@@ -1,0 +1,21 @@
+import React from 'react';
+
+const ScrollingAnnouncementBarDelivery: React.FC = () => {
+    // Repeated text items to ensure seamless loop
+    // We duplicate the content enough times to fill the width + buffer for the scroll
+    const items = Array(12).fill(null);
+
+    return (
+        <div className="w-full h-10 bg-[#75147c] overflow-hidden flex items-center relative px-4">
+            <div className="flex whitespace-nowrap animate-scroll-infinite w-max">
+                {items.map((_, index) => (
+                    <div key={index} className="flex items-center mx-4">
+                        <span className="text-white text-sm font-bold mr-1">Entrega em até 24 hrs</span>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
+
+export default ScrollingAnnouncementBarDelivery;

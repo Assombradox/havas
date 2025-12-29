@@ -1,0 +1,33 @@
+import React from 'react';
+
+const Footer: React.FC = () => {
+    const currentYear = new Date().getFullYear();
+
+    return (
+        <footer className="w-full bg-gray-50 py-8 px-4 mt-auto">
+            <div className="max-w-7xl mx-auto flex flex-col gap-6 text-left">
+                {/* Copyright */}
+                <p className="text-xs text-gray-500">
+                    © {currentYear} Havaianas Brasil. All Rights Reserved.
+                </p>
+
+                {/* Legal Info */}
+                <div className="text-xs text-gray-500 leading-relaxed space-y-4">
+                    <p>
+                        Razão Social: Alpargatas S.A. • CNPJ: 61.079.117/0001-05 • Endereço: Av. das Nações Unidas, nº 14.261 - Ala A - 10º andar - São Paulo - São Paulo - Brasil - CEP 04794-000
+                    </p>
+
+                    <p>
+                        Fale Conosco: SP (11) 3003-3414 | Outras regiões 0800 7070 566 • Horário de Atendimento: 09h às 18h de segunda a sexta
+                    </p>
+
+                    <p>
+                        Opções de pagamento: Cartão de Crédito (Visa, MasterCard, Amex, Diners Club e Hipercard) e PIX.
+                    </p>
+                </div>
+            </div>
+        </footer>
+    );
+};
+
+export default Footer;

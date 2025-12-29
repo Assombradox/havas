@@ -1,0 +1,2 @@
+src/pages/checkout/steps/IdentificationStep.tsx(1,27): error TS6133: 'useEffect' is declared but its value is never read.
+src/pages/checkout/steps/PaymentStep.tsx(52,17): error TS2353: Object literal may only specify known properties, and 'items' does not exist in type 'PixPaymentPayload'.

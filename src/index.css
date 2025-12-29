@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .animate-marquee-one-pass {
+    display: inline-block;
+    animation: marquee 15s linear forwards;
+  }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(100vw);
+    }
+
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+
+  /* Progress Bar Animation */
+  @keyframes progress-fill {
+    0% {
+      width: 0%;
+    }
+
+    100% {
+      width: 100%;
+    }
+  }
+
+  .animate-progress-fill {
+    animation-name: progress-fill;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+
+  /* Infinite Scroll Animation */
+  @keyframes scroll-infinite {
+    0% {
+      transform: translateX(0);
+    }
+
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .animate-scroll-infinite {
+    animation: scroll-infinite 42.85s linear infinite;
+  }
+}
