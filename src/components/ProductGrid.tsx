@@ -51,11 +51,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
                                     alt={product.name}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 />
-                                {product.isNew && (
-                                    <span className="absolute top-2 left-2 bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wide">
-                                        Novo
-                                    </span>
-                                )}
+
                             </div>
 
                             {/* Product Info */}

@@ -12,8 +12,13 @@ app.use(express.json());
 import { paymentStore } from './store/paymentStore';
 
 import { handleGetPixPayment } from './api/pix/get';
+import { productsRouter } from './routes/products.routes';
+import { categoriesRouter } from './routes/categories.routes';
 
 // Routes
+app.use('/products', productsRouter);
+app.use('/categories', categoriesRouter);
+
 app.post('/api/pix/create', handleCreatePixPayment);
 app.get('/api/pix/:paymentId', handleGetPixPayment);
 app.post('/api/pix/webhook', handlePixWebhook);

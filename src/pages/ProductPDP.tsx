@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Check } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { getProductBySlug, getRelatedProducts, type Product, type ProductColor } from '../data/products';
 import AnnouncementBar from '../components/AnnouncementBar';
@@ -122,23 +123,76 @@ const ProductPDP: React.FC = () => {
                     reviewCount={product.reviewCount}
                 />
 
-                {/* Variation Selection */}
+                {/* Variation Selection (Slug-Based - NEW V1.1) */}
+                {/* Only render if we have related products defined */}
+                {(product.relatedProducts && product.relatedProducts.length > 0) ? (
+                    <div className="w-full px-4 py-4 bg-white border-t border-gray-100 pb-0">
+                        <p className="text-sm text-gray-900 mb-3">
+                            Cor: <span className="font-bold uppercase">{product.color || selectedColor.name}</span>
+                        </p>
+                        <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                            {/* Current Product (Active) */}
+                            <button
+                                className="relative w-16 h-16 rounded-lg overflow-hidden flex-none border-2 border-black transition-all"
+                            >
+                                <img
+                                    src={product.colors[0].thumbnail}
+                                    alt={product.name}
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute top-1 right-1 bg-black rounded-full p-0.5">
+                                    <Check className="w-2 h-2 text-white" strokeWidth={4} />
+                                </div>
+                            </button>
+
+                            {/* Related Products */}
+                            {product.relatedProducts.map(slug => {
+                                const related = getProductBySlug(slug);
+                                if (!related) return null; // Skip if slug invalid
+
+                                return (
+                                    <button
+                                        key={slug}
+                                        onClick={() => {
+                                            window.history.pushState({}, '', `/produto/${slug}`);
+                                            window.dispatchEvent(new Event('popstate'));
+                                            window.scrollTo(0, 0);
+                                        }}
+                                        className="relative w-16 h-16 rounded-lg overflow-hidden flex-none border-2 border-transparent hover:border-gray-200 transition-all"
+                                        title={related.color || related.name}
+                                    >
+                                        <img
+                                            src={related.colors[0].thumbnail}
+                                            alt={related.name}
+                                            className="w-full h-full object-cover"
+                                        />
+                                    </button>
+                                );
+                            })}
+                        </div>
+                    </div>
+                ) : null}
+
+                {/* Legacy Size Selector (Hides internal colors if slug-based selector is active) */}
                 <SizeSelector
                     colors={product.colors}
                     sizesAvailable={product.sizes.filter(s => s.available).map(s => s.label)}
                     onColorSelect={handleColorSelect}
                     onSizeSelect={handleSizeSelect}
+                    hideColors={!!(product.relatedProducts && product.relatedProducts.length > 0)}
                 />
 
                 {/* Delivery Info */}
                 <DeliveryInfo />
 
                 {/* Product Description */}
-                <div id="product-description">
-                    <ProductDescription
-                        description={product.description}
-                    />
-                </div>
+                {product.description && (
+                    <div id="product-description">
+                        <ProductDescription
+                            description={product.description}
+                        />
+                    </div>
+                )}
 
                 {/* Recommended Products */}
                 {relatedProducts.length > 0 && (

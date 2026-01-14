@@ -20,6 +20,14 @@ import CheckoutSuccessPage from './pages/checkout/CheckoutSuccessPage';
 import { CartProvider } from './context/CartContext';
 import CartContainer from './components/CartContainer';
 
+// ADMIN IMPORTS
+import AdminLayout from './admin/AdminLayout';
+import Dashboard from './admin/pages/Dashboard';
+import ProductsList from './admin/pages/Products/ProductsList';
+import ProductForm from './admin/pages/Products/ProductForm';
+import CategoriesList from './admin/pages/Categories/CategoriesList';
+import CategoryForm from './admin/pages/Categories/CategoryForm';
+
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
@@ -37,6 +45,46 @@ function App() {
 
   // Move content rendering to a helper function or component to clean up
   const renderContent = () => {
+    // --- ADMIN ROUTES ---
+    if (currentPath.startsWith('/admin')) {
+      // Dashboard
+      if (currentPath === '/admin') {
+        return <AdminLayout><Dashboard /></AdminLayout>;
+      }
+
+      // Products List
+      if (currentPath === '/admin/products') {
+        return <AdminLayout><ProductsList /></AdminLayout>;
+      }
+
+      // Product Create
+      if (currentPath === '/admin/products/new') {
+        return <AdminLayout><ProductForm /></AdminLayout>;
+      }
+
+      // Product Edit
+      if (currentPath.startsWith('/admin/products/')) {
+        const id = currentPath.split('/admin/products/')[1];
+        return <AdminLayout><ProductForm id={id} /></AdminLayout>;
+      }
+
+      // Categories List
+      if (currentPath === '/admin/categories') {
+        return <AdminLayout><CategoriesList /></AdminLayout>;
+      }
+
+      // Category Create
+      if (currentPath === '/admin/categories/new') {
+        return <AdminLayout><CategoryForm /></AdminLayout>;
+      }
+
+      // Category Edit
+      if (currentPath.startsWith('/admin/categories/')) {
+        const slug = currentPath.split('/admin/categories/')[1];
+        return <AdminLayout><CategoryForm slug={slug} /></AdminLayout>;
+      }
+    }
+
     const isProductRoute = currentPath.startsWith('/produto/');
     const isPixRoute = currentPath.startsWith('/checkout/pix/');
 
@@ -66,8 +114,32 @@ function App() {
       return <ProductPDP />;
     }
 
-    if (currentPath === '/category') {
-      return <CategoryListingPage />;
+    if (currentPath === '/category' || currentPath === '/categoria/chinelos') {
+      return <CategoryListingPage categorySlug="chinelos" />;
+    }
+
+    if (currentPath === '/categoria/rasteirinhas') {
+      return <CategoryListingPage categorySlug="rasteirinhas" />;
+    }
+
+    if (currentPath === '/categoria/farm') {
+      return <CategoryListingPage categorySlug="farm" />;
+    }
+
+    if (currentPath === '/categoria/times-futebol') {
+      return <CategoryListingPage categorySlug="times-futebol" />;
+    }
+
+    if (currentPath === '/categoria/pride') {
+      return <CategoryListingPage categorySlug="pride" />;
+    }
+
+    if (currentPath === '/categoria/glitter') {
+      return <CategoryListingPage categorySlug="glitter" />;
+    }
+
+    if (currentPath === '/categoria/floral') {
+      return <CategoryListingPage categorySlug="floral" />;
     }
 
     // Default Home

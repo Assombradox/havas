@@ -30,8 +30,8 @@ dist-ssr
 !.env.example
 
 # Backend Data
-backend/data/*.json
-!backend/data/.gitkeep
+# backend/data/*.json
+# !backend/data/.gitkeep
 
 # Backend Build
 backend/dist

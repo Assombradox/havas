@@ -13,6 +13,7 @@ interface SizeSelectorProps {
     sizesAvailable: string[];
     onColorSelect: (color: ProductColor) => void;
     onSizeSelect: (size: string) => void;
+    hideColors?: boolean;
 }
 
 const FIXED_SIZES = [
@@ -23,7 +24,8 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
     colors,
     sizesAvailable,
     onColorSelect,
-    onSizeSelect
+    onSizeSelect,
+    hideColors = false
 }) => {
     // Internal state
     // Default to first color and no size selected initially
@@ -43,36 +45,40 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
 
     return (
         <div className="w-full px-4 py-4 bg-white border-t border-gray-100">
-            {/* Color Selection */}
-            <div className="mb-6">
-                <p className="text-sm text-gray-900 mb-3">
-                    Cor: <span className="font-bold uppercase">{selectedColor.name}</span>
-                </p>
-                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-                    {colors.map((color, index) => (
-                        <button
-                            key={index}
-                            onClick={() => handleColorClick(color)}
-                            className={`relative w-16 h-16 rounded-lg overflow-hidden flex-none border-2 transition-all ${selectedColor.name === color.name
-                                ? 'border-black'
-                                : 'border-transparent hover:border-gray-200'
-                                }`}
-                        >
-                            <img
-                                src={color.thumbnail}
-                                alt={color.name}
-                                className="w-full h-full object-cover"
-                            />
-                            {/* Selected Checkmark Overlay */}
-                            {selectedColor.name === color.name && (
-                                <div className="absolute top-1 right-1 bg-black rounded-full p-0.5">
-                                    <Check className="w-2 h-2 text-white" strokeWidth={4} />
-                                </div>
-                            )}
-                        </button>
-                    ))}
+            {/* Color Selection (Visual Only if hideColors is true, or completely hidden? Prompt says "Selector de cores simples" in PDP) */}
+            {/* If we strictly follow prompt, we replace this. Let's hide it if requested. */}
+
+            {!hideColors && (
+                <div className="mb-6">
+                    <p className="text-sm text-gray-900 mb-3">
+                        Cor: <span className="font-bold uppercase">{selectedColor.name}</span>
+                    </p>
+                    <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                        {colors.map((color, index) => (
+                            <button
+                                key={index}
+                                onClick={() => handleColorClick(color)}
+                                className={`relative w-16 h-16 rounded-lg overflow-hidden flex-none border-2 transition-all ${selectedColor.name === color.name
+                                    ? 'border-black'
+                                    : 'border-transparent hover:border-gray-200'
+                                    }`}
+                            >
+                                <img
+                                    src={color.thumbnail}
+                                    alt={color.name}
+                                    className="w-full h-full object-cover"
+                                />
+                                {/* Selected Checkmark Overlay */}
+                                {selectedColor.name === color.name && (
+                                    <div className="absolute top-1 right-1 bg-black rounded-full p-0.5">
+                                        <Check className="w-2 h-2 text-white" strokeWidth={4} />
+                                    </div>
+                                )}
+                            </button>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* Size Selection */}
             <div>

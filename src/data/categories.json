@@ -1,0 +1,58 @@
+[
+    {
+        "slug": "chinelos",
+        "title": "Chinelos Havaianas",
+        "description": "Explore nossa coleção de chinelos Havaianas. Conforto, estilo e qualidade para todos os momentos. Do básico ao estampado, encontre o par perfeito para você aproveitar o melhor do verão com liberdade e muito charme nos pés.",
+        "image": "categoryChinelos",
+        "type": "category",
+        "order": 1
+    },
+    {
+        "slug": "rasteirinhas",
+        "title": "Havaianas Rasteirinhas",
+        "description": "Confira as rasteirinhas Havaianas, perfeitas para garantir conforto e praticidade para os seus pés no verão 2025. Seja sandália ou rasteirinha, Havaianas é sempre sucesso, frescor e charme no verão!",
+        "image": "categoryRasteirinhas",
+        "type": "category",
+        "order": 2
+    },
+    {
+        "slug": "farm",
+        "title": "Havaianas Farm",
+        "description": "Falou em tropicalidade brasileira, já sabe: falou em Havaianas e FARM! Vem conferir os itens dessa collab queridinha! As flores, as frutas, as plantas, os animais… A gente ama cores da natureza! A cada coleção de chinelos FARM Havaianas, dá vontade de levar todos para desfilar na praia, piscina, por todos os lugares!",
+        "image": "categoryfarm",
+        "type": "collection",
+        "order": 1
+    },
+    {
+        "slug": "times-futebol",
+        "title": "Times de Futebol",
+        "description": "Mostre a paixão pelo seu time do coração com as Havaianas dos maiores clubes do Brasil! Conforto de campeão para você torcer com estilo.",
+        "image": "categoryTime",
+        "type": "collection",
+        "order": 2
+    },
+    {
+        "slug": "pride",
+        "title": "Havaianas Pride",
+        "description": "Conheça a linha Pride, coleção que celebra o amor, o orgulho e o nosso desejo de mudanças. A linha Havaianas Pride reverte 7% do valor líquido das vendas para a All Out, uma organização que atua no Brasil e no mundo em defesa dos direitos das pessoas LGBTQIAPN+.",
+        "image": "categoryPride",
+        "type": "collection",
+        "order": 3
+    },
+    {
+        "slug": "glitter",
+        "title": "Havaianas Glitter",
+        "description": "Bora de glow up? Os chinelos com glitter são perfeitos para brilhar em um passeio no parque, rolê com os amigos, praia, piscina, carnaval e muito mais! Vem conferir os lançamentos!",
+        "image": "categoryGlitter",
+        "type": "collection",
+        "order": 4
+    },
+    {
+        "slug": "floral",
+        "title": "Havaianas Floral 🌸",
+        "description": "Que tal deixar seus dias mais floridos e coloridos? Nós temos vários modelos com estampas inspiradas nas flores para te ajudar a montar um look lindo e cheio de charme!",
+        "image": "categoryFloral",
+        "type": "collection",
+        "order": 5
+    }
+]

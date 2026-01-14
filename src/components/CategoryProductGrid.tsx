@@ -1,14 +1,25 @@
 import React, { useState } from 'react';
 import { Star } from 'lucide-react';
-import { categoryProducts } from '../data/categoryProducts';
+import type { Product } from '../data/products';
 
-const CategoryProductGrid: React.FC = () => {
+interface CategoryProductGridProps {
+    products: Product[];
+}
+
+const CategoryProductGrid: React.FC<CategoryProductGridProps> = ({ products }) => {
     const [visibleCount, setVisibleCount] = useState(10);
-    const visibleProducts = categoryProducts.slice(0, visibleCount);
-    const hasMore = visibleCount < categoryProducts.length;
+    const visibleProducts = products.slice(0, visibleCount);
+    const hasMore = visibleCount < products.length;
 
     const handleShowMore = () => {
         setVisibleCount((prev) => prev + 10);
+    };
+
+    const navigateToProduct = (slug: string) => {
+        const path = `/produto/${slug}`;
+        window.history.pushState({}, '', path);
+        window.dispatchEvent(new PopStateEvent('popstate'));
+        window.scrollTo(0, 0);
     };
 
     const formatPrice = (price: number) => {
@@ -18,8 +29,8 @@ const CategoryProductGrid: React.FC = () => {
         }).format(price);
     };
 
-    const calculateDiscount = (original: number, current: number) => {
-        if (original <= current) return null;
+    const calculateDiscount = (original: number | undefined, current: number) => {
+        if (!original || original <= current) return null;
         const discount = Math.round(((original - current) / original) * 100);
         return `${discount}% OFF`;
     };
@@ -29,14 +40,19 @@ const CategoryProductGrid: React.FC = () => {
             {/* Grid Container */}
             <div className="grid grid-cols-2 gap-x-4 gap-y-8 px-4">
                 {visibleProducts.map((product) => {
-                    const discountBadge = calculateDiscount(product.originalPrice, product.currentPrice);
+                    const mainImage = product.colors?.[0]?.images?.[0] || product.colors?.[0]?.thumbnail || '';
+                    const discountBadge = calculateDiscount(product.originalPrice, product.price);
 
                     return (
-                        <div key={product.id} className="cursor-pointer group">
+                        <div
+                            key={product.id}
+                            onClick={() => navigateToProduct(product.slug)}
+                            className="cursor-pointer group"
+                        >
                             {/* Image Container */}
                             <div className="relative aspect-[3/4] mb-3 bg-gray-100 rounded-lg overflow-hidden">
                                 <img
-                                    src={product.image}
+                                    src={mainImage}
                                     alt={product.name}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 />
@@ -49,7 +65,7 @@ const CategoryProductGrid: React.FC = () => {
 
                             {/* Product Info */}
                             <div className="flex flex-col gap-1">
-                                {/* Rating (Reusing existing style) */}
+                                {/* Rating */}
                                 <div className="flex items-center gap-1">
                                     <div className="flex text-red-600">
                                         {[...Array(5)].map((_, i) => (
@@ -69,13 +85,13 @@ const CategoryProductGrid: React.FC = () => {
 
                                 {/* Price */}
                                 <div className="flex flex-col mt-1">
-                                    {product.originalPrice > product.currentPrice && (
+                                    {product.originalPrice && product.originalPrice > product.price && (
                                         <span className="text-xs text-gray-400 line-through">
                                             {formatPrice(product.originalPrice)}
                                         </span>
                                     )}
                                     <span className="text-base font-bold text-gray-900">
-                                        {formatPrice(product.currentPrice)}
+                                        {formatPrice(product.price)}
                                     </span>
                                 </div>
                             </div>

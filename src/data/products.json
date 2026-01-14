@@ -1,0 +1,1456 @@
+[
+    {
+        "id": "1001",
+        "slug": "chinelo-havaianas-farm-mar-de-ondas",
+        "name": "Chinelo Havaianas Farm Mar de Ondas",
+        "description": "A Sandália Havaianas Farm Mar de Ondas traz a vibração do verão brasileiro com estampas exclusivas e o conforto clássico que você já conhece. Perfeita para dias de sol e mar.",
+        "price": 29.90,
+        "originalPrice": 92.99,
+        "rating": 4.8,
+        "reviewCount": 124,
+        "categories": [
+            "chinelos",
+            "farm"
+        ],
+        "colors": [
+            {
+                "id": "marinho",
+                "name": "Marinho",
+                "thumbnail": "farm1",
+                "images": [
+                    "farm1",
+                    "farm2",
+                    "farm3",
+                    "farm4",
+                    "farm5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "33/34",
+                "available": true
+            },
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": false
+            }
+        ]
+    },
+    {
+        "id": "1002",
+        "slug": "rasteirinha-havaianas-aqua-glow",
+        "name": "Rasteirinha Havaianas Aqua Glow",
+        "description": "Brilhe com a Rasteirinha Aqua Glow. Design sofisticado com tiras metálicas e solado ultra macio para o máximo conforto.",
+        "price": 59.90,
+        "originalPrice": 139.99,
+        "rating": 4.6,
+        "reviewCount": 42,
+        "categories": [
+            "rasteirinhas"
+        ],
+        "colors": [
+            {
+                "id": "dourado",
+                "name": "Dourado",
+                "thumbnail": "product3",
+                "images": [
+                    "product3"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "1003",
+        "slug": "chinelo-havaianas-farm-brisa-serena",
+        "name": "Chinelo Havaianas Farm Brisa Serena",
+        "description": "Estampa floral delicada da coleção Farm. Um toque de natureza aos seus pés.",
+        "price": 29.90,
+        "originalPrice": 82.99,
+        "rating": 4.9,
+        "reviewCount": 89,
+        "categories": [
+            "chinelos",
+            "farm"
+        ],
+        "colors": [
+            {
+                "id": "floral",
+                "name": "Floral",
+                "thumbnail": "product2",
+                "images": [
+                    "product2"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "33/34",
+                "available": true
+            },
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "1004",
+        "slug": "chinelo-havaianas-top-logo-metalico",
+        "name": "Chinelo Havaianas Top Logo Metálico",
+        "description": "O clássico modelo Top com um toque de modernidade no logo metálico.",
+        "price": 19.90,
+        "originalPrice": 49.99,
+        "rating": 4.5,
+        "reviewCount": 215,
+        "categories": [
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "preto",
+                "name": "Preto",
+                "thumbnail": "product4",
+                "images": [
+                    "product4"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            },
+            {
+                "label": "43/44",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "2001",
+        "slug": "chinelo-havaianas-brasil-logo-azul",
+        "name": "Chinelo Havaianas Brasil Logo",
+        "description": "O legítimo chinelo brasileiro. Bandeira do Brasil nas tiras e muita história pra contar.",
+        "price": 24.50,
+        "originalPrice": 59.99,
+        "rating": 4.8,
+        "reviewCount": 3285,
+        "categories": [
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "azul",
+                "name": "Azul",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "39/40",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "2002",
+        "slug": "chinelo-havaianas-slim-summer-bliss",
+        "name": "Chinelo Havaianas Slim Summer Bliss",
+        "description": "Modelagem slim com estampas vibrantes que celebram a alegria do verão.",
+        "price": 33.20,
+        "originalPrice": 57.99,
+        "rating": 4.4,
+        "reviewCount": 182,
+        "categories": [
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "rosa",
+                "name": "Rosa",
+                "thumbnail": "product6",
+                "images": [
+                    "product6"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "35/36",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "2003",
+        "slug": "chinelo-havaianas-brasil-logo-amarelo",
+        "name": "Chinelo Havaianas Brasil Logo Amarelo",
+        "description": "Clássico é clássico. A versão amarela do Brasil Logo para iluminar seu caminhar.",
+        "price": 23.20,
+        "originalPrice": 59.99,
+        "rating": 4.9,
+        "reviewCount": 3285,
+        "categories": [
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "amarelo",
+                "name": "Amarelo",
+                "thumbnail": "product7",
+                "images": [
+                    "product7"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "2004",
+        "slug": "chinelo-havaianas-top-summer-vibes",
+        "name": "Chinelo Havaianas Top Summer Vibes",
+        "description": "Good vibes only. Chinelo confortável com arte inspirada nas praias tropicais.",
+        "price": 29.90,
+        "originalPrice": 49.99,
+        "rating": 4.2,
+        "reviewCount": 21,
+        "categories": [
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "verde",
+                "name": "Verde",
+                "thumbnail": "product8",
+                "images": [
+                    "product8"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "39/40",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "3001",
+        "slug": "chinelo-havaianas-top-times-palmeiras",
+        "name": "Chinelo Havaianas Top Times Palmeiras",
+        "description": "Chinelo do Verdão. Conforto e paixão pelo Palmeiras aos seus pés.",
+        "price": 19.90,
+        "originalPrice": 59.99,
+        "rating": 4.8,
+        "reviewCount": 320,
+        "categories": [
+            "times-futebol",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "3002",
+        "slug": "chinelo-havaianas-top-times-vasco",
+        "name": "Chinelo Havaianas Top Times Vasco Da Gama",
+        "description": "Chinelo do Gigante da Colina. Tradição e conforto para a torcida vascaína.",
+        "price": 19.90,
+        "originalPrice": 59.99,
+        "rating": 4.7,
+        "reviewCount": 280,
+        "categories": [
+            "times-futebol",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "3003",
+        "slug": "chinelo-havaianas-top-times-atletico-mg",
+        "name": "Chinelo Havaianas Top Times Atlético Mineiro",
+        "description": "Galo Forte e Vingador! Chinelo confortável para a Massa Atleticana.",
+        "price": 29.90,
+        "originalPrice": 59.99,
+        "rating": 4.7,
+        "reviewCount": 280,
+        "categories": [
+            "times-futebol",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "3004",
+        "slug": "chinelo-havaianas-top-times-botafogo",
+        "name": "Chinelo Havaianas Top Times Botafogo",
+        "description": "O Glorioso aos seus pés. Mostre sua torcida pelo Fogão com estilo.",
+        "price": 29.90,
+        "originalPrice": 59.99,
+        "rating": 4.7,
+        "reviewCount": 280,
+        "categories": [
+            "times-futebol",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "3005",
+        "slug": "chinelo-havaianas-top-times-santos",
+        "name": "Chinelo Havaianas Top Times Santos",
+        "description": "O Peixe! Chinelo do Santos FC para quem tem orgulho da Vila Belmiro.",
+        "price": 29.90,
+        "originalPrice": 59.99,
+        "rating": 4.7,
+        "reviewCount": 280,
+        "categories": [
+            "times-futebol",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "3006",
+        "slug": "chinelo-havaianas-top-times-fluminense",
+        "name": "Chinelo Havaianas Top Times Fluminense",
+        "description": "Nense! As cores do Tricolor das Laranjeiras com o conforto das Havaianas.",
+        "price": 29.90,
+        "originalPrice": 59.99,
+        "rating": 4.7,
+        "reviewCount": 280,
+        "categories": [
+            "times-futebol",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "3007",
+        "slug": "chinelo-havaianas-top-times-gremio",
+        "name": "Chinelo Havaianas Top Times Grêmio",
+        "description": "Imortal Tricolor! Leve a paixão pelo Grêmio para onde for.",
+        "price": 29.90,
+        "originalPrice": 59.99,
+        "rating": 4.7,
+        "reviewCount": 280,
+        "categories": [
+            "times-futebol",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "3008",
+        "slug": "chinelo-havaianas-top-times-cruzeiro",
+        "name": "Chinelo Havaianas Top Times Cruzeiro",
+        "description": "Cabuloso! A torcida celeste merece este conforto.",
+        "price": 29.90,
+        "originalPrice": 59.99,
+        "rating": 4.7,
+        "reviewCount": 280,
+        "categories": [
+            "times-futebol",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "3009",
+        "slug": "chinelo-havaianas-top-times-internacional",
+        "name": "Chinelo Havaianas Top Times Internacional",
+        "description": "Colorado! Mostre seu orgulho pelo Inter com estas Havaianas exclusivas.",
+        "price": 29.90,
+        "originalPrice": 59.99,
+        "rating": 4.7,
+        "reviewCount": 280,
+        "categories": [
+            "times-futebol",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "3010",
+        "slug": "chinelo-havaianas-top-times-flamengo",
+        "name": "Chinelo Havaianas Top Times Flamengo",
+        "description": "Mengão! O manto sagrado também nos seus pés. Raça, amor e paixão!",
+        "price": 29.90,
+        "originalPrice": 59.99,
+        "rating": 4.7,
+        "reviewCount": 280,
+        "categories": [
+            "times-futebol",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "3011",
+        "slug": "chinelo-havaianas-top-times-corinthians",
+        "name": "Chinelo Havaianas Top Times Corinthians",
+        "description": "Timão! Vai Corinthians! O bando de loucos calça Havaianas.",
+        "price": 29.90,
+        "originalPrice": 59.99,
+        "rating": 4.7,
+        "reviewCount": 280,
+        "categories": [
+            "times-futebol",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "3012",
+        "slug": "chinelo-havaianas-top-times-sao-paulo",
+        "name": "Chinelo Havaianas Top Times São Paulo",
+        "description": "Tricolor Paulista! As três cores mais fortes nos seus chinelos favoritos.",
+        "price": 29.90,
+        "originalPrice": 59.99,
+        "rating": 4.7,
+        "reviewCount": 280,
+        "categories": [
+            "times-futebol",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "4001",
+        "slug": "chinelo-havaianas-top-pride-all-over",
+        "name": "Chinelo Havaianas Top Pride All Over",
+        "description": "Chinelo da coleção Pride. Celebre o amor em todas as cores.",
+        "price": 19.90,
+        "originalPrice": 69.99,
+        "rating": 4.8,
+        "reviewCount": 1427,
+        "categories": [
+            "pride",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "4002",
+        "slug": "chinelo-havaianas-top-pride",
+        "name": "Chinelo Havaianas Top Pride",
+        "description": "Clássico Top com as cores do orgulho.",
+        "price": 19.90,
+        "originalPrice": 69.99,
+        "rating": 4.7,
+        "reviewCount": 489,
+        "categories": [
+            "pride",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "4003",
+        "slug": "chinelo-havaianas-top-pride-simples",
+        "name": "Chinelo Havaianas Top Pride Simples",
+        "description": "Orgulho nos detalhes. Discreto e cheio de significado.",
+        "price": 29.90,
+        "originalPrice": 69.99,
+        "rating": 4.7,
+        "reviewCount": 489,
+        "categories": [
+            "pride",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "5001",
+        "slug": "chinelo-havaianas-slim-glitter-ii",
+        "name": "Chinelo Havaianas Slim Glitter II",
+        "description": "Bora de glow up? O chinelo com glitter perfeito para brilhar.",
+        "price": 19.90,
+        "originalPrice": 69.99,
+        "rating": 4.8,
+        "reviewCount": 368,
+        "categories": [
+            "glitter",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "33/34",
+                "available": true
+            },
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            },
+            {
+                "label": "42/43",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "5002",
+        "slug": "chinelo-havaianas-slim-palette-glow",
+        "name": "Chinelo Havaianas Slim Palette Glow",
+        "description": "Brilhe com estilo e sofisticação.",
+        "price": 19.90,
+        "originalPrice": 44.99,
+        "rating": 4.7,
+        "reviewCount": 489,
+        "categories": [
+            "glitter",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "33/34",
+                "available": true
+            },
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            },
+            {
+                "label": "42/43",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "5003",
+        "slug": "chinelo-havaianas-slim-square-glitter-neon",
+        "name": "Chinelo Havaianas Slim Square Glitter Neon",
+        "description": "Modernidade e brilho em um design quadrado.",
+        "price": 29.90,
+        "originalPrice": 74.99,
+        "rating": 4.5,
+        "reviewCount": 89,
+        "categories": [
+            "glitter",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "33/34",
+                "available": true
+            },
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            },
+            {
+                "label": "42/43",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "5004",
+        "slug": "chinelo-havaianas-slim-square-sparkle",
+        "name": "Chinelo Havaianas Slim Square Sparkle",
+        "description": "Brilho intenso em formato square.",
+        "price": 29.90,
+        "originalPrice": 84.99,
+        "rating": 4.5,
+        "reviewCount": 89,
+        "categories": [
+            "glitter",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "33/34",
+                "available": true
+            },
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            },
+            {
+                "label": "42/43",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "5005",
+        "slug": "chinelo-havaianas-slim-sparkle",
+        "name": "Chinelo Havaianas Slim Sparkle",
+        "description": "O clássico Slim com um toque extra de brilho.",
+        "price": 29.90,
+        "originalPrice": 94.99,
+        "rating": 4.4,
+        "reviewCount": 53,
+        "categories": [
+            "glitter",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "33/34",
+                "available": true
+            },
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            },
+            {
+                "label": "42/43",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "5006",
+        "slug": "chinelo-havaianas-slim-square-glitter-contour",
+        "name": "Chinelo Havaianas Slim Square Glitter Contour",
+        "description": "Contorno brilhante para destacar seus passos.",
+        "price": 29.90,
+        "originalPrice": 79.99,
+        "rating": 4.5,
+        "reviewCount": 89,
+        "categories": [
+            "glitter",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "33/34",
+                "available": true
+            },
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            },
+            {
+                "label": "42/43",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "5007",
+        "slug": "chinelo-havaianas-slim-point-glitter",
+        "name": "Chinelo Havaianas Slim Point Glitter",
+        "description": "Estilo point com muito glitter.",
+        "price": 29.90,
+        "originalPrice": 84.99,
+        "rating": 4.6,
+        "reviewCount": 60,
+        "categories": [
+            "glitter",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "33/34",
+                "available": true
+            },
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            },
+            {
+                "label": "42/43",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "5008",
+        "slug": "chinelo-havaianas-slim-glitter-mix",
+        "name": "Chinelo Havaianas Slim Glitter Mix",
+        "description": "Um mix de brilhos para quem ama se destacar.",
+        "price": 29.90,
+        "originalPrice": 89.99,
+        "rating": 4.9,
+        "reviewCount": 741,
+        "categories": [
+            "glitter",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "33/34",
+                "available": true
+            },
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            },
+            {
+                "label": "42/43",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "5009",
+        "slug": "chinelo-havaianas-slim-gloss",
+        "name": "Chinelo Havaianas Slim Gloss",
+        "description": "Acabamento gloss para um brilho sofisticado.",
+        "price": 29.90,
+        "originalPrice": 52.99,
+        "rating": 4.7,
+        "reviewCount": 257,
+        "categories": [
+            "glitter",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "33/34",
+                "available": true
+            },
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            },
+            {
+                "label": "42/43",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "6001",
+        "slug": "chinelo-havaianas-top-begonia-coracao",
+        "name": "Chinelo Havaianas Top Begônia Coração",
+        "description": "Estampa delicada de begônias em formato de coração. Amor aos seus pés.",
+        "price": 29.90,
+        "originalPrice": 79.99,
+        "rating": 4.8,
+        "reviewCount": 368,
+        "categories": [
+            "floral",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "33/34",
+                "available": true
+            },
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            },
+            {
+                "label": "42/43",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "6002",
+        "slug": "chinelo-havaianas-top-jardim-noturno",
+        "name": "Chinelo Havaianas Top Jardim Noturno",
+        "description": "A beleza do jardim sob a luz do luar.",
+        "price": 19.90,
+        "originalPrice": 79.99,
+        "rating": 4.7,
+        "reviewCount": 489,
+        "categories": [
+            "floral",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "33/34",
+                "available": true
+            },
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            },
+            {
+                "label": "42/43",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "6003",
+        "slug": "chinelo-havaianas-top-tropicalia-vibes-ii",
+        "name": "Chinelo Havaianas Top Tropicalia Vibes II",
+        "description": "Vibrações tropicais intensas e coloridas.",
+        "price": 29.90,
+        "originalPrice": 79.99,
+        "rating": 4.5,
+        "reviewCount": 89,
+        "categories": [
+            "floral",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "33/34",
+                "available": true
+            },
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            },
+            {
+                "label": "42/43",
+                "available": true
+            }
+        ]
+    },
+    {
+        "id": "6004",
+        "slug": "chinelo-havaianas-slim-organic",
+        "name": "Chinelo Havaianas Slim Organic",
+        "description": "Estampas orgânicas que conectam você à natureza.",
+        "price": 29.90,
+        "originalPrice": 79.99,
+        "rating": 4.5,
+        "reviewCount": 89,
+        "categories": [
+            "floral",
+            "chinelos"
+        ],
+        "colors": [
+            {
+                "id": "padrao",
+                "name": "Padrão",
+                "thumbnail": "product5",
+                "images": [
+                    "product5"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "33/34",
+                "available": true
+            },
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            },
+            {
+                "label": "42/43",
+                "available": true
+            }
+        ]
+    }
+]
