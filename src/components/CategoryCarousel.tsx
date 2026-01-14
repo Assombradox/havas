@@ -1,11 +1,19 @@
-import React from 'react';
-import { categories } from '../data/categories';
+import React, { useEffect, useState } from 'react';
+import { categoriesService } from '../services/storefront/categories.service';
+import type { CategoryConfig } from '../types/Category';
 
 const CategoryCarousel: React.FC = () => {
     // Filter categories by type 'category' and sort by order
-    const carouselCategories = categories
-        .filter(c => c.type === 'category')
-        .sort((a, b) => a.order - b.order);
+    const [carouselCategories, setCarouselCategories] = useState<CategoryConfig[]>([]);
+
+    useEffect(() => {
+        categoriesService.getAll().then(all => {
+            const filtered = all
+                .filter(c => c.type === 'category')
+                .sort((a, b) => a.order - b.order);
+            setCarouselCategories(filtered);
+        });
+    }, []);
 
     const handleNavigation = (slug: string) => {
         const path = `/categoria/${slug}`;

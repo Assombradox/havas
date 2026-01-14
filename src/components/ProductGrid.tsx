@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Star } from 'lucide-react';
-import { products as allProducts, type Product } from '../data/products';
+import { productsService } from '../services/storefront/products.service';
+import type { Product } from '../types/Product';
 
 interface ProductGridProps {
     title?: string;
@@ -9,8 +10,18 @@ interface ProductGridProps {
 
 const ProductGrid: React.FC<ProductGridProps> = ({
     title = "Lançamentos",
-    products = allProducts // Default to all products if none provided
+    products
 }) => {
+    // Internal state for when products are not passed via props (e.g. Home)
+    const [internalProducts, setInternalProducts] = useState<Product[]>([]);
+
+    useEffect(() => {
+        if (!products) {
+            productsService.getAll().then(setInternalProducts);
+        }
+    }, [products]);
+
+    const displayProducts = products || internalProducts;
 
     // Custom navigation function since we can't use useNavigate from react-router in this simple router setup
     const navigateToProduct = (slug: string) => {
@@ -31,7 +42,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
 
             {/* Horizontal Scroll Container */}
             <div className="flex overflow-x-auto w-full px-4 pb-4 gap-4 snap-x snap-mandatory scrollbar-hide">
-                {products.map((product) => {
+                {displayProducts.map((product) => {
                     // Safety check for image
                     const mainImage = product.colors?.[0]?.images?.[0] || product.colors?.[0]?.thumbnail || '';
 

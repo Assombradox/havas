@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Check } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { getProductBySlug, getRelatedProducts, type Product, type ProductColor } from '../data/products';
+import { getRelatedProducts, type Product, type ProductColor } from '../data/products';
+import { productsService } from '../services/storefront/products.service';
 import AnnouncementBar from '../components/AnnouncementBar';
 import Header from '../components/Header';
 import ImageGallery from '../components/ImageGallery';
@@ -21,30 +22,45 @@ const ProductPDP: React.FC = () => {
     const [selectedColor, setSelectedColor] = useState<ProductColor | null>(null);
     const [notFound, setNotFound] = useState(false);
 
+    // State to hold resolved related products (for color variations)
+    const [colorVariations, setColorVariations] = useState<Product[]>([]);
+
     // Get Slug from URL
     useEffect(() => {
-        const path = window.location.pathname;
-        const slug = path.split('/produto/')[1];
+        const loadProduct = async () => {
+            const path = window.location.pathname;
+            const slug = path.split('/produto/')[1];
 
-        if (!slug) {
-            // Fallback for /pdp dev route
-            const fallback = getProductBySlug('chinelo-havaianas-farm-mar-de-ondas');
-            if (fallback) {
-                setProduct(fallback);
-                setSelectedColor(fallback.colors[0]);
-            }
-        } else {
-            const found = getProductBySlug(slug);
-            if (found) {
-                setProduct(found);
-                setSelectedColor(found.colors[0]);
-                // Reset states on product change
-                setSelectedSize(null);
-                window.scrollTo(0, 0);
+            if (!slug) {
+                // Fallback for /pdp dev route
+                const fallback = await productsService.getBySlug('chinelo-havaianas-farm-mar-de-ondas');
+                if (fallback) {
+                    setProduct(fallback);
+                    setSelectedColor(fallback.colors[0]);
+                }
             } else {
-                setNotFound(true);
+                const found = await productsService.getBySlug(slug);
+                if (found) {
+                    setProduct(found);
+                    setSelectedColor(found.colors[0]);
+                    // Reset states on product change
+                    setSelectedSize(null);
+                    window.scrollTo(0, 0);
+
+                    // Resolve related products for color variations
+                    if (found.relatedProducts?.length) {
+                        const variations = await Promise.all(found.relatedProducts.map(s => productsService.getBySlug(s)));
+                        setColorVariations(variations.filter((p): p is Product => !!p));
+                    } else {
+                        setColorVariations([]);
+                    }
+
+                } else {
+                    setNotFound(true);
+                }
             }
-        }
+        };
+        loadProduct();
     }, [window.location.pathname]);
 
     const { addToCart } = useCart();
@@ -146,29 +162,25 @@ const ProductPDP: React.FC = () => {
                             </button>
 
                             {/* Related Products */}
-                            {product.relatedProducts.map(slug => {
-                                const related = getProductBySlug(slug);
-                                if (!related) return null; // Skip if slug invalid
-
-                                return (
-                                    <button
-                                        key={slug}
-                                        onClick={() => {
-                                            window.history.pushState({}, '', `/produto/${slug}`);
-                                            window.dispatchEvent(new Event('popstate'));
-                                            window.scrollTo(0, 0);
-                                        }}
-                                        className="relative w-16 h-16 rounded-lg overflow-hidden flex-none border-2 border-transparent hover:border-gray-200 transition-all"
-                                        title={related.color || related.name}
-                                    >
-                                        <img
-                                            src={related.colors[0].thumbnail}
-                                            alt={related.name}
-                                            className="w-full h-full object-cover"
-                                        />
-                                    </button>
-                                );
-                            })}
+                            {colorVariations.map(related => (
+                                <button
+                                    key={related.slug}
+                                    onClick={() => {
+                                        window.history.pushState({}, '', `/produto/${related.slug}`);
+                                        window.dispatchEvent(new Event('popstate'));
+                                        window.scrollTo(0, 0);
+                                    }}
+                                    className="relative w-16 h-16 rounded-lg overflow-hidden flex-none border-2 border-transparent hover:border-gray-200 transition-all"
+                                    title={related.color || related.name}
+                                >
+                                    <img
+                                        src={related.colors[0].thumbnail}
+                                        alt={related.name}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </button>
+                            )
+                            )}
                         </div>
                     </div>
                 ) : null}

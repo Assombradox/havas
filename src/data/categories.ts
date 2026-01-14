@@ -14,7 +14,7 @@ import type { CategoryConfig } from '../types/Category';
 export type { CategoryConfig };
 
 // Map string keys to imported assets
-const imageMap: Record<string, string> = {
+export const imageMap: Record<string, string> = {
     categoryChinelos,
     categoryRasteirinhas,
     categoryfarm,

@@ -20,7 +20,7 @@ import farm5 from '../assets/farm-mar-de-ondas-5.jpg';
 import productsData from './products.json';
 
 // Map string keys to imported assets
-const imageMap: Record<string, string> = {
+export const imageMap: Record<string, string> = {
     product2, product3, product4, product5, product6, product7, product8,
     farm1, farm2, farm3, farm4, farm5
 };
