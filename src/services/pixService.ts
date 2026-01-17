@@ -18,6 +18,12 @@ export interface PixPaymentPayload {
         complement?: string;
     };
     amount: number;
+    items?: Array<{
+        title: string;
+        quantity: number;
+        unitPrice: number;
+        tangible: boolean;
+    }>;
 }
 
 export interface PixPaymentResponse {

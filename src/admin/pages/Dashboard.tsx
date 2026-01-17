@@ -4,8 +4,25 @@ import { categoriesAdminService } from '../services/categoriesAdminService';
 import { Package, FolderTree, AlertCircle } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-    const products = productsAdminService.getAll();
-    const categories = categoriesAdminService.getAll();
+    const [stats, setStats] = React.useState({ products: 0, categories: 0 });
+
+    React.useEffect(() => {
+        const loadStats = async () => {
+            try {
+                const [productsData, categoriesData] = await Promise.all([
+                    productsAdminService.getAll(),
+                    categoriesAdminService.getAll()
+                ]);
+                setStats({
+                    products: productsData ? productsData.length : 0,
+                    categories: categoriesData ? categoriesData.length : 0
+                });
+            } catch (error) {
+                console.error('Failed to load dashboard stats', error);
+            }
+        };
+        loadStats();
+    }, []);
 
     return (
         <div className="space-y-6">
@@ -17,7 +34,7 @@ const Dashboard: React.FC = () => {
                     </div>
                     <div>
                         <p className="text-sm text-gray-500 font-medium">Total de Produtos</p>
-                        <h3 className="text-2xl font-bold text-gray-900">{products.length}</h3>
+                        <h3 className="text-2xl font-bold text-gray-900">{stats.products}</h3>
                     </div>
                 </div>
 
@@ -28,7 +45,7 @@ const Dashboard: React.FC = () => {
                     </div>
                     <div>
                         <p className="text-sm text-gray-500 font-medium">Categorias Ativas</p>
-                        <h3 className="text-2xl font-bold text-gray-900">{categories.length}</h3>
+                        <h3 className="text-2xl font-bold text-gray-900">{stats.categories}</h3>
                     </div>
                 </div>
             </div>
