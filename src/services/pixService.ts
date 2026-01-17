@@ -38,7 +38,7 @@ export const createPixPayment = async (payload: PixPaymentPayload): Promise<PixP
     console.log('[PixService] Initiating PIX payment...', payload);
 
     try {
-        const response = await fetch('http://localhost:3000/api/pix/create', {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/pix/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

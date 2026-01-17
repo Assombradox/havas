@@ -1,6 +1,6 @@
 import type { CategoryConfig } from '../../types/Category';
 
-const API_URL = 'http://localhost:3000/categories';
+const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/categories`;
 
 export const categoriesAdminService = {
     getAll: async (): Promise<CategoryConfig[]> => {

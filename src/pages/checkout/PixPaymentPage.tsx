@@ -22,7 +22,7 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
 
         const fetchPaymentDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/api/pix/${paymentId}`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/pix/${paymentId}`);
                 if (!response.ok) throw new Error('Pagamento não encontrado');
 
                 const data = await response.json();
@@ -62,7 +62,7 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
 
         const checkStatus = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/api/pix/status/${paymentId}`);
+                const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/pix/status/${paymentId}`);
                 const data = await response.json();
 
                 if (data.status === 'paid') {
