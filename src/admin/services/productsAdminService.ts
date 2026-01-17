@@ -48,7 +48,7 @@ export const productsAdminService = {
         }
     },
 
-    delete: async (id: string): Promise<void> => {
+    delete: async (_id: string): Promise<void> => {
         // Backend didn't implement DELETE yet (as per "delete() (optional)" in plan).
         // leaving strictly as requested with no-op or error
         console.warn('Delete not implemented in V1 Backend');
