@@ -25,6 +25,11 @@ app.get('/api/pix/:paymentId', handleGetPixPayment);
 app.post('/api/pix/webhook', handlePixWebhook);
 app.post('/api/pix/simulate-pay/:paymentId', handleSimulatePixPay);
 
+// Admin Routes
+import { getAllOrders } from './controllers/orderController';
+app.get('/api/orders', getAllOrders);
+
+
 // Status Endpoint
 app.get('/api/pix/status/:paymentId', async (req, res) => {
     const { paymentId } = req.params;

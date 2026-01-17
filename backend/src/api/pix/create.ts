@@ -45,12 +45,29 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
         // 5. Persistir no MongoDB
         console.log(`[Create] Saving payment ${orderId} (Trans: ${transaction.transaction_id}) to MongoDB...`);
 
-        // Save using orderId as the key, as the Webhook will use `external_id` (which is orderId)
+        // Save using orderId as the key
         await paymentStore.set(orderId, {
             status: 'waiting_payment',
             pixData: responseData,
             externalId: orderId,
-            transactionId: transaction.transaction_id
+            transactionId: transaction.transaction_id,
+
+            // New Fields for Admin List
+            totalAmount: Number(amount), // Original input (Reais usually, based on context)
+            customer: {
+                name: customerName,
+                email: customerEmail,
+                phone: customerPhone,
+                document: customerCpf
+            },
+            items: [
+                {
+                    title: "Pedido Checkout",
+                    quantity: 1,
+                    unitPrice: Number(amount),
+                    tangible: true
+                }
+            ]
         });
 
         const storeSize = await paymentStore.size();
