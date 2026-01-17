@@ -6,8 +6,11 @@ const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/cate
 const hydrate = (category: any): CategoryConfig => {
     return {
         ...category,
+        id: category.id || category.slug,
+        name: category.name || category.title || category.slug,
+        title: category.title,
         image: imageMap[category.image] || category.image,
-        type: category.type as 'category' | 'collection'
+        type: (category.type as 'category' | 'collection') || 'category'
     };
 }
 

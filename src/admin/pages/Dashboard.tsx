@@ -49,17 +49,6 @@ const Dashboard: React.FC = () => {
                     </div>
                 </div>
             </div>
-
-            <div className="bg-blue-50 border border-blue-100 p-4 rounded-lg flex items-start gap-3">
-                <AlertCircle className="text-blue-600 shrink-0 mt-0.5" size={20} />
-                <div>
-                    <h4 className="font-semibold text-blue-900">Modo de Simulação Local</h4>
-                    <p className="text-sm text-blue-800 mt-1">
-                        Este painel está rodando no navegador. As alterações são salvas no <strong>localStorage</strong> e não alteram os arquivos JSON reais.
-                        Para persistir em disco, seria necessário um backend Node.js real.
-                    </p>
-                </div>
-            </div>
         </div>
     );
 };

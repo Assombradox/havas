@@ -25,10 +25,18 @@ export const imageMap: Record<string, string> = {
 };
 
 // Hydrate the JSON data with actual image assets
-export const categories: CategoryConfig[] = categoriesData.map(c => ({
+export const categories: CategoryConfig[] = categoriesData.map((c: any) => ({
     ...c,
-    image: imageMap[c.image] || c.image, // Fallback to string if not found (or if already URL)
-    type: c.type as 'category' | 'collection' // Ensure type safety
+    // Garante ID (usa slug se não tiver)
+    id: c.id || c.slug,
+    // Garante Name (usa title ou slug se não tiver)
+    name: c.name || c.title || c.slug,
+    // Mantém title opcional para compatibilidade
+    title: c.title,
+    // Resolve imagem (mapa ou string direta)
+    image: imageMap[c.image] || c.image,
+    // Força a tipagem correta
+    type: (c.type as 'category' | 'collection') || 'category'
 }));
 
 export const getCategoryBySlug = (slug: string): CategoryConfig | undefined => {
