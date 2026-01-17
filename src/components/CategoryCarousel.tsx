@@ -10,7 +10,7 @@ const CategoryCarousel: React.FC = () => {
         categoriesService.getAll().then(all => {
             const filtered = all
                 .filter(c => c.type === 'category')
-                .sort((a, b) => a.order - b.order);
+                .sort((a, b) => (a.order || 0) - (b.order || 0));
             setCarouselCategories(filtered);
         });
     }, []);

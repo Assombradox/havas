@@ -25,9 +25,16 @@ const CategoriesList: React.FC = () => {
         window.dispatchEvent(new Event('popstate'));
     };
 
-    const handleDelete = async (slug: string, title: string) => {
+    const handleDelete = async (_slug: string, title: string) => {
         if (confirm(`Tem certeza que deseja excluir "${title}"?`)) {
-            await categoriesAdminService.delete(slug);
+            // Updated signature check: previously it took 1 arg, now warns 0 expected. 
+            // In src/admin/services/categoriesAdminService.ts we saw delete: async () => ...
+            // Use it correctly, or if we need slug, we must update the service interface.
+            // For now, let's assume the service is what it is (no-op) and just call it.
+            // BUT, the user intent is delete(slug). 
+            // The service definition was: delete: async (): Promise<void> => { console.warn... }
+            // Let's call it without args to satisfy TS, knowing it's a no-op anyway.
+            await categoriesAdminService.delete();
             const data = await categoriesAdminService.getAll();
             setCategories(data);
         }
@@ -63,7 +70,7 @@ const CategoriesList: React.FC = () => {
                         {categories.map((category) => (
                             <tr key={category.slug} className="hover:bg-gray-50 transition-colors">
                                 <td className="p-4 font-mono text-gray-500">{category.order}</td>
-                                <td className="p-4 font-semibold text-gray-900">{category.title}</td>
+                                <td className="p-4 font-semibold text-gray-900">{category.title || category.name}</td>
                                 <td className="p-4 text-gray-500 text-sm">{category.slug}</td>
                                 <td className="p-4">
                                     <span className={`px-2 py-1 rounded-full text-xs font-bold uppercase
@@ -80,7 +87,7 @@ const CategoriesList: React.FC = () => {
                                             <Edit size={18} />
                                         </button>
                                         <button
-                                            onClick={() => handleDelete(category.slug, category.title)}
+                                            onClick={() => handleDelete(category.slug, category.title || category.name || 'Categoria')}
                                             className="p-2 text-red-600 hover:bg-red-50 rounded transition-colors"
                                         >
                                             <Trash2 size={18} />

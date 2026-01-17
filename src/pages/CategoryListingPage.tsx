@@ -77,8 +77,8 @@ const CategoryListingPage: React.FC<CategoryListingPageProps> = ({ categorySlug 
             <main className="flex-grow">
                 {/* Category Header */}
                 <CategoryHeader
-                    title={categoryConfig.title}
-                    description={categoryConfig.description}
+                    title={categoryConfig.title || categoryConfig.name || categoryConfig.slug}
+                    description={categoryConfig.description || ''}
                 />
 
                 {/* Product Grid - Handles pagination internally */}

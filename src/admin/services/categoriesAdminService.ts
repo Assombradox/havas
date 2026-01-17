@@ -7,7 +7,7 @@ export const categoriesAdminService = {
         const response = await fetch(API_URL);
         if (!response.ok) throw new Error('Failed to fetch categories');
         const data: CategoryConfig[] = await response.json();
-        return data.sort((a, b) => a.order - b.order);
+        return data.sort((a, b) => (a.order || 0) - (b.order || 0));
     },
 
     getById: async (slug: string): Promise<CategoryConfig | undefined> => {
@@ -43,7 +43,7 @@ export const categoriesAdminService = {
         }
     },
 
-    delete: async (slug: string): Promise<void> => {
+    delete: async (): Promise<void> => {
         console.warn('Delete not implemented in V1 Backend');
     }
 };

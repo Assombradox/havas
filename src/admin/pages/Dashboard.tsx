@@ -1,7 +1,7 @@
 import React from 'react';
 import { productsAdminService } from '../services/productsAdminService';
 import { categoriesAdminService } from '../services/categoriesAdminService';
-import { Package, FolderTree, AlertCircle } from 'lucide-react';
+import { Package, FolderTree } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
     const [stats, setStats] = React.useState({ products: 0, categories: 0 });

@@ -12,6 +12,7 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ slug }) => {
 
     const [formData, setFormData] = useState<CategoryConfig>({
         slug: '',
+        name: '',
         title: '',
         description: '',
         type: 'category',
@@ -81,6 +82,22 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ slug }) => {
                             required
                             className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             value={formData.title}
+                            onChange={(e) => {
+                                handleChange(e);
+                                // Auto-fill name if empty to keep it sync
+                                if (!formData.name) {
+                                    setFormData(prev => ({ ...prev, name: e.target.value }));
+                                }
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Nome Interno</label>
+                        <input
+                            type="text"
+                            name="name"
+                            className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            value={formData.name}
                             onChange={handleChange}
                         />
                     </div>

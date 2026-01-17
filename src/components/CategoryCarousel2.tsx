@@ -10,7 +10,7 @@ const CategoryCarousel2: React.FC = () => {
         categoriesService.getAll().then(all => {
             const filtered = all
                 .filter(c => c.type === 'collection')
-                .sort((a, b) => a.order - b.order);
+                .sort((a, b) => (a.order || 0) - (b.order || 0));
             setCarouselCategories(filtered);
         });
     }, []);
@@ -54,7 +54,7 @@ const CategoryCarousel2: React.FC = () => {
 
                         {/* Category Name */}
                         <h3 className="text-sm font-medium text-gray-900 text-center truncate px-1">
-                            {category.title}
+                            {category.title || category.name || ''}
                         </h3>
                     </div>
                 ))}
