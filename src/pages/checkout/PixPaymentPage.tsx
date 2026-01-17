@@ -77,13 +77,29 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
         return () => clearInterval(interval);
     }, [paymentId]);
 
-    // Helper to handle different QR Code formats (URL vs Base64)
+    // Helper to handle different QR Code formats (URL vs Base64 vs Raw EMV)
     const getQrImageSrc = (source: string) => {
         if (!source) return '';
+
+        // If it looks like a raw EMV string (starts with 0002...), generate QR via API
+        if (source.startsWith('0002')) {
+            return `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(source)}`;
+        }
+
+        // Standard checks for ID/URL/Base64
         if (source.startsWith('http') || source.startsWith('data:')) {
             return source;
         }
+
+        // Fallback: assume base64
         return `data:image/png;base64,${source}`;
+    };
+
+    const handleCopyPix = () => {
+        if (pixCode) {
+            navigator.clipboard.writeText(pixCode);
+            alert('Código PIX copiado!');
+        }
     };
 
     if (isLoading) {
@@ -146,7 +162,7 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
                         {/* QR Code */}
                         <div className="mb-6 p-4 bg-white border-2 border-dashed border-gray-300 rounded-lg">
                             {paymentData?.qrCodeImage ? (
-                                /* 1. Use API provided Image */
+                                /* 1. Use API provided Image OR Raw logic */
                                 <div className="flex justify-center">
                                     <img
                                         src={getQrImageSrc(paymentData.qrCodeImage)}
@@ -155,7 +171,7 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
                                     />
                                 </div>
                             ) : pixCode ? (
-                                /* 2. Fallback: Generate from code */
+                                /* 2. Fallback: Generate from code var if image missing */
                                 <div className="flex justify-center">
                                     <img
                                         src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(pixCode)}`}
@@ -201,7 +217,10 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
                         </div>
 
                         {/* Copy Button */}
-                        <button className="w-full bg-[#E50000] hover:bg-[#cc0000] text-white font-bold py-4 rounded transition-colors text-base uppercase tracking-wide flex items-center justify-center gap-2">
+                        <button
+                            onClick={handleCopyPix}
+                            className="w-full bg-[#E50000] hover:bg-[#cc0000] text-white font-bold py-4 rounded transition-colors text-base uppercase tracking-wide flex items-center justify-center gap-2"
+                        >
                             <Copy className="w-4 h-4" />
                             Copiar código PIX
                         </button>
