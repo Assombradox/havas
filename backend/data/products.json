@@ -51,7 +51,7 @@
     },
     {
         "id": "1002",
-        "slug": "rasteirinha-havaianas-aqua-glow",
+        "slug": "Aqua-Glow-Ferrugem",
         "name": "Rasteirinha Havaianas Aqua Glow",
         "description": "Brilhe com a Rasteirinha Aqua Glow. Design sofisticado com tiras metálicas e solado ultra macio para o máximo conforto.",
         "price": 59.9,
@@ -64,10 +64,13 @@
         "colors": [
             {
                 "id": "dourado",
-                "name": "Dourado",
-                "thumbnail": "product3",
+                "name": "Ferrugem",
+                "thumbnail": "https://havaianas.com.br/cdn/shop/files/4150265-1976-aqua-glow-0.png?v=1755888241&width=250",
                 "images": [
-                    "product3"
+                    "https://havaianas.com.br/cdn/shop/files/4150265-1976-aqua-glow-0.png?v=1755888241",
+                    "https://havaianas.com.br/cdn/shop/files/4150265-1976-aqua-glow-3.png?v=1755888241",
+                    "https://havaianas.com.br/cdn/shop/files/4150265-1976-aqua-glow-4.png?v=1755888241",
+                    "https://havaianas.com.br/cdn/shop/files/4150265-1976-aqua-glow-1.png?v=1755888241"
                 ]
             }
         ],
@@ -1473,7 +1476,20 @@
         "categories": [
             "rasteirinhas"
         ],
-        "colors": [],
+        "colors": [
+            {
+                "id": "1768370734892",
+                "name": "Preto",
+                "thumbnail": "https://havaianas.com.br/cdn/shop/files/4150265-0090-aqua-glow-0.png?v=1755888525&width=250",
+                "images": [
+                    "https://havaianas.com.br/cdn/shop/files/4150265-0090-aqua-glow-0.png?v=1755888525",
+                    "https://havaianas.com.br/cdn/shop/files/4150265-0090-aqua-glow-1.png?v=1755888525",
+                    "https://havaianas.com.br/cdn/shop/files/4150265-0090-aqua-glow-2.png?v=1755888525",
+                    "https://havaianas.com.br/cdn/shop/files/4150265-0090-aqua-glow-3.png?v=1755888525",
+                    "https://havaianas.com.br/cdn/shop/files/4150265-0090-aqua-glow-4.png?v=1755888525"
+                ]
+            }
+        ],
         "sizes": [
             {
                 "label": "33/34",
@@ -1496,6 +1512,58 @@
                 "available": true
             }
         ],
-        "color": "preto"
+        "color": "Preto",
+        "relatedProducts": [
+            "Aqua-Glow-Ferrugem"
+        ]
+    },
+    {
+        "id": "941",
+        "slug": "Farm-Coquetel",
+        "name": "Chinelo Havaianas Farm Coquetel",
+        "description": "Havaianas e Farm se juntaram para essa parceria brasileiríssima: a combinação do conforto que você já conhece dos chinelos mais amados do mundo com as estampas icônicas da marca carioca. Tinha que dar certo! O modelo Coquetel 26 é um convite para curtir o verão!\n",
+        "price": 29.9,
+        "originalPrice": 82.99,
+        "rating": 5,
+        "reviewCount": 325,
+        "categories": [
+            "farm"
+        ],
+        "colors": [
+            {
+                "id": "1768366918656",
+                "name": "Branco",
+                "thumbnail": "https://havaianas.com.br/cdn/shop/files/tbd-tbd-farm-coquetel-branco-0.png?v=1764770507",
+                "images": [
+                    "https://havaianas.com.br/cdn/shop/files/tbd-tbd-farm-coquetel-branco-0.png?v=1764770507",
+                    "https://havaianas.com.br/cdn/shop/files/tbd-tbd-farm-coquetel-branco-1.png?v=1764770507",
+                    "https://havaianas.com.br/cdn/shop/files/tbd-tbd-farm-coquetel-branco-2.png?v=1764770507",
+                    "https://havaianas.com.br/cdn/shop/files/tbd-tbd-farm-coquetel-branco-3.png?v=1764770507"
+                ]
+            }
+        ],
+        "sizes": [
+            {
+                "label": "33/34",
+                "available": true
+            },
+            {
+                "label": "35/36",
+                "available": true
+            },
+            {
+                "label": "37/38",
+                "available": true
+            },
+            {
+                "label": "39/40",
+                "available": true
+            },
+            {
+                "label": "41/42",
+                "available": true
+            }
+        ],
+        "color": "Branco"
     }
 ]

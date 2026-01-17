@@ -2,6 +2,7 @@ import express = require('express');
 import cors from 'cors';
 import { handleCreatePixPayment } from './api/pix/create';
 import { handlePixWebhook } from './api/pix/webhook';
+import { handleSimulatePixPay } from './api/pix/simulate';
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use('/categories', categoriesRouter);
 app.post('/api/pix/create', handleCreatePixPayment);
 app.get('/api/pix/:paymentId', handleGetPixPayment);
 app.post('/api/pix/webhook', handlePixWebhook);
+app.post('/api/pix/simulate-pay/:paymentId', handleSimulatePixPay);
 
 // Status Endpoint
 app.get('/api/pix/status/:paymentId', async (req, res) => {

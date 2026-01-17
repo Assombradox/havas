@@ -54,7 +54,7 @@ const CategoryCarousel: React.FC = () => {
 
                         {/* Category Name */}
                         <h3 className="text-sm font-medium text-gray-900 text-center truncate">
-                            {category.title.replace('Havaianas ', '')}
+                            {(category.title || category.name || '').replace('Havaianas ', '')}
                         </h3>
                     </div>
                 ))}

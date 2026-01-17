@@ -1,5 +1,6 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
+import QRCode from 'qrcode';
 
 dotenv.config();
 
@@ -53,6 +54,27 @@ interface CreateTransactionPayload {
 }
 
 export const createPixTransaction = async (payload: CreateTransactionPayload) => {
+    // MOCK MODE
+    if (process.env.USE_MOCK_PAYMENT === 'true') {
+        console.log('[BRPIX Service] MOCK MODE: Returning fake PIX data');
+        const mockId = `mock_tx_${Date.now()}`;
+
+        // Generate Dynamic QR Code based on real amount
+        const amountFormatted = (payload.amount / 100).toFixed(2);
+        const mockText = `MOCK_PIX | VALOR: R$ ${amountFormatted} | ID: ${mockId}`;
+        const qrCodeBase64 = await QRCode.toDataURL(mockText);
+
+        return {
+            id: mockId,
+            pix: {
+                qrcode: qrCodeBase64, // Real generated QR image
+                qrcodeText: mockText,    // Real text data
+                expirationDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+            },
+            status: 'pending'
+        };
+    }
+
     try {
         console.log(`[BRPIX Service] Criando transação... Valor: ${payload.amount}`);
         console.log(`[BRPIX Service] Payload JSON enviado:`, JSON.stringify(payload, null, 2));

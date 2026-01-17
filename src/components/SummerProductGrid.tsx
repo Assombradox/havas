@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Star } from 'lucide-react';
-import { products } from '../data/products';
+import { productsService } from '../services/storefront/products.service';
+import type { Product } from '../types/Product';
 
 const SummerProductGrid: React.FC = () => {
-    // Filter only the summer products (ID starting with 200 for this demo, or just distinct items)
-    // We added IDs 2001-2004 for Summer grid
-    const summerProducts = products.filter(p => p.id.startsWith('200'));
+    // Filter only the summer products (ID starting with 200 for this demo)
+    const [summerProducts, setSummerProducts] = useState<Product[]>([]);
+
+    useEffect(() => {
+        const load = async () => {
+            const all = await productsService.getAll();
+            // We added IDs 2001-2004 for Summer grid
+            setSummerProducts(all.filter(p => p.id.startsWith('200')));
+        };
+        load();
+    }, []);
 
     const navigateToProduct = (slug: string) => {
         const path = `/produto/${slug}`;

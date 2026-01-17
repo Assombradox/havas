@@ -70,7 +70,8 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
             paymentId: transaction.id,
             qrCodeImage: transaction.pix?.qrcode,      // Base64 image
             pixCode: transaction.pix?.qrcodeText,      // Copia e Cola
-            expiresAt: transaction.pix?.expirationDate
+            expiresAt: transaction.pix?.expirationDate,
+            amount: amountInCents
         };
 
         // Import paymentStore dynamically or assume it's available via module import if not circular
@@ -86,8 +87,8 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
         // Let's assume I will add the import in a separate tool call if needed, or if I can edit the top.
         // I will edit the top to add import, then edit the bottom to use it.
 
-        // 5. Persistir em memória/disco
-        console.log(`[Create] Saving payment ${transaction.id} to persistent store...`);
+        // 5. Persistir no MongoDB
+        console.log(`[Create] Saving payment ${transaction.id} to MongoDB...`);
         await paymentStore.set(transaction.id, {
             status: 'waiting_payment',
             pixData: responseData

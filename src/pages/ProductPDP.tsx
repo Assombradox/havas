@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Check } from 'lucide-react';
+import { Check, AlertCircle } from 'lucide-react';
 import { useCart } from '../context/CartContext';
-import { getRelatedProducts, type Product, type ProductColor } from '../data/products';
+import { type Product, type ProductColor } from '../data/products';
 import { productsService } from '../services/storefront/products.service';
 import AnnouncementBar from '../components/AnnouncementBar';
 import Header from '../components/Header';
@@ -17,15 +17,18 @@ import FixedBottomPurchaseBar from '../components/FixedBottomPurchaseBar';
 import Footer from '../components/Footer';
 
 const ProductPDP: React.FC = () => {
+    // 1. All Hooks at the top
     const [product, setProduct] = useState<Product | null>(null);
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const [selectedColor, setSelectedColor] = useState<ProductColor | null>(null);
     const [notFound, setNotFound] = useState(false);
-
-    // State to hold resolved related products (for color variations)
     const [colorVariations, setColorVariations] = useState<Product[]>([]);
+    const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
 
-    // Get Slug from URL
+    const { addToCart } = useCart();
+
+    // 2. Effects
+    // Load Product
     useEffect(() => {
         const loadProduct = async () => {
             const path = window.location.pathname;
@@ -54,7 +57,6 @@ const ProductPDP: React.FC = () => {
                     } else {
                         setColorVariations([]);
                     }
-
                 } else {
                     setNotFound(true);
                 }
@@ -63,8 +65,47 @@ const ProductPDP: React.FC = () => {
         loadProduct();
     }, [window.location.pathname]);
 
-    const { addToCart } = useCart();
+    // Load Recommended Products (Related) - Depends on product
+    useEffect(() => {
+        if (product) {
+            productsService.getAll().then(all => {
+                const others = all.filter(p => p.id !== product.id).slice(0, 4);
+                setRelatedProducts(others);
+            });
+        }
+    }, [product]);
 
+    // 3. Handlers & Logic
+    const handleColorSelect = (color: ProductColor) => {
+        setSelectedColor(color);
+    };
+
+    const handleSizeSelect = (size: string) => {
+        setSelectedSize(size);
+    };
+
+    const handleAddToBag = () => {
+        if (selectedSize && product && selectedColor) {
+            addToCart({
+                id: product.id,
+                name: product.name,
+                image: selectedColor.images[0], // Use main image of color
+                color: selectedColor.name,
+                size: selectedSize,
+                unitPrice: product.originalPrice || product.price,
+                discountedPrice: product.price
+            });
+        }
+    };
+
+    const handleInfoClick = () => {
+        const descriptionElement = document.getElementById('product-description');
+        if (descriptionElement) {
+            descriptionElement.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+
+    // 4. Conditional Renders (Early Returns)
     if (notFound) {
         return (
             <div className="flex flex-col min-h-screen">
@@ -86,41 +127,32 @@ const ProductPDP: React.FC = () => {
 
     if (!product || !selectedColor) return <div className="min-h-screen bg-white" />; // Loading
 
-    const relatedProducts = getRelatedProducts(product.id);
+    // DIAGNOSIS: Checks if product has minimal data structure
+    const hasValidData = product && product.colors && product.colors.length > 0;
+    if (!hasValidData) {
+        return (
+            <div className="flex flex-col min-h-screen">
+                <Header />
+                <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-gray-50">
+                    <AlertCircle size={48} className="text-yellow-500 mb-4" />
+                    <h1 className="text-xl font-bold text-gray-900 mb-2">Dados Incompletos ⚠️</h1>
+                    <p className="text-gray-500 mb-6 max-w-md">
+                        Este produto existe no banco de dados, mas não possui <strong>Cores</strong> ou <strong>Imagens</strong> cadastradas.
+                        <br />Por favor, acesse o painel Admin para corrigir.
+                    </p>
+                    <button
+                        onClick={() => window.history.back()}
+                        className="bg-black text-white px-6 py-2 rounded-lg font-bold"
+                    >
+                        Voltar
+                    </button>
+                </div>
+                <Footer />
+            </div>
+        );
+    }
 
-    const handleColorSelect = (color: ProductColor) => {
-        setSelectedColor(color);
-    };
-
-    const handleSizeSelect = (size: string) => {
-        setSelectedSize(size);
-    };
-
-    const handleAddToBag = () => {
-        if (selectedSize) {
-            addToCart({
-                id: product.id,
-                name: product.name,
-                image: selectedColor.images[0], // Use main image of color
-                color: selectedColor.name,
-                size: selectedSize,
-                unitPrice: product.originalPrice || product.price,
-                discountedPrice: product.price
-            });
-        }
-    };
-
-    const handleInfoClick = () => {
-        const descriptionElement = document.getElementById('product-description');
-        if (descriptionElement) {
-            descriptionElement.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
-
-    // Calculate percent discount for badge if needed, or pass to PriceBlock
-    // PriceBlock logic assumes external calculation or handles it? Let's check PriceBlock props.
-    // PriceBlock props: productName, originalPrice, currentPrice, rating, reviewCount.
-
+    // 5. Main Render
     return (
         <div className="w-full bg-white min-h-screen flex flex-col">
             <AnnouncementBar />
@@ -162,25 +194,34 @@ const ProductPDP: React.FC = () => {
                             </button>
 
                             {/* Related Products */}
-                            {colorVariations.map(related => (
-                                <button
-                                    key={related.slug}
-                                    onClick={() => {
-                                        window.history.pushState({}, '', `/produto/${related.slug}`);
-                                        window.dispatchEvent(new Event('popstate'));
-                                        window.scrollTo(0, 0);
-                                    }}
-                                    className="relative w-16 h-16 rounded-lg overflow-hidden flex-none border-2 border-transparent hover:border-gray-200 transition-all"
-                                    title={related.color || related.name}
-                                >
-                                    <img
-                                        src={related.colors[0].thumbnail}
-                                        alt={related.name}
-                                        className="w-full h-full object-cover"
-                                    />
-                                </button>
-                            )
-                            )}
+                            {colorVariations.map(related => {
+                                const variationThumb = related.colors?.[0]?.thumbnail;
+                                const isError = !variationThumb;
+
+                                return (
+                                    <button
+                                        key={related.slug}
+                                        onClick={() => {
+                                            window.history.pushState({}, '', `/produto/${related.slug}`);
+                                            window.dispatchEvent(new Event('popstate'));
+                                            window.scrollTo(0, 0);
+                                        }}
+                                        className={`relative w-16 h-16 rounded-lg overflow-hidden flex-none transition-all
+                                        ${isError ? 'border-2 border-red-500 bg-red-100 flex items-center justify-center' : 'border-2 border-transparent hover:border-gray-200'}`}
+                                        title={isError ? "Erro: Produto sem imagem cadastrada" : (related.color || related.name)}
+                                    >
+                                        {isError ? (
+                                            <AlertCircle size={24} className="text-red-500" />
+                                        ) : (
+                                            <img
+                                                src={variationThumb}
+                                                alt={related.name}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        )}
+                                    </button>
+                                )
+                            })}
                         </div>
                     </div>
                 ) : null}
@@ -208,7 +249,11 @@ const ProductPDP: React.FC = () => {
 
                 {/* Recommended Products */}
                 {relatedProducts.length > 0 && (
-                    <ProductGrid title="Você também pode gostar" products={relatedProducts} />
+                    <ProductGrid
+                        key={product.id}
+                        title="Você também pode gostar"
+                        products={relatedProducts}
+                    />
                 )}
 
                 {/* Delivery Marquee */}

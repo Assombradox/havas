@@ -95,6 +95,34 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
         }));
     };
 
+    const handleAddColor = () => {
+        setFormData(prev => ({
+            ...prev,
+            colors: [...prev.colors, { id: Date.now().toString(), name: 'Nova Cor', thumbnail: '', images: [] }]
+        }));
+    };
+
+    const removeColor = (index: number) => {
+        setFormData(prev => ({
+            ...prev,
+            colors: prev.colors.filter((_, i) => i !== index)
+        }));
+    };
+
+    const updateColor = (index: number, field: string, value: string) => {
+        const newColors = [...formData.colors];
+        if (field === 'images') {
+            // Handle newline or comma separation
+            newColors[index] = {
+                ...newColors[index],
+                images: value.split(/[\n,]+/).map(s => s.trim())
+            };
+        } else {
+            newColors[index] = { ...newColors[index], [field]: value };
+        }
+        setFormData(prev => ({ ...prev, colors: newColors }));
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
@@ -313,12 +341,73 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
                     </div>
                 </section>
 
-                {/* Images/Colors (Simplified for V1 - only editing first color or JSON structure directly) */}
+                {/* Images/Colors (Dynamic URLs V2.1) */}
                 <section className="space-y-4">
-                    <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Cores & Imagens (Simplificado)</h3>
-                    <div className="bg-yellow-50 p-4 rounded-lg text-yellow-800 text-sm">
-                        Para edição avançada de múltiplas cores e imagens, use o editor de JSON direto ou aguarde a V2.
-                        <br />Atualmente exibindo {formData.colors.length} variações de cor.
+                    <div className="flex justify-between items-center border-b pb-2">
+                        <h3 className="text-lg font-semibold text-gray-800">Cores & Imagens</h3>
+                        <button type="button" onClick={handleAddColor} className="text-blue-600 text-sm font-bold flex items-center gap-1 hover:underline">
+                            <Plus size={16} /> Adicionar Cor
+                        </button>
+                    </div>
+
+                    <div className="space-y-6">
+                        {formData.colors.map((color, idx) => (
+                            <div key={idx} className="bg-gray-50 p-4 rounded-xl border border-gray-200 relative group">
+                                <button
+                                    type="button"
+                                    onClick={() => removeColor(idx)}
+                                    className="absolute top-2 right-2 text-gray-400 hover:text-red-500 p-1"
+                                    title="Remover cor"
+                                >
+                                    <X size={18} />
+                                </button>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {/* Color Name */}
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Nome da Cor</label>
+                                        <input
+                                            type="text"
+                                            value={color.name}
+                                            onChange={(e) => updateColor(idx, 'name', e.target.value)}
+                                            className="w-full p-2 border border-gray-300 rounded bg-white"
+                                            placeholder="Ex: Verde Militar"
+                                        />
+                                    </div>
+
+                                    {/* Thumbnail URL */}
+                                    <div>
+                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Thumbnail URL</label>
+                                        <input
+                                            type="text"
+                                            value={color.thumbnail}
+                                            onChange={(e) => updateColor(idx, 'thumbnail', e.target.value)}
+                                            className="w-full p-2 border border-gray-300 rounded bg-white font-mono text-xs"
+                                            placeholder="https://..."
+                                        />
+                                    </div>
+
+                                    {/* Images List */}
+                                    <div className="md:col-span-2">
+                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">
+                                            Imagens do Produto (URLs) <span className="text-gray-400 font-normal lowercase">(uma por linha ou separadas por vírgula)</span>
+                                        </label>
+                                        <textarea
+                                            rows={3}
+                                            value={color.images.join('\n')}
+                                            onChange={(e) => updateColor(idx, 'images', e.target.value)}
+                                            className="w-full p-2 border border-gray-300 rounded bg-white font-mono text-xs"
+                                            placeholder="https://imagem1.jpg&#10;https://imagem2.jpg"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                        {formData.colors.length === 0 && (
+                            <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-200 rounded-xl">
+                                Nenhuma cor adicionada.
+                            </div>
+                        )}
                     </div>
                 </section>
 

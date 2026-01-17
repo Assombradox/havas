@@ -4,9 +4,9 @@ import { categoriesService } from '../services/categories.service';
 const router = Router();
 
 // GET /categories
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
     try {
-        const categories = categoriesService.getAll();
+        const categories = await categoriesService.getAll();
         res.json(categories);
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });
@@ -14,9 +14,9 @@ router.get('/', (req, res) => {
 });
 
 // POST /categories
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     try {
-        const newCategory = categoriesService.create(req.body);
+        const newCategory = await categoriesService.create(req.body);
         res.status(201).json(newCategory);
     } catch (error: any) {
         res.status(400).json({ error: error.message });
@@ -24,9 +24,9 @@ router.post('/', (req, res) => {
 });
 
 // PUT /categories/:slug
-router.put('/:slug', (req, res) => {
+router.put('/:slug', async (req, res) => {
     try {
-        const updatedCategory = categoriesService.update(req.params.slug, req.body);
+        const updatedCategory = await categoriesService.update(req.params.slug, req.body);
         if (!updatedCategory) {
             return res.status(404).json({ error: 'Category not found' });
         }

@@ -25,6 +25,7 @@ export interface PixPaymentResponse {
     qrCodeImage: string; // Base64 or URL
     pixCode: string;     // Copy and Paste code
     expiresAt: string;   // ISO 8601 Date
+    amount: number;      // in cents
 }
 
 /**

@@ -11,7 +11,7 @@ const ProductsList: React.FC = () => {
         const load = async () => {
             try {
                 const data = await productsAdminService.getAll();
-                setProducts(data);
+                setProducts(data || []);
             } catch (error) {
                 console.error('Failed to load products');
             }
@@ -32,9 +32,9 @@ const ProductsList: React.FC = () => {
         }
     };
 
-    const filteredProducts = products.filter(p =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.slug.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredProducts = (products || []).filter(p =>
+        p.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.slug?.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
@@ -85,7 +85,7 @@ const ProductsList: React.FC = () => {
                                 </td>
                                 <td className="p-4">
                                     <div className="flex flex-wrap gap-1">
-                                        {product.categories.map(c => (
+                                        {(product.categories || []).map(c => (
                                             <span key={c} className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full border border-gray-200">
                                                 {c}
                                             </span>

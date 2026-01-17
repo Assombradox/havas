@@ -1,107 +1,66 @@
-import fs from 'fs';
-import path from 'path';
-
-const DATA_FILE = path.join(__dirname, '../../data/products.json');
-const SRC_BACKUP = path.join(__dirname, '../../../../src/data/products.json');
-
-// Interface (could be shared, but redundant definition here to keep backend independent)
-interface Product {
-    id: string;
-    slug: string;
-    name: string;
-    description?: string;
-    price: number;
-    originalPrice?: number;
-    rating: number;
-    reviewCount: number;
-    categories: string[];
-    colors: any[];
-    sizes: any[];
-    color?: string;
-    relatedProducts?: string[];
-}
+import Product, { IProduct } from '../models/Product';
 
 export const productsService = {
-    getAll: (): Product[] => {
+    getAll: async (): Promise<IProduct[]> => {
         try {
-            if (!fs.existsSync(DATA_FILE)) {
-                // If file doesn't exist, try to seed
-                if (fs.existsSync(SRC_BACKUP)) {
-                    console.log('Seeding products from src/data...');
-                    const seedData = fs.readFileSync(SRC_BACKUP, 'utf-8');
-                    // Create directory if not exists
-                    fs.mkdirSync(path.dirname(DATA_FILE), { recursive: true });
-                    fs.writeFileSync(DATA_FILE, seedData);
-                    return JSON.parse(seedData);
-                }
-                return [];
-            }
-
-            const data = fs.readFileSync(DATA_FILE, 'utf-8');
-            const products = JSON.parse(data);
-
-            // If empty array, try reseeding (Safety check for accidental wipes)
-            if (Array.isArray(products) && products.length === 0) {
-                if (fs.existsSync(SRC_BACKUP)) {
-                    console.log('Re-seeding empty products file...');
-                    const seedData = fs.readFileSync(SRC_BACKUP, 'utf-8');
-                    fs.writeFileSync(DATA_FILE, seedData);
-                    return JSON.parse(seedData);
-                }
-            }
-
-            return products;
+            const products = await Product.find({});
+            return products || [];
         } catch (error) {
-            console.error('Error reading products:', error);
+            console.error('Error fetching products:', error);
+            return []; // Fail safe: return empty array instead of throwing if critical
+        }
+    },
+
+    getById: async (id: string): Promise<IProduct | null> => {
+        try {
+            return await Product.findOne({ id: id });
+        } catch (error) {
+            console.error('Error fetching product by ID:', error);
+            throw error;
+        }
+    },
+
+    getBySlug: async (slug: string): Promise<IProduct | null> => {
+        try {
+            return await Product.findOne({ slug: slug });
+        } catch (error) {
+            console.error('Error fetching product by slug:', error);
+            throw error;
+        }
+    },
+
+    getByCategory: async (categorySlug: string): Promise<IProduct[]> => {
+        try {
+            const products = await Product.find({ categories: categorySlug });
+            return products || [];
+        } catch (error) {
+            console.error('Error fetching products by category:', error);
             return [];
         }
     },
 
-    getById: (id: string): Product | undefined => {
-        const products = productsService.getAll();
-        return products.find(p => p.id === id);
+    create: async (productData: any): Promise<IProduct> => {
+        try {
+            // Unique checks are handled by Mongoose schema (unique: true)
+            // But we can catch duplicate key errors if needed
+            const newProduct = new Product(productData);
+            return await newProduct.save();
+        } catch (error) {
+            console.error('Error creating product:', error);
+            throw error;
+        }
     },
 
-    getBySlug: (slug: string): Product | undefined => {
-        const products = productsService.getAll();
-        return products.find(p => p.slug === slug);
-    },
-
-    create: (product: Product): Product => {
-        const products = productsService.getAll();
-
-        // Validate Slug Uniqueness
-        if (products.some(p => p.slug === product.slug)) {
-            throw new Error(`Slug "${product.slug}" already exists.`);
+    update: async (id: string, updates: Partial<IProduct>): Promise<IProduct | null> => {
+        try {
+            return await Product.findOneAndUpdate(
+                { id: id },
+                updates,
+                { new: true } // Return the updated document
+            );
+        } catch (error) {
+            console.error('Error updating product:', error);
+            throw error;
         }
-
-        // Validate ID Uniqueness
-        if (products.some(p => p.id === product.id)) {
-            throw new Error(`ID "${product.id}" already exists.`);
-        }
-
-        products.push(product);
-        fs.writeFileSync(DATA_FILE, JSON.stringify(products, null, 4));
-        return product;
-    },
-
-    update: (id: string, updates: Partial<Product>): Product | undefined => {
-        const products = productsService.getAll();
-        const index = products.findIndex(p => p.id === id);
-
-        if (index === -1) return undefined; // Not found
-
-        // Check Slug Uniqueness if updating slug
-        if (updates.slug && updates.slug !== products[index].slug) {
-            if (products.some(p => p.slug === updates.slug)) {
-                throw new Error(`Slug "${updates.slug}" already exists.`);
-            }
-        }
-
-        const updatedProduct = { ...products[index], ...updates };
-        products[index] = updatedProduct;
-
-        fs.writeFileSync(DATA_FILE, JSON.stringify(products, null, 4));
-        return updatedProduct;
     }
 };

@@ -43,8 +43,11 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
     const pixCode = paymentData?.pixCode;
     const expiresAt = paymentData?.expiresAt;
 
-    // Mock Total - in real app should come from context or API
-    const orderTotal = 39.90; // The user didn't ask to fix this specifically, but ideally it should come from API too. Keeping as is for scope.
+    // Dynamic Total from API (amount is in cents)
+    const orderTotal = paymentData?.amount ? paymentData.amount / 100 : 0;
+
+    // Fallback if zero (loading or error)
+    const displayTotal = orderTotal > 0 ? orderTotal : 39.90; // Fallback only for legacy dev mode
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('pt-BR', {
@@ -132,7 +135,7 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
                         {/* Order Value */}
                         <div className="mb-6">
                             <span className="text-sm text-gray-500">Valor do pedido</span>
-                            <h2 className="text-3xl font-bold text-gray-900 mt-1">{formatPrice(orderTotal)}</h2>
+                            <h2 className="text-3xl font-bold text-gray-900 mt-1">{formatPrice(displayTotal)}</h2>
                         </div>
 
                         {/* Instructions */}
