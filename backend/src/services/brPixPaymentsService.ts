@@ -23,10 +23,16 @@ export const createPixPayment = async (amount: number, payer: Payer, orderId: st
 
         // Sanitization
         const cleanDocument = payer.document.replace(/\D/g, '');
-        const cleanAmount = Number(amount).toFixed(2);
+
+        // Converte centavos (2990) para reais (29.90)
+        const amountInReais = Number(amount) / 100;
+
+        // Formata para garantir 2 casas decimais e volta para numero
+        const cleanAmount = parseFloat(amountInReais.toFixed(2));
 
         const payload = {
-            amount: parseFloat(cleanAmount), // API expects number/decimal
+            amount: cleanAmount, // API expects number/decimal
+
             payment_method: "pix",
             customer: {
                 name: payer.name,
