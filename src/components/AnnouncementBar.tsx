@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 
 const AnnouncementBar: React.FC = () => {
     const messages = [
-        "FRETE A PARTIR DE R$ 7,99 PARA TODO BRASIL",
-        "PARCELAMENTO EM ATÉ 6X SEM JUROS",
-        "ENVIAMOS PARA TODO O BRASIL"
+        "FRETE GRÁTIS PARA TODO O BRASIL",
+        "ENTREGA EM ATÉ 24 HORAS",
+        "PROMOÇÕES ESPECIAIS"
     ];
 
     const [currentIndex, setCurrentIndex] = useState(0);
