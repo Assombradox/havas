@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import { Truck, Calendar, Store, ChevronDown, ChevronUp } from 'lucide-react';
+import { Truck, Calendar, Store, Check, Loader2 } from 'lucide-react';
 
 const DeliveryInfo: React.FC = () => {
     const [cep, setCep] = useState('');
     const [isCalculated, setIsCalculated] = useState(false);
-    const [isScheduleOpen, setIsScheduleOpen] = useState(false);
+    const [isCalculating, setIsCalculating] = useState(false);
+    const [selectedOption, setSelectedOption] = useState<'fast' | 'scheduled'>('fast');
 
     // Brazilian date formatter
     const getDeliveryPromiseDate = () => {
@@ -18,13 +19,6 @@ const DeliveryInfo: React.FC = () => {
 
     const deliveryPromiseDate = useMemo(() => getDeliveryPromiseDate(), []);
 
-    // Min date for scheduler (Today + 2 days)
-    const minDate = useMemo(() => {
-        const date = new Date();
-        date.setDate(date.getDate() + 2);
-        return date.toISOString().split('T')[0];
-    }, []);
-
     const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         let value = e.target.value.replace(/\D/g, '');
         if (value.length > 8) value = value.slice(0, 8);
@@ -35,15 +29,22 @@ const DeliveryInfo: React.FC = () => {
         }
 
         setCep(value);
-        // Reset calculation if user clears or changes input significantly? 
-        // Requirements didn't specify, but it's good UX to reset if they start typing again
-        if (value.length < 9) setIsCalculated(false);
+        if (value.length < 9) {
+            setIsCalculated(false);
+        }
     };
 
     const handleCalculate = () => {
-        // Simple length validation
-        if (cep.length === 9) { // 8 digits + 1 hyphen
-            setIsCalculated(true);
+        if (cep.length === 9) {
+            setIsCalculating(true);
+            setIsCalculated(false);
+
+            // Fake loading delay
+            setTimeout(() => {
+                setIsCalculating(false);
+                setIsCalculated(true);
+                setSelectedOption('fast'); // Default selection
+            }, 1500);
         }
     };
 
@@ -78,13 +79,18 @@ const DeliveryInfo: React.FC = () => {
                                 placeholder="Digite o seu CEP"
                                 className="flex-1 bg-white border border-gray-300 rounded-md px-3 py-2 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-all placeholder:text-gray-400"
                                 maxLength={9}
+                                disabled={isCalculating}
                             />
                             <button
                                 onClick={handleCalculate}
-                                disabled={cep.length < 9}
-                                className="bg-white border border-[#e00000] text-[#e00000] px-5 py-2 rounded-md text-sm font-medium hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:border-gray-300 disabled:text-gray-400 disabled:bg-gray-100 transition-colors"
+                                disabled={cep.length < 9 || isCalculating}
+                                className="bg-white border border-[#e00000] text-[#e00000] px-5 py-2 rounded-md text-sm font-medium hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed disabled:border-gray-300 disabled:text-gray-400 disabled:bg-gray-100 transition-colors min-w-[100px] flex items-center justify-center"
                             >
-                                Calcular
+                                {isCalculating ? (
+                                    <Loader2 className="w-4 h-4 animate-spin" />
+                                ) : (
+                                    "Calcular"
+                                )}
                             </button>
                         </div>
                         <p className="text-xs text-gray-600 mt-2">
@@ -92,12 +98,21 @@ const DeliveryInfo: React.FC = () => {
                         </p>
                     </div>
 
-                    {/* Results Area - Only shown after calculation */}
+                    {/* Results Area */}
                     {isCalculated && (
                         <div className="flex flex-col gap-3 mt-2 animate-in fade-in slide-in-from-top-2 duration-300">
-                            {/* Option 1: Fast Delivery (Highlighted) */}
-                            <div className="border border-green-600/30 bg-green-50/50 rounded-lg p-4 flex items-start gap-3">
-                                <Truck className="w-5 h-5 text-green-700 mt-0.5 shrink-0" />
+
+                            {/* Option 1: Fast Delivery */}
+                            <button
+                                onClick={() => setSelectedOption('fast')}
+                                className={`
+                                    relative rounded-lg p-4 flex items-start gap-3 transition-all text-left border
+                                    ${selectedOption === 'fast'
+                                        ? 'border-[#e00000] bg-white ring-1 ring-[#e00000]'
+                                        : 'border-gray-200 bg-white hover:border-gray-300'}
+                                `}
+                            >
+                                <Truck className={`w-5 h-5 mt-0.5 shrink-0 ${selectedOption === 'fast' ? 'text-[#e00000]' : 'text-gray-600'}`} />
                                 <div className="flex-1">
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm font-bold text-gray-900">Entrega Rápida</span>
@@ -110,41 +125,42 @@ const DeliveryInfo: React.FC = () => {
                                         Para pedidos finalizados até 23:59 de hoje ({deliveryPromiseDate})
                                     </p>
                                 </div>
-                            </div>
-
-                            {/* Option 2: Scheduled Delivery */}
-                            <div className="border border-gray-200 rounded-lg overflow-hidden transition-all">
-                                <button
-                                    onClick={() => setIsScheduleOpen(!isScheduleOpen)}
-                                    className="w-full p-4 flex items-center gap-3 hover:bg-gray-50 transition-colors text-left"
-                                >
-                                    <Calendar className="w-5 h-5 text-gray-600 shrink-0" />
-                                    <div className="flex-1">
-                                        <span className="text-sm font-medium text-gray-900 block">Agendar entrega</span>
-                                        <span className="text-xs text-gray-500 block mt-0.5">Escolha uma data para receber seu pedido</span>
-                                    </div>
-                                    {isScheduleOpen ? (
-                                        <ChevronUp className="w-4 h-4 text-gray-400" />
-                                    ) : (
-                                        <ChevronDown className="w-4 h-4 text-gray-400" />
-                                    )}
-                                </button>
-
-                                {/* Collapsible Content */}
-                                {isScheduleOpen && (
-                                    <div className="px-4 pb-4 animate-in slide-in-from-top-1">
-                                        <label className="text-xs text-gray-500 mb-1.5 block">Selecione a data:</label>
-                                        <input
-                                            type="date"
-                                            min={minDate}
-                                            className="w-full border border-gray-300 rounded px-3 py-2 text-sm text-gray-700 focus:border-black focus:ring-1 focus:ring-black outline-none"
-                                        />
+                                {selectedOption === 'fast' && (
+                                    <div className="absolute top-2 right-2 bg-[#e00000] rounded-full p-0.5">
+                                        <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
                                     </div>
                                 )}
-                            </div>
+                            </button>
 
-                            {/* Option 3: Pickup in Store */}
-                            <div className="border border-gray-200 rounded-lg p-4 flex items-center gap-3">
+                            {/* Option 2: Scheduled Delivery (No Date Input) */}
+                            <button
+                                onClick={() => setSelectedOption('scheduled')}
+                                className={`
+                                    relative rounded-lg p-4 flex items-start gap-3 transition-all text-left border
+                                    ${selectedOption === 'scheduled'
+                                        ? 'border-[#e00000] bg-white ring-1 ring-[#e00000]'
+                                        : 'border-gray-200 bg-white hover:border-gray-300'}
+                                `}
+                            >
+                                <Calendar className={`w-5 h-5 mt-0.5 shrink-0 ${selectedOption === 'scheduled' ? 'text-[#e00000]' : 'text-gray-600'}`} />
+                                <div className="flex-1">
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-sm font-bold text-gray-900">Entrega Agendada</span>
+                                        <span className="text-sm font-bold text-gray-600">A combinar</span>
+                                    </div>
+                                    <p className="text-xs text-gray-600 mt-1">
+                                        Prefiro agendar a data de entrega
+                                    </p>
+                                </div>
+                                {selectedOption === 'scheduled' && (
+                                    <div className="absolute top-2 right-2 bg-[#e00000] rounded-full p-0.5">
+                                        <Check className="w-2.5 h-2.5 text-white" strokeWidth={3} />
+                                    </div>
+                                )}
+                            </button>
+
+                            {/* Option 3: Pickup (Static Info) */}
+                            <div className="border border-gray-200 rounded-lg p-4 flex items-center gap-3 bg-white">
                                 <Store className="w-5 h-5 text-gray-600 shrink-0" />
                                 <div className="flex-1">
                                     <div className="flex items-center justify-between">
@@ -157,13 +173,11 @@ const DeliveryInfo: React.FC = () => {
                                 </div>
                             </div>
 
-                            {/* Disclaimer */}
                             <p className="text-[10px] text-gray-400 mt-1">
                                 *Prazos estimados após a confirmação do pagamento.
                             </p>
                         </div>
                     )}
-
                 </div>
             </div>
         </section>
