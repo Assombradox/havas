@@ -163,7 +163,7 @@ const DeliveryInfo: React.FC = () => {
                             </p>
                         </div>
                     )}
-                    )}
+
                 </div>
             </div>
         </section>
