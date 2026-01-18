@@ -27,6 +27,7 @@ import ProductsList from './admin/pages/Products/ProductsList';
 import ProductForm from './admin/pages/Products/ProductForm';
 import CategoriesList from './admin/pages/Categories/CategoriesList';
 import CategoryForm from './admin/pages/Categories/CategoryForm';
+import OrdersList from './admin/pages/Orders/OrdersList';
 
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -83,106 +84,113 @@ function App() {
         const slug = currentPath.split('/admin/categories/')[1];
         return <AdminLayout><CategoryForm slug={slug} /></AdminLayout>;
       }
+      return <AdminLayout><CategoryForm slug={slug} /></AdminLayout>;
     }
 
-    const isProductRoute = currentPath.startsWith('/produto/');
-    const isPixRoute = currentPath.startsWith('/checkout/pix/');
-
-    if (isPixRoute) {
-      const parts = currentPath.split('/checkout/pix/');
-      const paymentId = parts[1];
-      return <PixPaymentPage paymentId={paymentId} />;
+    // Orders List
+    if (currentPath === '/admin/orders') {
+      return <AdminLayout><OrdersList /></AdminLayout>;
     }
+  }
 
-    if (currentPath === '/checkout/pix') { // Legacy or direct access fallback
-      return <PixPaymentPage />;
-    }
+  const isProductRoute = currentPath.startsWith('/produto/');
+  const isPixRoute = currentPath.startsWith('/checkout/pix/');
 
-    if (currentPath === '/checkout/success') {
-      return <CheckoutSuccessPage />;
-    }
+  if (isPixRoute) {
+    const parts = currentPath.split('/checkout/pix/');
+    const paymentId = parts[1];
+    return <PixPaymentPage paymentId={paymentId} />;
+  }
 
-    if (currentPath === '/checkout') {
-      return <CheckoutLayout />;
-    }
+  if (currentPath === '/checkout/pix') { // Legacy or direct access fallback
+    return <PixPaymentPage />;
+  }
 
-    if (isProductRoute) {
-      return <ProductPDP />;
-    }
+  if (currentPath === '/checkout/success') {
+    return <CheckoutSuccessPage />;
+  }
 
-    if (currentPath === '/pdp') {
-      return <ProductPDP />;
-    }
+  if (currentPath === '/checkout') {
+    return <CheckoutLayout />;
+  }
 
-    if (currentPath === '/category' || currentPath === '/categoria/chinelos') {
-      return <CategoryListingPage categorySlug="chinelos" />;
-    }
+  if (isProductRoute) {
+    return <ProductPDP />;
+  }
 
-    if (currentPath === '/categoria/rasteirinhas') {
-      return <CategoryListingPage categorySlug="rasteirinhas" />;
-    }
+  if (currentPath === '/pdp') {
+    return <ProductPDP />;
+  }
 
-    if (currentPath === '/categoria/farm') {
-      return <CategoryListingPage categorySlug="farm" />;
-    }
+  if (currentPath === '/category' || currentPath === '/categoria/chinelos') {
+    return <CategoryListingPage categorySlug="chinelos" />;
+  }
 
-    if (currentPath === '/categoria/times-futebol') {
-      return <CategoryListingPage categorySlug="times-futebol" />;
-    }
+  if (currentPath === '/categoria/rasteirinhas') {
+    return <CategoryListingPage categorySlug="rasteirinhas" />;
+  }
 
-    if (currentPath === '/categoria/pride') {
-      return <CategoryListingPage categorySlug="pride" />;
-    }
+  if (currentPath === '/categoria/farm') {
+    return <CategoryListingPage categorySlug="farm" />;
+  }
 
-    if (currentPath === '/categoria/glitter') {
-      return <CategoryListingPage categorySlug="glitter" />;
-    }
+  if (currentPath === '/categoria/times-futebol') {
+    return <CategoryListingPage categorySlug="times-futebol" />;
+  }
 
-    if (currentPath === '/categoria/floral') {
-      return <CategoryListingPage categorySlug="floral" />;
-    }
+  if (currentPath === '/categoria/pride') {
+    return <CategoryListingPage categorySlug="pride" />;
+  }
 
-    // Default Home
-    return (
-      <div className="w-full">
-        <AnnouncementBar />
-        <Header />
-        <DeliveryAvailabilityBar />
+  if (currentPath === '/categoria/glitter') {
+    return <CategoryListingPage categorySlug="glitter" />;
+  }
 
-        {/* Temporary Link to PDP Preview */}
-        <div className="bg-blue-50 p-2 text-center text-sm text-blue-800 flex justify-center gap-4">
-          <button onClick={() => navigate('/pdp')} className="underline font-bold">
-            [DEV] Preview PDP
-          </button>
-          <button onClick={() => navigate('/category')} className="underline font-bold">
-            [DEV] Preview Category
-          </button>
-          <button onClick={() => navigate('/checkout')} className="underline font-bold">
-            [DEV] Checkout
-          </button>
-        </div>
+  if (currentPath === '/categoria/floral') {
+    return <CategoryListingPage categorySlug="floral" />;
+  }
 
-        <HeroBanner />
-        <ScrollingAnnouncementBar />
-        <ProductGrid />
-        <CategoryCarousel />
-        <SummerProductGrid />
-        <EditorialBanner />
-        <CategoryCarousel2 />
-        <ScrollingAnnouncementBarDelivery />
-        <FAQSection />
-
-        <Footer />
-      </div>
-    );
-  };
-
+  // Default Home
   return (
-    <CartProvider>
-      {renderContent()}
-      <CartContainer />
-    </CartProvider>
+    <div className="w-full">
+      <AnnouncementBar />
+      <Header />
+      <DeliveryAvailabilityBar />
+
+      {/* Temporary Link to PDP Preview */}
+      <div className="bg-blue-50 p-2 text-center text-sm text-blue-800 flex justify-center gap-4">
+        <button onClick={() => navigate('/pdp')} className="underline font-bold">
+          [DEV] Preview PDP
+        </button>
+        <button onClick={() => navigate('/category')} className="underline font-bold">
+          [DEV] Preview Category
+        </button>
+        <button onClick={() => navigate('/checkout')} className="underline font-bold">
+          [DEV] Checkout
+        </button>
+      </div>
+
+      <HeroBanner />
+      <ScrollingAnnouncementBar />
+      <ProductGrid />
+      <CategoryCarousel />
+      <SummerProductGrid />
+      <EditorialBanner />
+      <CategoryCarousel2 />
+      <ScrollingAnnouncementBarDelivery />
+      <FAQSection />
+
+      <Footer />
+    </div>
   );
+};
+
+return (
+  <CartProvider>
+    {renderContent()}
+    <CartContainer />
+  </CartProvider>
+);
 }
 
 export default App;
