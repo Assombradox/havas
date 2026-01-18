@@ -97,19 +97,27 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
                                 onClick={() => handleSizeClick(size, isAvailable)}
                                 disabled={!isAvailable}
                                 className={`
-                                    relative h-10 text-xs font-medium rounded border transition-all flex items-center justify-center
+                                    relative h-10 text-xs font-medium border transition-all flex items-center justify-center rounded-none
                                     ${!isAvailable
                                         ? 'border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50'
                                         : isSelected
-                                            ? 'border-black text-black bg-white ring-1 ring-black'
+                                            ? 'border-[#e00000] text-[#e00000] bg-white ring-1 ring-[#e00000] z-10'
                                             : 'border-gray-300 text-gray-900 hover:border-gray-400'
                                     }
                                 `}
                             >
                                 {size}
+
+                                {/* Selected Checkmark (New) */}
+                                {isSelected && (
+                                    <div className="absolute top-0 right-0 translate-x-[30%] translate-y-[-30%] bg-[#e00000] text-white rounded-full p-[1px] shadow-sm z-20">
+                                        <Check className="w-2 h-2" strokeWidth={3} />
+                                    </div>
+                                )}
+
                                 {/* Diagonal Strike for Unavailable */}
                                 {!isAvailable && (
-                                    <div className="absolute w-[120%] h-[1px] bg-gray-300 rotate-[20deg]" />
+                                    <div className="absolute w-[120%] h-[1px] bg-[#e00000] rotate-[20deg]" />
                                 )}
                             </button>
                         );
