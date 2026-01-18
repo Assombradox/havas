@@ -84,113 +84,111 @@ function App() {
         const slug = currentPath.split('/admin/categories/')[1];
         return <AdminLayout><CategoryForm slug={slug} /></AdminLayout>;
       }
-      return <AdminLayout><CategoryForm slug={slug} /></AdminLayout>;
+
+      // Orders List
+      if (currentPath === '/admin/orders') {
+        return <AdminLayout><OrdersList /></AdminLayout>;
+      }
     }
 
-    // Orders List
-    if (currentPath === '/admin/orders') {
-      return <AdminLayout><OrdersList /></AdminLayout>;
+
+    const isProductRoute = currentPath.startsWith('/produto/');
+    const isPixRoute = currentPath.startsWith('/checkout/pix/');
+
+    if (isPixRoute) {
+      const parts = currentPath.split('/checkout/pix/');
+      const paymentId = parts[1];
+      return <PixPaymentPage paymentId={paymentId} />;
     }
-  }
 
-  const isProductRoute = currentPath.startsWith('/produto/');
-  const isPixRoute = currentPath.startsWith('/checkout/pix/');
+    if (currentPath === '/checkout/pix') { // Legacy or direct access fallback
+      return <PixPaymentPage />;
+    }
 
-  if (isPixRoute) {
-    const parts = currentPath.split('/checkout/pix/');
-    const paymentId = parts[1];
-    return <PixPaymentPage paymentId={paymentId} />;
-  }
+    if (currentPath === '/checkout/success') {
+      return <CheckoutSuccessPage />;
+    }
 
-  if (currentPath === '/checkout/pix') { // Legacy or direct access fallback
-    return <PixPaymentPage />;
-  }
+    if (currentPath === '/checkout') {
+      return <CheckoutLayout />;
+    }
 
-  if (currentPath === '/checkout/success') {
-    return <CheckoutSuccessPage />;
-  }
+    if (isProductRoute) {
+      return <ProductPDP />;
+    }
 
-  if (currentPath === '/checkout') {
-    return <CheckoutLayout />;
-  }
+    if (currentPath === '/pdp') {
+      return <ProductPDP />;
+    }
 
-  if (isProductRoute) {
-    return <ProductPDP />;
-  }
+    if (currentPath === '/category' || currentPath === '/categoria/chinelos') {
+      return <CategoryListingPage categorySlug="chinelos" />;
+    }
 
-  if (currentPath === '/pdp') {
-    return <ProductPDP />;
-  }
+    if (currentPath === '/categoria/rasteirinhas') {
+      return <CategoryListingPage categorySlug="rasteirinhas" />;
+    }
 
-  if (currentPath === '/category' || currentPath === '/categoria/chinelos') {
-    return <CategoryListingPage categorySlug="chinelos" />;
-  }
+    if (currentPath === '/categoria/farm') {
+      return <CategoryListingPage categorySlug="farm" />;
+    }
 
-  if (currentPath === '/categoria/rasteirinhas') {
-    return <CategoryListingPage categorySlug="rasteirinhas" />;
-  }
+    if (currentPath === '/categoria/times-futebol') {
+      return <CategoryListingPage categorySlug="times-futebol" />;
+    }
 
-  if (currentPath === '/categoria/farm') {
-    return <CategoryListingPage categorySlug="farm" />;
-  }
+    if (currentPath === '/categoria/pride') {
+      return <CategoryListingPage categorySlug="pride" />;
+    }
 
-  if (currentPath === '/categoria/times-futebol') {
-    return <CategoryListingPage categorySlug="times-futebol" />;
-  }
+    if (currentPath === '/categoria/glitter') {
+      return <CategoryListingPage categorySlug="glitter" />;
+    }
 
-  if (currentPath === '/categoria/pride') {
-    return <CategoryListingPage categorySlug="pride" />;
-  }
+    if (currentPath === '/categoria/floral') {
+      return <CategoryListingPage categorySlug="floral" />;
+    }
 
-  if (currentPath === '/categoria/glitter') {
-    return <CategoryListingPage categorySlug="glitter" />;
-  }
+    // Default Home
+    return (
+      <div className="w-full">
+        <AnnouncementBar />
+        <Header />
+        <DeliveryAvailabilityBar />
 
-  if (currentPath === '/categoria/floral') {
-    return <CategoryListingPage categorySlug="floral" />;
-  }
+        {/* Temporary Link to PDP Preview */}
+        <div className="bg-blue-50 p-2 text-center text-sm text-blue-800 flex justify-center gap-4">
+          <button onClick={() => navigate('/pdp')} className="underline font-bold">
+            [DEV] Preview PDP
+          </button>
+          <button onClick={() => navigate('/category')} className="underline font-bold">
+            [DEV] Preview Category
+          </button>
+          <button onClick={() => navigate('/checkout')} className="underline font-bold">
+            [DEV] Checkout
+          </button>
+        </div>
 
-  // Default Home
-  return (
-    <div className="w-full">
-      <AnnouncementBar />
-      <Header />
-      <DeliveryAvailabilityBar />
+        <HeroBanner />
+        <ScrollingAnnouncementBar />
+        <ProductGrid />
+        <CategoryCarousel />
+        <SummerProductGrid />
+        <EditorialBanner />
+        <CategoryCarousel2 />
+        <ScrollingAnnouncementBarDelivery />
+        <FAQSection />
 
-      {/* Temporary Link to PDP Preview */}
-      <div className="bg-blue-50 p-2 text-center text-sm text-blue-800 flex justify-center gap-4">
-        <button onClick={() => navigate('/pdp')} className="underline font-bold">
-          [DEV] Preview PDP
-        </button>
-        <button onClick={() => navigate('/category')} className="underline font-bold">
-          [DEV] Preview Category
-        </button>
-        <button onClick={() => navigate('/checkout')} className="underline font-bold">
-          [DEV] Checkout
-        </button>
+        <Footer />
       </div>
+    );
+  };
 
-      <HeroBanner />
-      <ScrollingAnnouncementBar />
-      <ProductGrid />
-      <CategoryCarousel />
-      <SummerProductGrid />
-      <EditorialBanner />
-      <CategoryCarousel2 />
-      <ScrollingAnnouncementBarDelivery />
-      <FAQSection />
-
-      <Footer />
-    </div>
+  return (
+    <CartProvider>
+      {renderContent()}
+      <CartContainer />
+    </CartProvider>
   );
-};
-
-return (
-  <CartProvider>
-    {renderContent()}
-    <CartContainer />
-  </CartProvider>
-);
 }
-
 export default App;
