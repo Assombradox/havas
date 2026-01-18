@@ -59,7 +59,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
                                 key={index}
                                 onClick={() => handleColorClick(color)}
                                 className={`relative w-16 h-16 rounded-lg overflow-hidden flex-none border-2 transition-all ${selectedColor.name === color.name
-                                    ? 'border-black'
+                                    ? 'border-red-600'
                                     : 'border-transparent hover:border-gray-200'
                                     }`}
                             >
@@ -70,7 +70,7 @@ const SizeSelector: React.FC<SizeSelectorProps> = ({
                                 />
                                 {/* Selected Checkmark Overlay */}
                                 {selectedColor.name === color.name && (
-                                    <div className="absolute top-1 right-1 bg-black rounded-full p-0.5">
+                                    <div className="absolute top-1 right-1 bg-red-600 rounded-full p-0.5">
                                         <Check className="w-2 h-2 text-white" strokeWidth={4} />
                                     </div>
                                 )}
