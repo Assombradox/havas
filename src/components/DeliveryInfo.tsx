@@ -119,7 +119,7 @@ const DeliveryInfo: React.FC = () => {
                                         <span className="text-sm font-bold text-green-700">Grátis</span>
                                     </div>
                                     <p className="text-xs text-gray-600 mt-1">
-                                        Receba em até 24–48 horas
+                                        Receba em até 2 dias úteis
                                     </p>
                                     <p className="text-[10px] text-green-800 mt-1.5 font-medium">
                                         Para pedidos finalizados até 23:59 de hoje ({deliveryPromiseDate})
@@ -165,11 +165,10 @@ const DeliveryInfo: React.FC = () => {
                                 <div className="flex-1">
                                     <div className="flex items-center justify-between">
                                         <span className="text-sm font-medium text-gray-900">Retirar na loja</span>
-                                        <span className="text-sm font-bold text-green-700">Grátis</span>
+                                        <span className="text-sm font-bold text-green-700">Indisponível</span>
                                     </div>
                                     <p className="text-xs text-gray-500 mt-0.5">
-                                        Disponível para algumas regiões
-                                    </p>
+                                        Não disponível na sua região no momento.                                    </p>
                                 </div>
                             </div>
 
