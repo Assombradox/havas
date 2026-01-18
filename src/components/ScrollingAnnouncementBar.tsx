@@ -10,8 +10,8 @@ const ScrollingAnnouncementBar: React.FC = () => {
             <div className="flex whitespace-nowrap animate-scroll-infinite w-max">
                 {items.map((_, index) => (
                     <div key={index} className="flex items-center mx-4">
-                        <span className="text-white text-sm font-bold mr-1">pague em até 6x</span>
-                        <span className="text-white text-sm font-normal">*parcela mínima de R$49</span>
+                        <span className="text-white text-sm font-bold mr-1">Promoções validas até as:</span>
+                        <span className="text-white text-sm font-normal">23:59 de hoje</span>
                     </div>
                 ))}
             </div>
