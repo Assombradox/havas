@@ -251,7 +251,7 @@ const ProductPDP: React.FC = () => {
                 {relatedProducts.length > 0 && (
                     <ProductGrid
                         key={product.id}
-                        title="Você também pode gostar"
+                        title="Leve também 🛍️"
                         products={relatedProducts}
                     />
                 )}

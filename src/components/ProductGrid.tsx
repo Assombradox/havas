@@ -37,7 +37,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
             {/* Section Header */}
             <div className="flex justify-between items-center px-4 mb-4">
                 <h2 className="text-xl font-bold text-gray-900">{title}</h2>
-                <span className="text-sm font-medium text-red-600">Ver tudo</span>
+                <span className="text-sm font-medium text-red-600">  </span>
             </div>
 
             {/* Horizontal Scroll Container */}
