@@ -156,18 +156,7 @@ function App() {
         <Header />
         <DeliveryAvailabilityBar />
 
-        {/* Temporary Link to PDP Preview */}
-        <div className="bg-blue-50 p-2 text-center text-sm text-blue-800 flex justify-center gap-4">
-          <button onClick={() => navigate('/pdp')} className="underline font-bold">
-            [DEV] Preview PDP
-          </button>
-          <button onClick={() => navigate('/category')} className="underline font-bold">
-            [DEV] Preview Category
-          </button>
-          <button onClick={() => navigate('/checkout')} className="underline font-bold">
-            [DEV] Checkout
-          </button>
-        </div>
+
 
         <HeroBanner />
         <ScrollingAnnouncementBar />
