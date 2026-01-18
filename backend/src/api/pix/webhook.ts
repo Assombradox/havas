@@ -3,8 +3,18 @@ import crypto from 'crypto';
 import Payment from '../../models/Payment';
 
 export const handlePixWebhook = async (req: Request, res: Response) => {
+    // Debug Logs for Signature Inspection
+    console.log('📨 Webhook Headers Recebidos:', JSON.stringify(req.headers, null, 2));
+    console.log('📦 Webhook Body:', JSON.stringify(req.body, null, 2));
+
     try {
-        const signature = req.headers['x-webhook-signature'] || req.headers['http_x_webhook_signature'];
+        // 2. Tentar várias chaves para encontrar a assinatura
+        const signature = req.headers['x-webhook-signature'] ||
+            req.headers['x-brpix-signature'] ||
+            req.headers['signature'] ||
+            req.headers['authorization'] ||
+            req.headers['http_x_webhook_signature'];
+
         const secret = process.env.BRPIX_WEBHOOK_SECRET;
 
         // 1. Validação de Segurança (HMAC)
@@ -14,8 +24,9 @@ export const handlePixWebhook = async (req: Request, res: Response) => {
         }
 
         if (!signature) {
-            console.error('[Webhook] Missing signature');
-            return res.status(401).send('Missing Signature');
+            // Log detalhado dos headers disponíveis para debug
+            console.error('[Webhook] Assinatura não encontrada. Headers disponíveis:', Object.keys(req.headers));
+            throw new Error('[Webhook] Assinatura não encontrada nos headers: ' + Object.keys(req.headers).join(', '));
         }
 
         // Generate HMAC-SHA256 of the body
