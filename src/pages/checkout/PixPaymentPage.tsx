@@ -1,5 +1,5 @@
 import React from 'react';
-import { QrCode, Timer, Copy, CheckCircle2 } from 'lucide-react';
+import { QrCode, Timer, Copy, CheckCircle2, MessageCircle } from 'lucide-react';
 // Logo unused
 import type { PixPaymentResponse } from '../../services/pixService';
 
@@ -253,6 +253,26 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
                             <Copy className="w-4 h-4" />
                             Copiar código PIX
                         </button>
+
+                        {/* WhatsApp Proof CTA */}
+                        <div className="mt-8 pt-6 border-t border-gray-100 w-full animate-in slide-in-from-bottom-2">
+                            <h3 className="font-bold text-gray-900 text-sm mb-1">
+                                Já realizou o pagamento?
+                            </h3>
+                            <p className="text-xs text-gray-500 mb-4 max-w-xs mx-auto leading-relaxed">
+                                Envie o comprovante no nosso WhatsApp para agilizar a liberação do seu pedido agora.
+                            </p>
+
+                            <a
+                                href="https://wa.me/5596991649290?text=Ol%C3%A1%2C%20acabei%20de%20fazer%20o%20pagamento%20do%20meu%20pedido%20via%20PIX%20e%20gostaria%20de%20enviar%20o%20comprovante."
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="w-full bg-[#25D366] hover:bg-[#20b858] text-white font-bold py-4 rounded-none transition-colors text-base uppercase tracking-wide flex items-center justify-center gap-2"
+                            >
+                                <MessageCircle className="w-5 h-5 fill-current" />
+                                Enviar Comprovante
+                            </a>
+                        </div>
 
                     </div>
 
