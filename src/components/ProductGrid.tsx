@@ -21,7 +21,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
         }
     }, [products]);
 
-    const displayProducts = products || internalProducts || [];
+    const displayProducts = (products || internalProducts || []).slice(0, 9);
 
     // Custom navigation function since we can't use useNavigate from react-router in this simple router setup
     const navigateToProduct = (slug: string) => {
@@ -32,15 +32,27 @@ const ProductGrid: React.FC<ProductGridProps> = ({
         window.scrollTo(0, 0);
     };
 
+    const navigateToCategory = () => {
+        const path = '/category';
+        window.history.pushState({}, '', path);
+        window.dispatchEvent(new PopStateEvent('popstate'));
+        window.scrollTo(0, 0);
+    };
+
     return (
         <section className="w-full py-6 bg-white">
             {/* Section Header */}
             <div className="flex justify-between items-center px-4 mb-4">
                 <h2 className="text-xl font-bold text-gray-900">{title}</h2>
-                <span className="text-sm font-medium text-red-600">  </span>
+                <button
+                    onClick={navigateToCategory}
+                    className="bg-[#e00000] text-white px-4 py-2 text-sm font-bold rounded-none hover:bg-red-700 transition-colors"
+                >
+                    Ver Tudo
+                </button>
             </div>
 
-            {/* Horizontal Scroll Container */}
+            {/* Horizontal Scroll Container (Restored) */}
             <div className="flex overflow-x-auto w-full px-4 pb-4 gap-4 snap-x snap-mandatory scrollbar-hide">
                 {displayProducts.map((product) => {
                     // Safety check for image
@@ -49,14 +61,22 @@ const ProductGrid: React.FC<ProductGridProps> = ({
                     // Format price helper
                     const format = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
 
+                    // Calculate discount
+                    const calculateDiscount = (original: number | undefined, current: number) => {
+                        if (!original || original <= current) return null;
+                        const discount = Math.round(((original - current) / original) * 100);
+                        return `${discount}% OFF`;
+                    };
+                    const discountBadge = calculateDiscount(product.originalPrice, product.price);
+
                     return (
                         <div
                             key={product.id}
                             onClick={() => navigateToProduct(product.slug)}
-                            className="flex-none w-[calc(50%-8px)] snap-start cursor-pointer group last:mr-4"
+                            className="flex-none w-[calc(50%-24px)] md:w-[calc(33%-24px)] lg:w-[calc(25%-24px)] snap-start cursor-pointer group flex flex-col"
                         >
                             {/* Image Container */}
-                            <div className="relative aspect-[3/4] mb-3 bg-gray-100 rounded-lg overflow-hidden">
+                            <div className="relative aspect-[4/4] mb-0 bg-gray-100 rounded-lg overflow-hidden">
                                 {mainImage ? (
                                     <img
                                         src={mainImage}
@@ -69,6 +89,12 @@ const ProductGrid: React.FC<ProductGridProps> = ({
                                     </div>
                                 )}
 
+                                {discountBadge && (
+                                    <span className="absolute top-0 left-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wide">
+                                        -{discountBadge}
+                                    </span>
+                                )}
+
                             </div>
 
                             {/* Product Info */}
@@ -77,7 +103,10 @@ const ProductGrid: React.FC<ProductGridProps> = ({
                                 <div className="flex items-center gap-1">
                                     <div className="flex text-red-600">
                                         {[...Array(5)].map((_, i) => (
-                                            <Star key={i} className="w-3 h-3 fill-current" />
+                                            <Star
+                                                key={i}
+                                                className={`w-3 h-3 ${i < Math.floor(product.rating || 5) ? 'fill-current' : 'fill-transparent stroke-current'}`}
+                                            />
                                         ))}
                                     </div>
                                     <span className="text-xs text-gray-500">({product.reviewCount})</span>
@@ -90,7 +119,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
 
                                 {/* Price */}
                                 <div className="flex flex-col mt-1">
-                                    {product.originalPrice && (
+                                    {product.originalPrice && product.originalPrice > product.price && (
                                         <span className="text-xs text-gray-400 line-through">
                                             {format(product.originalPrice)}
                                         </span>
