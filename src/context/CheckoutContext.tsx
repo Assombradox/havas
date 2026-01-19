@@ -61,7 +61,7 @@ const defaultData: CheckoutData = {
     delivery: {
         method: 'Grátis',
         price: 0,
-        deadline: '3-5 dias úteis'
+        deadline: 'Data estimada de entrega após preencher o endereço'
     }
 };
 
