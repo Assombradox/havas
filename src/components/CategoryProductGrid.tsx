@@ -50,14 +50,14 @@ const CategoryProductGrid: React.FC<CategoryProductGridProps> = ({ products }) =
                             className="cursor-pointer group"
                         >
                             {/* Image Container */}
-                            <div className="relative aspect-[3/4] mb-3 bg-gray-100 rounded-lg overflow-hidden">
+                            <div className="relative aspect-[4/4] mb-3 bg-gray-100 rounded-lg overflow-hidden">
                                 <img
                                     src={mainImage}
                                     alt={product.name}
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 />
                                 {discountBadge && (
-                                    <span className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wide">
+                                    <span className="absolute top-0 left-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wide">
                                         -{discountBadge}
                                     </span>
                                 )}
