@@ -133,7 +133,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
                 <div
                     onClick={() => setSelectedMethod('pix')}
                     className={`
-                        relative border rounded-lg p-4 cursor-pointer flex items-center gap-4 transition-all
+                        relative border rounded-none p-4 cursor-pointer flex items-center gap-4 transition-all
                         ${selectedMethod === 'pix'
                             ? 'border-black bg-gray-50 ring-1 ring-black'
                             : 'border-gray-200 hover:border-gray-300'
@@ -152,7 +152,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
                     <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                             <span className="font-bold text-gray-900">PIX</span>
-                            <span className="bg-[#D4E157] text-[10px] font-bold px-1.5 py-0.5 rounded text-gray-800 uppercase">
+                            <span className="bg-[#D4E157] text-[10px] font-bold px-1.5 py-0.5 rounded-sm text-gray-800 uppercase">
                                 Aprovação imediata
                             </span>
                         </div>
@@ -186,7 +186,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
                     onClick={handlePayment}
                     disabled={!isButtonEnabled || isLoading}
                     className={`
-                        w-full font-bold py-4 rounded transition-all text-base uppercase tracking-wide flex items-center justify-center gap-2
+                        w-full font-bold py-4 rounded-none transition-all text-base uppercase tracking-wide flex items-center justify-center gap-2
                         ${isButtonEnabled && !isLoading
                             ? 'bg-[#E50000] hover:bg-[#cc0000] text-white shadow-md transform active:scale-[0.99]'
                             : 'bg-gray-200 text-gray-400 cursor-not-allowed'

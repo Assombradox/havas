@@ -56,7 +56,7 @@ const DeliveryStep: React.FC<DeliveryStepProps> = ({ onNext, onBack }) => {
 
             <div
                 className={`
-                    relative border rounded-lg p-4 cursor-pointer flex items-center gap-4 transition-all mb-6
+                    relative border rounded-none p-4 cursor-pointer flex items-center gap-4 transition-all mb-6
                     ${selectedOption === 'standard'
                         ? 'border-black bg-gray-50 ring-1 ring-black'
                         : 'border-gray-200 hover:border-gray-300'
@@ -86,7 +86,7 @@ const DeliveryStep: React.FC<DeliveryStepProps> = ({ onNext, onBack }) => {
             {/* CTA */}
             <button
                 onClick={handleNext}
-                className="w-full bg-[#E50000] hover:bg-[#cc0000] text-white font-bold py-4 rounded transition-colors text-base uppercase tracking-wide mb-4"
+                className="w-full bg-[#E50000] hover:bg-[#cc0000] text-white font-bold py-4 rounded-none transition-colors text-base uppercase tracking-wide mb-4"
             >
                 Ir para o pagamento
             </button>

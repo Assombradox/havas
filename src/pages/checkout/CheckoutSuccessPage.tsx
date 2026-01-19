@@ -18,7 +18,7 @@ const CheckoutSuccessPage: React.FC = () => {
 
                 <button
                     onClick={() => window.location.href = '/'}
-                    className="w-full bg-[#2C5F2D] hover:bg-[#1e421f] text-white font-bold py-3 rounded transition-colors"
+                    className="w-full bg-[#e00000] hover:bg-red-700 text-white font-bold py-3 rounded-none transition-colors"
                 >
                     Voltar para a Loja
                 </button>

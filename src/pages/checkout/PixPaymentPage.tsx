@@ -219,7 +219,7 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
                         {/* Copy Button */}
                         <button
                             onClick={handleCopyPix}
-                            className="w-full bg-[#E50000] hover:bg-[#cc0000] text-white font-bold py-4 rounded transition-colors text-base uppercase tracking-wide flex items-center justify-center gap-2"
+                            className="w-full bg-[#E50000] hover:bg-[#cc0000] text-white font-bold py-4 rounded-none transition-colors text-base uppercase tracking-wide flex items-center justify-center gap-2"
                         >
                             <Copy className="w-4 h-4" />
                             Copiar código PIX

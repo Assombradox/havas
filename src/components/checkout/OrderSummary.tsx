@@ -3,11 +3,20 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
 const OrderSummary: React.FC = () => {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
     const { cartItems, subtotal } = useCart();
 
     const freight = 0; // "Calculado na próxima etapa"
     const total = subtotal + freight;
+
+    const savings = cartItems.reduce((acc, item) => {
+        const original = item.unitPrice;
+        const final = item.discountedPrice || item.unitPrice;
+        if (original > final) {
+            return acc + ((original - final) * item.quantity);
+        }
+        return acc;
+    }, 0);
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('pt-BR', {
@@ -37,7 +46,7 @@ const OrderSummary: React.FC = () => {
                     {/* Product Rows */}
                     {cartItems.map((item) => (
                         <div key={item.id} className="flex gap-4 py-4 border-t border-gray-200">
-                            <div className="relative w-16 h-16 bg-white rounded border border-gray-200">
+                            <div className="relative w-16 h-16 bg-white border border-gray-200">
                                 <span className="absolute -top-2 -right-2 bg-gray-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full z-10">
                                     {item.quantity}
                                 </span>
@@ -60,6 +69,12 @@ const OrderSummary: React.FC = () => {
 
                     {/* Totals */}
                     <div className="space-y-2 pt-4 border-t border-gray-200">
+                        {savings > 0 && (
+                            <div className="flex justify-between text-sm font-bold text-emerald-600 mb-2">
+                                <span>Você economizou</span>
+                                <span>{formatPrice(savings)}</span>
+                            </div>
+                        )}
                         <div className="flex justify-between text-sm text-gray-600">
                             <span>Subtotal</span>
                             <span>{formatPrice(subtotal)}</span>

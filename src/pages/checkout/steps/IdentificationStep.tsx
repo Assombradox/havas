@@ -145,7 +145,7 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="Seu nome"
-                                className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                                className="w-full border border-gray-300 rounded-none px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
                             />
                         </div>
                         <div>
@@ -155,7 +155,7 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
                                 value={lastName}
                                 onChange={(e) => setLastName(e.target.value)}
                                 placeholder="Seu sobrenome"
-                                className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                                className="w-full border border-gray-300 rounded-none px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
                             />
                         </div>
                     </div>
@@ -168,7 +168,7 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
                             value={email}
                             onChange={handleEmailChange}
                             placeholder="Seu melhor e-mail"
-                            className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                            className="w-full border border-gray-300 rounded-none px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
                         />
                         {/* Suggestion Dropdown */}
                         {showSuggestions && (
