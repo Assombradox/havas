@@ -25,6 +25,13 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
         return sum + (price * item.quantity);
     }, 0);
 
+    const totalSavings = items.reduce((sum, item) => {
+        if (item.discountedPrice && item.discountedPrice < item.unitPrice) {
+            return sum + ((item.unitPrice - item.discountedPrice) * item.quantity);
+        }
+        return sum;
+    }, 0);
+
     const formatPrice = (value: number) =>
         new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
 
@@ -56,10 +63,12 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
                 </div>
 
                 {/* Promotional Banner */}
-                <div className="bg-red-50 px-5 py-3 border-b border-red-100">
-                    <p className="text-xs font-medium text-red-700 text-center">
-                        Frete grátis para compras acima de R$ 299,00
-                    </p>
+                <div className="w-full border-b border-gray-100">
+                    <img
+                        src="https://i.ibb.co/4bHBVYB/banner-sacola.webp"
+                        alt="Frete Grátis e Condições"
+                        className="w-full h-auto object-cover"
+                    />
                 </div>
 
                 {/* Product List */}
@@ -151,7 +160,20 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
                 </div>
 
                 {/* Footer */}
-                <div className="border-t border-gray-100 bg-white p-5 space-y-4">
+                <div className="border-t border-gray-100 bg-white p-5 space-y-4 shadow-[0_-4px_15px_-3px_rgba(0,0,0,0.05)]">
+
+                    {/* Savings Message */}
+                    {totalSavings > 0 && (
+                        <div className="flex items-center justify-between text-green-700 bg-green-50 px-3 py-2 rounded-sm">
+                            <span className="text-xs font-medium">
+                                Você está economizando:
+                            </span>
+                            <span className="text-sm font-bold">
+                                {formatPrice(totalSavings)}
+                            </span>
+                        </div>
+                    )}
+
                     {/* Summary */}
                     <div className="flex items-center justify-between">
                         <span className="text-sm text-gray-600">
@@ -163,7 +185,13 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
                     </div>
 
                     {/* Actions */}
-                    <div className="flex flex-col gap-3">
+                    <div className="grid grid-cols-2 gap-3">
+                        <button
+                            onClick={onClose}
+                            className="w-full bg-gray-50 text-[#e00000] border border-gray-200 h-12 rounded-none font-bold text-sm hover:bg-gray-100 transition-colors"
+                        >
+                            Seguir comprando
+                        </button>
                         <button
                             onClick={() => {
                                 onClose();
@@ -171,15 +199,9 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
                                 window.dispatchEvent(new PopStateEvent('popstate'));
                                 window.scrollTo(0, 0);
                             }}
-                            className="w-full bg-black text-white h-12 rounded-lg font-bold text-sm uppercase tracking-wide hover:bg-gray-800 transition-colors"
+                            className="w-full bg-[#e00000] text-white h-12 rounded-none font-bold text-sm uppercase tracking-wide hover:bg-red-700 transition-colors"
                         >
-                            Ver sacola
-                        </button>
-                        <button
-                            onClick={onClose}
-                            className="w-full bg-transparent text-gray-500 h-10 rounded-lg font-medium text-sm hover:text-gray-900 transition-colors"
-                        >
-                            Seguir comprando
+                            FINALIZAR COMPRA
                         </button>
                     </div>
                 </div>
