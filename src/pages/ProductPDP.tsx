@@ -255,6 +255,14 @@ const ProductPDP: React.FC = () => {
                         products={relatedProducts}
                     />
                 )}
+                {/* Recommended Products */}
+                {relatedProducts.length > 0 && (
+                    <ProductGrid
+                        key={product.id}
+                        title="Estão levando 🔥"
+                        products={relatedProducts}
+                    />
+                )}
 
                 {/* Delivery Marquee */}
                 <ScrollingAnnouncementBarDelivery />
