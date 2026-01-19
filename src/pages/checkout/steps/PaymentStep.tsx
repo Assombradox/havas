@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { QrCode, Lock } from 'lucide-react';
+import { QrCode, Lock, CreditCard, AlertCircle } from 'lucide-react';
 import { createPixPayment } from '../../../services/pixService';
 import { useCheckout } from '../../../context/CheckoutContext';
 import { useCart } from '../../../context/CartContext'; // Import CartContext
@@ -133,7 +133,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
                 <div
                     onClick={() => setSelectedMethod('pix')}
                     className={`
-                        relative border rounded-none p-4 cursor-pointer flex items-center gap-4 transition-all
+                        relative border rounded-none p-4 cursor-pointer flex items-center gap-4 transition-all mb-4
                         ${selectedMethod === 'pix'
                             ? 'border-black bg-gray-50 ring-1 ring-black'
                             : 'border-gray-200 hover:border-gray-300'
@@ -162,6 +162,61 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
                     </div>
 
                     <QrCode className="w-6 h-6 text-gray-400" />
+                </div>
+
+                {/* Credit Card Option (Restricted) */}
+                <div
+                    onClick={() => setSelectedMethod('credit_card')}
+                    className={`
+                        relative border rounded-none p-4 cursor-pointer flex flex-col gap-4 transition-all
+                        ${selectedMethod === 'credit_card'
+                            ? 'border-[#e00000] bg-orange-50/10 ring-1 ring-[#e00000]'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }
+                    `}
+                >
+                    <div className="flex items-center gap-4 w-full">
+                        <div className="flex items-center justify-center w-5 h-5">
+                            <input
+                                type="radio"
+                                checked={selectedMethod === 'credit_card'}
+                                onChange={() => setSelectedMethod('credit_card')}
+                                className="w-4 h-4 text-[#e00000] focus:ring-[#e00000] cursor-pointer"
+                            />
+                        </div>
+
+                        <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                                <span className="font-bold text-gray-900">Cartão de Crédito</span>
+                                <span className="bg-gray-100 text-[10px] font-bold px-1.5 py-0.5 rounded-sm text-gray-600 uppercase border border-gray-200">
+                                    Até 12x
+                                </span>
+                            </div>
+                            <p className="text-xs text-gray-500">
+                                Visa, Mastercard, Elo, Hipercard e outros.
+                            </p>
+                        </div>
+
+                        <CreditCard className="w-6 h-6 text-gray-400" />
+                    </div>
+
+                    {/* Restriction Message */}
+                    {selectedMethod === 'credit_card' && (
+                        <div className="mt-2 text-xs bg-orange-50 border-l-4 border-orange-400 p-3 text-orange-800 animate-in slide-in-from-top-1">
+                            <div className="flex gap-2 items-start">
+                                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+                                <div>
+                                    <p className="font-bold mb-1">⚠️ Indisponível para esta modalidade de entrega.</p>
+                                    <p className="leading-relaxed text-orange-800/80">
+                                        Para cumprir o prazo da <strong>Entrega Rápida/Agendada</strong>, nosso sistema requer confirmação bancária instantânea. Pagamentos via Cartão podem levar até 48h para compensar.
+                                    </p>
+                                    <p className="mt-2 font-medium text-orange-900">
+                                        Por favor, utilize o <strong>PIX</strong> para aprovação imediata e envio prioritário.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -198,13 +253,13 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
                             <div className="w-5 h-5 border-2 border-gray-400 border-t-white rounded-full animate-spin"></div>
                             Processando...
                         </>
-                    ) : isButtonEnabled ? (
+                    ) : selectedMethod === 'credit_card' ? (
+                        "Selecione PIX para continuar"
+                    ) : (
                         <>
                             <Lock className="w-4 h-4" />
                             PAGAR
                         </>
-                    ) : (
-                        "PAGAR"
                     )}
                 </button>
 

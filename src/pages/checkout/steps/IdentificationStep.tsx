@@ -28,8 +28,48 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
 
     const [phone, setPhone] = useState(checkoutData.contact.phone);
 
+    const [cpfError, setCpfError] = useState('');
+
+    // --- CPF Validation Algorithm (Module 11) ---
+    const isValidCPF = (cpf: string) => {
+        const strCPF = cpf.replace(/[^\d]/g, '');
+        if (strCPF.length !== 11) return false;
+
+        // Reject all same digits (111.111.111-11, etc)
+        if (/^(\d)\1+$/.test(strCPF)) return false;
+
+        let sum = 0;
+        let remainder;
+
+        for (let i = 1; i <= 9; i++) sum += parseInt(strCPF.substring(i - 1, i)) * (11 - i);
+        remainder = (sum * 10) % 11;
+        if ((remainder === 10) || (remainder === 11)) remainder = 0;
+        if (remainder !== parseInt(strCPF.substring(9, 10))) return false;
+
+        sum = 0;
+        for (let i = 1; i <= 10; i++) sum += parseInt(strCPF.substring(i - 1, i)) * (12 - i);
+        remainder = (sum * 10) % 11;
+        if ((remainder === 10) || (remainder === 11)) remainder = 0;
+        if (remainder !== parseInt(strCPF.substring(10, 11))) return false;
+
+        return true;
+    };
+
+    const validateCpf = () => {
+        if (!isValidCPF(cpf)) {
+            setCpfError('CPF Inválido');
+            return false;
+        }
+        setCpfError('');
+        return true;
+    };
+
     // --- Save to Context on Next ---
     const handleNext = () => {
+        if (!validateCpf()) {
+            return;
+        }
+
         updateContact({
             name,
             lastName,
@@ -89,6 +129,7 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
         value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
 
         setCpf(value);
+        if (cpfError) setCpfError(''); // Clear error on type
     };
 
     // --- 4. CEP Logic & ViaCEP Integration ---
@@ -145,7 +186,7 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="Seu nome"
-                                className="w-full border border-gray-300 rounded-none px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                                className="w-full border border-gray-300 rounded-none px-3 py-3 text-sm focus:border-[#e00000] focus:ring-1 focus:ring-[#e00000] outline-none transition-colors"
                             />
                         </div>
                         <div>
@@ -155,7 +196,7 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
                                 value={lastName}
                                 onChange={(e) => setLastName(e.target.value)}
                                 placeholder="Seu sobrenome"
-                                className="w-full border border-gray-300 rounded-none px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                                className="w-full border border-gray-300 rounded-none px-3 py-3 text-sm focus:border-[#e00000] focus:ring-1 focus:ring-[#e00000] outline-none transition-colors"
                             />
                         </div>
                     </div>
@@ -168,7 +209,7 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
                             value={email}
                             onChange={handleEmailChange}
                             placeholder="Seu melhor e-mail"
-                            className="w-full border border-gray-300 rounded-none px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                            className="w-full border border-gray-300 rounded-none px-3 py-3 text-sm focus:border-[#e00000] focus:ring-1 focus:ring-[#e00000] outline-none transition-colors"
                         />
                         {/* Suggestion Dropdown */}
                         {showSuggestions && (
@@ -191,7 +232,7 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
                             type="checkbox"
                             id="newsletter"
                             defaultChecked
-                            className="mt-0.5"
+                            className="mt-0.5 accent-[#e00000]"
                         />
                         <label htmlFor="newsletter" className="text-xs text-gray-600">
                             Enviar novidades e ofertas para mim por e-mail
@@ -205,10 +246,19 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
                             type="tel" // Opens numeric keypad on mobile better than Text
                             value={cpf}
                             onChange={handleCpfChange}
+                            onBlur={validateCpf}
                             placeholder="000.000.000-00"
                             maxLength={14}
-                            className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                            className={`w-full border rounded-none px-3 py-3 text-sm outline-none transition-colors ${cpfError
+                                ? 'border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500 bg-red-50'
+                                : 'border-gray-300 focus:border-[#e00000] focus:ring-1 focus:ring-[#e00000]'
+                                }`}
                         />
+                        {cpfError && (
+                            <span className="text-xs text-red-600 mt-1 block font-medium animate-in slide-in-from-top-1">
+                                {cpfError}
+                            </span>
+                        )}
                     </div>
 
                     {/* [REMOVED] Data de Nascimento */}
@@ -236,7 +286,7 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
                             onChange={handleCepChange}
                             placeholder="00000-000"
                             maxLength={9}
-                            className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                            className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-[#e00000] focus:ring-1 focus:ring-[#e00000] outline-none transition-colors"
                         />
                     </div>
 
@@ -248,7 +298,7 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
                             value={address}
                             onChange={(e) => setAddress(e.target.value)}
                             placeholder="Rua, Avenida..."
-                            className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                            className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-[#e00000] focus:ring-1 focus:ring-[#e00000] outline-none transition-colors"
                         />
                     </div>
 
@@ -259,7 +309,7 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
                                 type="text"
                                 value={number}
                                 onChange={(e) => setNumber(e.target.value)}
-                                className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                                className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-[#e00000] focus:ring-1 focus:ring-[#e00000] outline-none transition-colors"
                             />
                         </div>
                         <div className="col-span-2">
@@ -268,7 +318,7 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
                                 type="text"
                                 value={complement}
                                 onChange={(e) => setComplement(e.target.value)}
-                                className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                                className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-[#e00000] focus:ring-1 focus:ring-[#e00000] outline-none transition-colors"
                             />
                         </div>
                     </div>
@@ -279,7 +329,7 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
                             type="text"
                             value={neighborhood}
                             onChange={(e) => setNeighborhood(e.target.value)}
-                            className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                            className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-[#e00000] focus:ring-1 focus:ring-[#e00000] outline-none transition-colors"
                         />
                     </div>
 
@@ -290,7 +340,7 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
                                 type="text"
                                 value={city}
                                 onChange={(e) => setCity(e.target.value)}
-                                className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                                className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-[#e00000] focus:ring-1 focus:ring-[#e00000] outline-none transition-colors"
                             />
                         </div>
                         <div className="col-span-1">
@@ -300,7 +350,7 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
                                 value={uf}
                                 onChange={(e) => setUf(e.target.value)}
                                 maxLength={2}
-                                className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                                className="w-full border border-gray-300 rounded px-3 py-3 text-sm focus:border-[#e00000] focus:ring-1 focus:ring-[#e00000] outline-none transition-colors"
                             />
                         </div>
                     </div>
@@ -318,7 +368,7 @@ const IdentificationStep: React.FC<IdentificationStepProps> = ({ onNext }) => {
                                 onChange={handlePhoneChange}
                                 placeholder="(00) 00000-0000"
                                 maxLength={15}
-                                className="w-full border border-gray-300 rounded-r px-3 py-3 text-sm focus:border-black focus:ring-1 focus:ring-black outline-none transition-colors"
+                                className="w-full border border-gray-300 rounded-r px-3 py-3 text-sm focus:border-[#e00000] focus:ring-1 focus:ring-[#e00000] outline-none transition-colors"
                             />
                         </div>
                     </div>

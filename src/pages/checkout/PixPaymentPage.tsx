@@ -13,6 +13,30 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
     const [isLoading, setIsLoading] = React.useState(true);
     const [error, setError] = React.useState<string | null>(null);
 
+    // Timer State
+    const [timeLeft, setTimeLeft] = React.useState(900); // 15 minutes in seconds
+
+    // Countdown Logic
+    React.useEffect(() => {
+        if (timeLeft <= 0) return;
+
+        const timer = setInterval(() => {
+            setTimeLeft(prev => prev - 1);
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [timeLeft]);
+
+    // Format Time Function (MM:SS)
+    const formatTime = (seconds: number) => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    };
+
+    // Helper: Timer Text Color
+    const timerColor = timeLeft < 60 ? 'text-red-600' : 'text-[#e00000]';
+
     // Fetch Data on Mount
     React.useEffect(() => {
         if (!paymentId) {
@@ -27,6 +51,9 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
 
                 const data = await response.json();
                 setPaymentData(data);
+
+                // If backend provides expiration, we could sync timer here
+                // For now, we stick to the 15min default starting from render
             } catch (err) {
                 console.error("Erro ao buscar dados do PIX:", err);
                 setError("Não foi possível carregar os dados do pagamento.");
@@ -41,7 +68,7 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
     // Fallback Mock Data (Only used if NO paymentId provided and NO API data)
     // This maintains backward compatibility or direct access without ID
     const pixCode = paymentData?.pixCode;
-    const expiresAt = paymentData?.expiresAt;
+    // const expiresAt = paymentData?.expiresAt; // Use local timer instead
 
     // Dynamic Total from API (amount is in cents)
     const orderTotal = paymentData?.amount ? paymentData.amount / 100 : 0;
@@ -114,12 +141,12 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
     if (error) {
         return (
             <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4 text-center">
-                <div className="bg-white p-8 rounded-lg shadow-sm border border-red-100 max-w-sm w-full">
+                <div className="bg-white p-8 rounded-none shadow-sm border border-red-100 max-w-sm w-full">
                     <h2 className="text-xl font-bold text-red-600 mb-2">Erro</h2>
                     <p className="text-gray-500 mb-6">{error}</p>
                     <button
                         onClick={() => window.location.href = '/checkout'}
-                        className="w-full bg-black text-white py-3 rounded font-bold"
+                        className="w-full bg-black text-white py-3 rounded-none font-bold"
                     >
                         Voltar para Checkout
                     </button>
@@ -136,10 +163,10 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
             <main className="px-4 py-6">
 
                 {/* Payment Container */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden max-w-md mx-auto">
+                <div className="bg-white rounded-none shadow-sm border border-gray-200 overflow-hidden max-w-md mx-auto">
 
                     {/* Header */}
-                    <div className="bg-green-50/50 p-4 border-b border-gray-100 text-center">
+                    <div className="bg-gray-50 p-4 border-b border-gray-100 text-center">
                         <div className="inline-flex items-center gap-2 mb-1">
                             <QrCode className="w-5 h-5 text-gray-700" />
                             <span className="font-bold text-gray-900">Pagamento via PIX</span>
@@ -192,13 +219,15 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
 
                         {/* Timer */}
                         <div className="flex flex-col items-center mb-6">
-                            <div className="flex items-center gap-2 text-orange-600 mb-1">
+                            <div className={`flex items-center gap-2 mb-1 ${timerColor}`}>
                                 <Timer className="w-4 h-4" />
                                 <span className="text-xs font-bold uppercase tracking-wide">
-                                    {expiresAt ? 'Pague antes de expirar' : 'Você tem 15 minutos para pagar'}
+                                    {timeLeft > 0 ? 'Pague antes de expirar' : 'Código Expirado'}
                                 </span>
                             </div>
-                            <span className="text-xl font-mono text-gray-900 font-medium">14:59</span>
+                            <span className={`text-xl font-mono font-medium ${timerColor}`}>
+                                {formatTime(timeLeft)}
+                            </span>
                         </div>
 
                         {/* Divider */}
@@ -209,7 +238,7 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
                             <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2 text-left">
                                 Pix Copia e Cola
                             </label>
-                            <div className="bg-gray-50 border border-gray-200 rounded p-3 text-left">
+                            <div className="bg-gray-50 border border-gray-200 rounded-none p-3 text-left">
                                 <p className="text-xs text-gray-500 font-mono break-all line-clamp-3">
                                     {pixCode}
                                 </p>

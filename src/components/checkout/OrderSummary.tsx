@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
+import { useCheckout } from '../../context/CheckoutContext';
+
 const OrderSummary: React.FC = () => {
     const [isOpen, setIsOpen] = useState(true);
     const { cartItems, subtotal } = useCart();
+    const { checkoutData } = useCheckout();
 
-    const freight = 0; // "Calculado na próxima etapa"
+    const freight = checkoutData.delivery.price || 0;
     const total = subtotal + freight;
 
     const savings = cartItems.reduce((acc, item) => {
@@ -79,10 +82,22 @@ const OrderSummary: React.FC = () => {
                             <span>Subtotal</span>
                             <span>{formatPrice(subtotal)}</span>
                         </div>
-                        <div className="flex justify-between text-sm text-gray-600">
-                            <span>Frete</span>
-                            <span className="text-xs">Calculado na próxima etapa</span>
+
+                        {/* Delivery Info */}
+                        <div className="flex flex-col gap-1">
+                            <div className="flex justify-between text-sm text-gray-600">
+                                <span>Entrega ({checkoutData.delivery.method || 'A calcular'})</span>
+                                <span className="text-green-600 font-bold uppercase text-xs">
+                                    {checkoutData.delivery.price === 0 ? 'Grátis' : formatPrice(checkoutData.delivery.price)}
+                                </span>
+                            </div>
+                            {checkoutData.delivery.deadline && (
+                                <span className="text-xs text-gray-500 text-right">
+                                    Previsão: {checkoutData.delivery.deadline}
+                                </span>
+                            )}
                         </div>
+
                         <div className="flex justify-between text-base font-bold text-gray-900 pt-2 border-t border-gray-200 mt-2">
                             <span>Total</span>
                             <span>{formatPrice(total)}</span>
