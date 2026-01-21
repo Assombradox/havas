@@ -19,7 +19,7 @@ const DeliveryAvailabilityBar: React.FC = () => {
                     setLocation(`${data.city}, ${data.region_code}`);
                 }
             })
-            .catch(err => {
+            .catch(() => {
                 // Silent fail/Warn only (AdBlockers often block this)
                 console.warn("Geolocalização automática indisponível (Bloqueada pelo Cliente/AdBlock).");
                 // Keep default "todo o Brasil"
