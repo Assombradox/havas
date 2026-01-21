@@ -1,6 +1,6 @@
 import type { Product } from '../../types/Product';
 
-const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/products`;
+const API_URL = `${(import.meta.env.VITE_API_URL || 'http://localhost:3000').replace(/\/$/, '')}/api/products`;
 
 console.log('🔌 Products Service initialized with API:', API_URL);
 
