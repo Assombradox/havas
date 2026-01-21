@@ -160,70 +160,70 @@ const Header: React.FC = () => {
                     />
 
                     {/* Panel */}
-                    <div className="relative w-[85%] max-w-sm bg-white h-full shadow-2xl animate-in slide-in-from-left duration-300 flex flex-col">
-                        {/* Drawer Header */}
-                        <div className="flex items-center justify-between p-6 border-b border-gray-100">
-                            <span className="text-xl font-bold text-gray-900 tracking-tight">MENU</span>
+                    <div className="relative w-[80%] max-w-[300px] bg-white h-full shadow-2xl animate-in slide-in-from-left duration-300 flex flex-col">
+                        {/* Drawer Header - Minimalist */}
+                        <div className="flex items-center justify-end p-6">
                             <button
                                 onClick={() => setIsMenuOpen(false)}
-                                className="p-2 hover:bg-gray-100 transition-colors"
+                                className="p-2 -mr-2 text-gray-400 hover:text-gray-900 transition-colors"
                             >
-                                <X className="w-6 h-6 text-gray-900" />
+                                <X className="w-6 h-6" strokeWidth={1.5} />
                             </button>
                         </div>
 
-                        {/* Drawer Links */}
-                        <nav className="flex-1 overflow-y-auto p-6">
+                        {/* Drawer Links - Clean List */}
+                        <nav className="flex-1 px-8 pb-8">
                             <ul className="flex flex-col gap-6">
                                 <li>
                                     <button
-                                        onClick={() => handleMenuClick('/lancamentos')}
-                                        className="text-lg font-bold text-red-600 hover:text-red-700 uppercase tracking-wide block w-full text-left"
+                                        onClick={() => handleMenuClick('/category/lancamentos')}
+                                        className="text-[15px] font-medium text-gray-800 hover:text-red-600 lowercase tracking-wide transition-colors block w-full text-left"
                                     >
-                                        Lançamentos
+                                        novidades
                                     </button>
                                 </li>
                                 <li>
                                     <button
-                                        onClick={() => handleMenuClick('/masculino')}
-                                        className="text-lg font-bold text-gray-900 hover:text-gray-600 uppercase tracking-wide block w-full text-left"
+                                        onClick={() => handleMenuClick('/category/feminino')}
+                                        className="text-[15px] font-medium text-gray-800 hover:text-red-600 lowercase tracking-wide transition-colors block w-full text-left"
                                     >
-                                        Masculino
+                                        mulher
                                     </button>
                                 </li>
                                 <li>
                                     <button
-                                        onClick={() => handleMenuClick('/feminino')}
-                                        className="text-lg font-bold text-gray-900 hover:text-gray-600 uppercase tracking-wide block w-full text-left"
+                                        onClick={() => handleMenuClick('/category/masculino')}
+                                        className="text-[15px] font-medium text-gray-800 hover:text-red-600 lowercase tracking-wide transition-colors block w-full text-left"
                                     >
-                                        Feminino
+                                        homem
                                     </button>
                                 </li>
                                 <li>
                                     <button
-                                        onClick={() => handleMenuClick('/infantil')}
-                                        className="text-lg font-bold text-gray-900 hover:text-gray-600 uppercase tracking-wide block w-full text-left"
+                                        onClick={() => handleMenuClick('/category/infantil')}
+                                        className="text-[15px] font-medium text-gray-800 hover:text-red-600 lowercase tracking-wide transition-colors block w-full text-left"
                                     >
-                                        Infantil
+                                        kids
                                     </button>
                                 </li>
                                 <li>
                                     <button
-                                        onClick={() => handleMenuClick('/outlet')}
-                                        className="text-lg font-bold text-gray-500 hover:text-red-600 uppercase tracking-wide block w-full text-left"
+                                        onClick={() => handleMenuClick('/category/acessorios')}
+                                        className="text-[15px] font-medium text-gray-800 hover:text-red-600 lowercase tracking-wide transition-colors block w-full text-left"
                                     >
-                                        Outlet
+                                        acessórios
+                                    </button>
+                                </li>
+                                <li>
+                                    <button
+                                        onClick={() => handleMenuClick('/category/outlet')}
+                                        className="text-[15px] font-medium text-red-600 hover:text-red-700 lowercase tracking-wide transition-colors block w-full text-left"
+                                    >
+                                        outlet
                                     </button>
                                 </li>
                             </ul>
                         </nav>
-
-                        {/* Drawer Footer */}
-                        <div className="p-6 border-t border-gray-100 bg-gray-50">
-                            <button className="w-full bg-gray-900 text-white py-4 font-bold uppercase hover:bg-red-600 transition-colors">
-                                Minha Conta
-                            </button>
-                        </div>
                     </div>
                 </div>
             )}
