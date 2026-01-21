@@ -293,7 +293,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
                                         ? 'bg-blue-600 text-white border-blue-600'
                                         : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'}`}
                             >
-                                {cat.title}
+                                {cat.title || cat.name}
                             </button>
                         ))}
                     </div>
@@ -302,19 +302,49 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
                 {/* Sizes */}
                 <section className="space-y-4">
                     <div className="flex justify-between items-center border-b pb-2">
-                        <h3 className="text-lg font-semibold text-gray-800">Tamanhos</h3>
-                        <button type="button" onClick={handleAddSize} className="text-blue-600 text-sm font-bold flex items-center gap-1 hover:underline">
-                            <Plus size={16} /> Adicionar
-                        </button>
+                        <h3 className="text-lg font-semibold text-gray-800">Tamanhos (Grade)</h3>
+                        {/* Button renamed/purposed for custom sizes if needed, or kept consistent */}
                     </div>
+
+                    {/* Standard Sizes Grid */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                        {['33/34', '35/36', '37/38', '39/40', '41/42', '43/44', '45/46'].map(stdSize => {
+                            const isSelected = formData.sizes.some(s => s.label === stdSize);
+                            return (
+                                <button
+                                    key={stdSize}
+                                    type="button"
+                                    onClick={() => {
+                                        setFormData(prev => {
+                                            const exists = prev.sizes.find(s => s.label === stdSize);
+                                            if (exists) {
+                                                return { ...prev, sizes: prev.sizes.filter(s => s.label !== stdSize) };
+                                            } else {
+                                                return { ...prev, sizes: [...prev.sizes, { label: stdSize, available: true }] };
+                                            }
+                                        });
+                                    }}
+                                    className={`w-16 h-12 rounded-lg font-bold text-sm transition-all border
+                                        ${isSelected
+                                            ? 'bg-blue-600 text-white border-blue-600 shadow-md transform scale-105'
+                                            : 'bg-white text-gray-500 border-gray-200 hover:border-blue-400 hover:text-blue-500'}`}
+                                >
+                                    {stdSize}
+                                </button>
+                            );
+                        })}
+                    </div>
+
+                    {/* Custom Size Input / List for non-standard or managing availability specifically */}
                     <div className="space-y-2">
+                        <p className="text-xs font-bold text-gray-400 uppercase">Personalizado / Ajuste Fino</p>
                         {formData.sizes.map((size, idx) => (
                             <div key={idx} className="flex items-center gap-4 bg-gray-50 p-2 rounded-lg">
                                 <input
                                     type="text"
                                     value={size.label}
                                     onChange={(e) => updateSize(idx, 'label', e.target.value)}
-                                    className="w-24 p-1 border rounded"
+                                    className="w-24 p-1 border rounded bg-white text-center font-bold text-gray-700"
                                 />
                                 <label className="flex items-center gap-2 cursor-pointer select-none">
                                     <input
@@ -330,6 +360,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
                                 </button>
                             </div>
                         ))}
+                        <button type="button" onClick={handleAddSize} className="text-blue-600 text-sm font-bold flex items-center gap-1 hover:underline mt-2">
+                            <Plus size={16} /> Adicionar Outro Tamanho
+                        </button>
                     </div>
                 </section>
 
