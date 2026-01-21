@@ -12,7 +12,7 @@ interface FeaturedSectionProps {
 const FeaturedSection: React.FC<FeaturedSectionProps> = ({
     title,
     categorySlug,
-    limit = 4
+    limit = 6
 }) => {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
@@ -41,90 +41,109 @@ const FeaturedSection: React.FC<FeaturedSectionProps> = ({
         window.scrollTo(0, 0);
     };
 
-    if (loading) return null; // Or a skeleton loader
+    const navigateToCategory = () => {
+        const path = `/category/${categorySlug}`;
+        window.history.pushState({}, '', path);
+        window.dispatchEvent(new Event('popstate'));
+        window.scrollTo(0, 0);
+    };
+
+    if (loading) return null; // Or skeleton
     if (products.length === 0) return null;
 
     return (
-        <section className="w-full py-12 px-4 bg-white">
-            <div className="max-w-screen-xl mx-auto">
-                <h2 className="text-2xl font-bold text-gray-900 text-center mb-8 uppercase tracking-wide">
-                    {title}
-                </h2>
+        <section className="w-full py-6 bg-white">
+            {/* Section Header */}
+            <div className="flex justify-between items-center px-4 mb-4">
+                <h2 className="text-xl font-bold text-gray-900">{title}</h2>
+                <button
+                    onClick={navigateToCategory}
+                    className="bg-[#e00000] text-white px-4 py-2 text-sm font-bold rounded-none hover:bg-red-700 transition-colors"
+                >
+                    Ver Tudo
+                </button>
+            </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    {products.map((product) => {
-                        const mainImage = product.colors?.[0]?.images?.[0] || product.colors?.[0]?.thumbnail || '';
+            {/* Horizontal Scroll Container (Restored) */}
+            <div className="flex overflow-x-auto w-full px-4 pb-4 gap-4 snap-x snap-mandatory scrollbar-hide">
+                {products.map((product) => {
+                    // Safety check for image
+                    const mainImage = product.colors?.[0]?.images?.[0] || product.colors?.[0]?.thumbnail || '';
 
-                        const format = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
+                    // Format price helper
+                    const format = (v: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
 
-                        const calculateDiscount = (original: number | undefined, current: number) => {
-                            if (!original || original <= current) return null;
-                            return Math.round(((original - current) / original) * 100);
-                        };
-                        const discountPercent = calculateDiscount(product.originalPrice, product.price);
+                    // Calculate discount
+                    const calculateDiscount = (original: number | undefined, current: number) => {
+                        if (!original || original <= current) return null;
+                        const discount = Math.round(((original - current) / original) * 100);
+                        return `${discount}% OFF`;
+                    };
+                    const discountBadge = calculateDiscount(product.originalPrice, product.price);
 
-                        return (
-                            <div
-                                key={product.id}
-                                onClick={() => navigateToProduct(product.slug)}
-                                className="group cursor-pointer flex flex-col"
-                            >
-                                {/* Image Container */}
-                                <div className="relative aspect-square bg-gray-100 overflow-hidden mb-3">
-                                    {mainImage ? (
-                                        <img
-                                            src={mainImage}
-                                            alt={product.name}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                                        />
-                                    ) : (
-                                        <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
-                                            Sem Foto
-                                        </div>
-                                    )}
+                    return (
+                        <div
+                            key={product.id}
+                            onClick={() => navigateToProduct(product.slug)}
+                            className="flex-none w-[calc(50%-24px)] md:w-[calc(33%-24px)] lg:w-[calc(25%-24px)] snap-start cursor-pointer group flex flex-col"
+                        >
+                            {/* Image Container */}
+                            <div className="relative aspect-[4/4] mb-0 bg-gray-100 rounded-lg overflow-hidden">
+                                {mainImage ? (
+                                    <img
+                                        src={mainImage}
+                                        alt={product.name}
+                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full bg-gray-200 flex items-center justify-center text-gray-400 text-xs">
+                                        Sem Foto
+                                    </div>
+                                )}
 
-                                    {discountPercent && (
-                                        <span className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 uppercase tracking-wide z-10">
-                                            -{discountPercent}% OFF
-                                        </span>
-                                    )}
+                                {discountBadge && (
+                                    <span className="absolute top-0 left-2 bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded-sm uppercase tracking-wide">
+                                        -{discountBadge}
+                                    </span>
+                                )}
+
+                            </div>
+
+                            {/* Product Info */}
+                            <div className="flex flex-col gap-1 p-3">
+                                {/* Rating */}
+                                <div className="flex items-center gap-1">
+                                    <div className="flex text-red-600">
+                                        {[...Array(5)].map((_, i) => (
+                                            <Star
+                                                key={i}
+                                                className={`w-3 h-3 ${i < Math.floor(product.rating || 5) ? 'fill-current' : 'fill-transparent stroke-current'}`}
+                                            />
+                                        ))}
+                                    </div>
+                                    <span className="text-xs text-gray-500">({product.reviewCount})</span>
                                 </div>
 
-                                {/* Info */}
-                                <div className="flex flex-col gap-1">
-                                    {/* Rating */}
-                                    <div className="flex items-center gap-1 mb-1">
-                                        <div className="flex text-red-600">
-                                            {[...Array(5)].map((_, i) => (
-                                                <Star
-                                                    key={i}
-                                                    className={`w-3 h-3 ${i < Math.floor(product.rating || 5) ? 'fill-current' : 'fill-transparent stroke-current'}`}
-                                                />
-                                            ))}
-                                        </div>
-                                    </div>
+                                {/* Title */}
+                                <h3 className="text-sm text-gray-700 font-normal leading-snug line-clamp-2 min-h-[40px]">
+                                    {product.name}
+                                </h3>
 
-                                    {/* Title */}
-                                    <h3 className="text-sm text-gray-800 font-normal leading-tight line-clamp-2 h-[40px]">
-                                        {product.name}
-                                    </h3>
-
-                                    {/* Price */}
-                                    <div className="mt-1 flex flex-col">
-                                        {product.originalPrice && product.originalPrice > product.price && (
-                                            <span className="text-xs text-gray-400 line-through">
-                                                {format(product.originalPrice)}
-                                            </span>
-                                        )}
-                                        <span className="text-base font-bold text-gray-900">
-                                            {format(product.price)}
+                                {/* Price */}
+                                <div className="flex flex-col mt-1">
+                                    {product.originalPrice && product.originalPrice > product.price && (
+                                        <span className="text-xs text-gray-400 line-through">
+                                            {format(product.originalPrice)}
                                         </span>
-                                    </div>
+                                    )}
+                                    <span className="text-base font-bold text-gray-900">
+                                        {format(product.price)}
+                                    </span>
                                 </div>
                             </div>
-                        );
-                    })}
-                </div>
+                        </div>
+                    );
+                })}
             </div>
         </section>
     );
