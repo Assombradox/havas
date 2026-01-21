@@ -5,19 +5,19 @@ const Footer: React.FC = () => {
 
     return (
         <footer className="w-full bg-gray-50 py-8 px-4 mt-auto">
-            <div className="max-w-7xl mx-auto flex flex-col gap-6 text-left">
+            <div className="max-w-7xl mx-auto flex flex-col gap-2 text-left">
                 {/* Copyright */}
-                <p className="text-xs text-gray-500">
+                <p className="text-sm font-bold text-gray-900">
                     © {currentYear} Havaianas Brasil. All Rights Reserved.
                 </p>
 
                 {/* Legal Info */}
-                <div className="text-xs text-gray-500 leading-relaxed space-y-4">
-                    <p>
+                <div className="text-xs text-gray-500 leading-snug">
+                    <p className="mb-1">
                         Razão Social: Alpargatas S.A. • CNPJ: 61.079.117/0001-05 • Endereço: Av. das Nações Unidas, nº 14.261 - Ala A - 10º andar - São Paulo - São Paulo - Brasil - CEP 04794-000
                     </p>
 
-                    <p>
+                    <p className="mb-1">
                         Fale Conosco: SP (11) 3003-3414 | Outras regiões 0800 7070 566 • Horário de Atendimento: 09h às 18h de segunda a sexta
                     </p>
 
