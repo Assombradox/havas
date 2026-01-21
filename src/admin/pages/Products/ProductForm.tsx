@@ -2,7 +2,35 @@ import React, { useEffect, useState } from 'react';
 import { productsAdminService } from '../../services/productsAdminService';
 import type { Product } from '../../../types/Product';
 import { categoriesAdminService } from '../../services/categoriesAdminService';
-import { ArrowLeft, Save, Plus, X } from 'lucide-react';
+import { ArrowLeft, Save, Plus, X, ImageOff } from 'lucide-react';
+
+const ImagePreview: React.FC<{ url: string }> = ({ url }) => {
+    const [error, setError] = useState(false);
+
+    // Reset error if url changes
+    useEffect(() => {
+        setError(false);
+    }, [url]);
+
+    if (!url || url.trim() === '') return null;
+
+    if (error) {
+        return (
+            <div className="w-16 h-16 shrink-0 rounded-lg border border-gray-200 bg-gray-100 flex items-center justify-center text-gray-400" title="Falha ao carregar imagem">
+                <ImageOff size={16} />
+            </div>
+        );
+    }
+
+    return (
+        <img
+            src={url}
+            alt="Preview"
+            onError={() => setError(true)}
+            className="w-16 h-16 shrink-0 object-cover rounded-lg border border-gray-200 bg-gray-50"
+        />
+    );
+};
 
 interface ProductFormProps {
     id?: string; // If present, edit mode
@@ -378,13 +406,16 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
                                     {/* Thumbnail URL */}
                                     <div>
                                         <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Thumbnail URL</label>
-                                        <input
-                                            type="text"
-                                            value={color.thumbnail}
-                                            onChange={(e) => updateColor(idx, 'thumbnail', e.target.value)}
-                                            className="w-full p-2 border border-gray-300 rounded bg-white font-mono text-xs"
-                                            placeholder="https://..."
-                                        />
+                                        <div className="flex gap-3 items-start">
+                                            <input
+                                                type="text"
+                                                value={color.thumbnail}
+                                                onChange={(e) => updateColor(idx, 'thumbnail', e.target.value)}
+                                                className="w-full p-2 border border-gray-300 rounded bg-white font-mono text-xs"
+                                                placeholder="https://..."
+                                            />
+                                            <ImagePreview url={color.thumbnail} />
+                                        </div>
                                     </div>
 
                                     {/* Images List */}
@@ -399,6 +430,17 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
                                             className="w-full p-2 border border-gray-300 rounded bg-white font-mono text-xs"
                                             placeholder="https://imagem1.jpg&#10;https://imagem2.jpg"
                                         />
+
+                                        {/* Gallery Preview */}
+                                        <div className="flex flex-wrap gap-2 mt-3 p-2 bg-gray-50/50 rounded-lg border border-dashed border-gray-200 min-h-[80px]">
+                                            {color.images.length > 0 && color.images.some(url => url.trim()) ? (
+                                                color.images.map((img, i) => (
+                                                    <ImagePreview key={i} url={img} />
+                                                ))
+                                            ) : (
+                                                <span className="text-xs text-gray-400 self-center w-full text-center">As imagens aparecerão aqui...</span>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -10,23 +10,15 @@ export interface DashboardOrder {
         name: string;
         email: string;
         phone?: string;
-        address?: {
-            street: string;
-            number: string;
-            complement?: string;
-            neighborhood?: string;
-            city: string;
-            state: string;
-            zipCode: string;
-        };
+        document?: string;
     } | null;
-    items?: Array<{
-        name: string;
+    items: Array<{
+        title: string;
         quantity: number;
-        price: number;
-        image?: string;
-        color?: string;
-        size?: string;
+        unitPrice: number;
+        tangible: boolean;
+        color?: string; // Optional if not coming from backend yet
+        size?: string;  // Optional if not coming from backend yet
     }>;
     createdAt: string;
 }

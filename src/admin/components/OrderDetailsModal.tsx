@@ -8,12 +8,15 @@ interface OrderDetailsModalProps {
 }
 
 const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ order, onClose }) => {
-    // Calculate subtotal from items
-    const subtotal = order.items?.reduce((acc, item) => acc + (item.price * item.quantity), 0) || 0;
+    // Calculate subtotal from items using unitPrice
+    const subtotal = order.items?.reduce((acc, item) => acc + ((item.unitPrice || 0) * item.quantity), 0) || 0;
     const fixedFreight = 0.99;
     const total = subtotal + fixedFreight;
 
-    const formatCurrency = (val: number) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+    const formatCurrency = (val: number) => {
+        if (isNaN(val)) return 'R$ 0,00';
+        return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+    };
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-in fade-in duration-200">
@@ -48,20 +51,13 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ order, onClose })
                                     <Phone size={12} /> {order.customer?.phone || "-"}
                                 </div>
                             </div>
-                            <div className="text-gray-600">
-                                <div className="flex items-start gap-2">
-                                    <MapPin size={12} className="mt-1 shrink-0" />
-                                    <span>
-                                        {order.customer?.address ? (
-                                            <>
-                                                {order.customer.address.street}, {order.customer.address.number}<br />
-                                                {order.customer.address.neighborhood} - {order.customer.address.city}/{order.customer.address.state}<br />
-                                                CEP: {order.customer.address.zipCode}
-                                            </>
-                                        ) : (
-                                            "Endereço não informado"
-                                        )}
-                                    </span>
+                            <div className="text-gray-600 md:text-right">
+                                {order.customer?.document && (
+                                    <p className="text-xs text-gray-500 mb-1">Doc: {order.customer.document}</p>
+                                )}
+                                <div className="flex items-center md:justify-end gap-2 text-xs italic text-gray-400">
+                                    <MapPin size={12} />
+                                    <span>Endereço não disponível via API</span>
                                 </div>
                             </div>
                         </div>
@@ -84,11 +80,11 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ order, onClose })
                                 <tbody className="divide-y divide-gray-100">
                                     {order.items?.map((item, idx) => (
                                         <tr key={idx}>
-                                            <td className="p-3 font-medium text-gray-900">{item.name}</td>
-                                            <td className="p-3 text-gray-500">{item.color || '-'} / {item.size || '-'}</td>
+                                            <td className="p-3 font-medium text-gray-900">{item.title}</td>
+                                            <td className="p-3 text-gray-500">{item.color ? `${item.color} / ${item.size}` : '-'}</td>
                                             <td className="p-3 text-center">{item.quantity}</td>
-                                            <td className="p-3 text-right text-gray-600">{formatCurrency(item.price)}</td>
-                                            <td className="p-3 text-right font-semibold text-gray-900">{formatCurrency(item.price * item.quantity)}</td>
+                                            <td className="p-3 text-right text-gray-600">{formatCurrency(item.unitPrice)}</td>
+                                            <td className="p-3 text-right font-semibold text-gray-900">{formatCurrency((item.unitPrice || 0) * item.quantity)}</td>
                                         </tr>
                                     ))}
                                     {(!order.items || order.items.length === 0) && (
