@@ -55,6 +55,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
         sizes: []
     });
 
+    // Generate robust ID for new products
     useEffect(() => {
         const loadData = async () => {
             // Load Categories
@@ -72,8 +73,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
                     setFormData(existing);
                 }
             } else {
-                // Generate random ID for new product
-                setFormData(prev => ({ ...prev, id: Math.floor(Math.random() * 10000).toString() }));
+                // Generate robust ID: Timestamp (base36) + Random (base36)
+                // Result example: "lz4f5g9x-2a"
+                const uniqueId = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 5);
+                setFormData(prev => ({ ...prev, id: uniqueId }));
             }
         };
         loadData();
@@ -84,12 +87,37 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
         window.dispatchEvent(new Event('popstate'));
     };
 
+    const generateSlug = (text: string) => {
+        return text
+            .toString()
+            .toLowerCase()
+            .normalize('NFD') // Split accents from letters
+            .replace(/[\u0300-\u036f]/g, '') // Remove accents
+            .replace(/\s+/g, '-') // Spaces to hyphens
+            .replace(/[^\w\-]+/g, '') // Remove non-word chars
+            .replace(/\-\-+/g, '-') // Remove multiple hyphens
+            .replace(/^-+/, '') // Trim start
+            .replace(/-+$/, ''); // Trim end
+    };
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: ['price', 'originalPrice', 'rating', 'reviewCount'].includes(name) ? parseFloat(value) || 0 : value
-        }));
+
+        setFormData(prev => {
+            const updates: any = {
+                [name]: ['price', 'originalPrice', 'rating', 'reviewCount'].includes(name) ? parseFloat(value) || 0 : value
+            };
+
+            // Auto-generate slug from name if creating new product or if slug matches old name pattern
+            if (name === 'name' && !isEditMode) {
+                // Check if current slug is empty or matches the auto-generated version of the previous name
+                // For simplicity in this V1, we just auto-update if it's a new product and user hasn't manually edited slug to vary wildly
+                // A simple approach is: always auto-update slug on name change for NEW products
+                updates.slug = generateSlug(value);
+            }
+
+            return { ...prev, ...updates };
+        });
     };
 
     const handleCategoryToggle = (slug: string) => {
