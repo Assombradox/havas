@@ -20,6 +20,10 @@ import { categoriesRouter } from './routes/categories.routes';
 app.use('/products', productsRouter);
 app.use('/categories', categoriesRouter);
 
+// Auth Routes
+import { authRouter } from './routes/auth.routes';
+app.use('/api/auth', authRouter);
+
 app.post('/api/pix/create', handleCreatePixPayment);
 app.get('/api/pix/:paymentId', handleGetPixPayment);
 app.post('/api/pix/webhook', handlePixWebhook);
