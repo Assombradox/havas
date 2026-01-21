@@ -1,6 +1,6 @@
 import type { CategoryConfig } from '../../types/Category';
 
-const API_URL = `${(import.meta.env.VITE_API_URL || 'http://localhost:3000').replace(/\/$/, '')}/api/categories`;
+const API_URL = `${(import.meta.env.VITE_API_URL || 'http://localhost:3000').replace(/\/$/, '')}/categories`;
 
 console.log('🔌 Categories Service initialized with API:', API_URL);
 
