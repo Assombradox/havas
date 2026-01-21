@@ -170,7 +170,7 @@ function App() {
 
         <HeroBanner />
         <ScrollingAnnouncementBar />
-        <FeaturedSection title="Lançamentos" categorySlug="lancamentos" limit={4} />
+        <FeaturedSection title="Lançamentos" categorySlug="chinelos" limit={5} />
         <CategoryCarousel />
         <FeaturedSection title="Feminino" categorySlug="feminino" limit={4} />
         <FeaturedSection title="Masculino" categorySlug="masculino" limit={4} />
