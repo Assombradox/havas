@@ -21,30 +21,37 @@ export const categoriesAdminService = {
     },
 
     save: async (category: CategoryConfig): Promise<void> => {
+        // Ensure ID is present for MongoDB backend
+        const payload = {
+            ...category,
+            id: category.id || category.slug
+        };
+
         // Check existence by slug to decide PUT or POST
-        // Similar to products, we can try to fetch it or check the list.
-        // Let's try to fetch the specific one.
         const existing = await categoriesAdminService.getById(category.slug);
 
         if (existing) {
             const response = await fetch(`${API_URL}/${category.slug}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(category)
+                body: JSON.stringify(payload)
             });
             if (!response.ok) throw new Error('Failed to update category');
         } else {
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(category)
+                body: JSON.stringify(payload)
             });
             if (!response.ok) throw new Error('Failed to create category');
         }
     },
 
-    delete: async (): Promise<void> => {
-        console.warn('Delete not implemented in V1 Backend');
+    delete: async (slug: string): Promise<void> => {
+        const response = await fetch(`${API_URL}/${slug}`, {
+            method: 'DELETE'
+        });
+        if (!response.ok) throw new Error('Failed to delete category');
     }
 };
 
