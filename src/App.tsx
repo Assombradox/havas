@@ -5,11 +5,10 @@ import Header from './components/Header';
 import DeliveryAvailabilityBar from './components/DeliveryAvailabilityBar';
 import HeroBanner from './components/HeroBanner';
 import ScrollingAnnouncementBar from './components/ScrollingAnnouncementBar';
-import ProductGrid from './components/ProductGrid';
 import CategoryCarousel from './components/CategoryCarousel';
-import SummerProductGrid from './components/SummerProductGrid';
 import EditorialBanner from './components/EditorialBanner';
 import CategoryCarousel2 from './components/CategoryCarousel2';
+import FeaturedSection from './components/FeaturedSection';
 import ScrollingAnnouncementBarDelivery from './components/ScrollingAnnouncementBarDelivery';
 import FAQSection from './components/FAQSection';
 import Footer from './components/Footer';
@@ -171,9 +170,10 @@ function App() {
 
         <HeroBanner />
         <ScrollingAnnouncementBar />
-        <ProductGrid />
+        <FeaturedSection title="Lançamentos" categorySlug="lancamentos" limit={4} />
         <CategoryCarousel />
-        <SummerProductGrid />
+        <FeaturedSection title="Feminino" categorySlug="feminino" limit={4} />
+        <FeaturedSection title="Masculino" categorySlug="masculino" limit={4} />
         <EditorialBanner />
         <CategoryCarousel2 />
         <ScrollingAnnouncementBarDelivery />
