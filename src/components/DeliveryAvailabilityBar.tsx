@@ -20,7 +20,8 @@ const DeliveryAvailabilityBar: React.FC = () => {
                 }
             })
             .catch(err => {
-                console.error("Erro ao buscar local:", err);
+                // Silent fail/Warn only (AdBlockers often block this)
+                console.warn("Geolocalização automática indisponível (Bloqueada pelo Cliente/AdBlock).");
                 // Keep default "todo o Brasil"
             });
     }, []);
