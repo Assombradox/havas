@@ -29,6 +29,8 @@ import ProductForm from './admin/pages/Products/ProductForm';
 import CategoriesList from './admin/pages/Categories/CategoriesList';
 import CategoryForm from './admin/pages/Categories/CategoryForm';
 import OrdersList from './admin/pages/Orders/OrdersList';
+import Login from './admin/pages/Login';
+import ProtectedRoute from './admin/components/ProtectedRoute';
 
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -39,52 +41,64 @@ function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
-
-
   // Move content rendering to a helper function or component to clean up
   const renderContent = () => {
     // --- ADMIN ROUTES ---
     if (currentPath.startsWith('/admin')) {
+      // Login - Public
+      if (currentPath === '/admin/login') {
+        return <Login />;
+      }
+
+      // Protected Admin Area
+      const protectedAdmin = (component: React.ReactNode) => (
+        <ProtectedRoute>
+          <AdminLayout>
+            {component}
+          </AdminLayout>
+        </ProtectedRoute>
+      );
+
       // Dashboard
       if (currentPath === '/admin') {
-        return <AdminLayout><Dashboard /></AdminLayout>;
+        return protectedAdmin(<Dashboard />);
       }
 
       // Products List
       if (currentPath === '/admin/products') {
-        return <AdminLayout><ProductsList /></AdminLayout>;
+        return protectedAdmin(<ProductsList />);
       }
 
       // Product Create
       if (currentPath === '/admin/products/new') {
-        return <AdminLayout><ProductForm /></AdminLayout>;
+        return protectedAdmin(<ProductForm />);
       }
 
       // Product Edit
       if (currentPath.startsWith('/admin/products/')) {
         const id = currentPath.split('/admin/products/')[1];
-        return <AdminLayout><ProductForm id={id} /></AdminLayout>;
+        return protectedAdmin(<ProductForm id={id} />);
       }
 
       // Categories List
       if (currentPath === '/admin/categories') {
-        return <AdminLayout><CategoriesList /></AdminLayout>;
+        return protectedAdmin(<CategoriesList />);
       }
 
       // Category Create
       if (currentPath === '/admin/categories/new') {
-        return <AdminLayout><CategoryForm /></AdminLayout>;
+        return protectedAdmin(<CategoryForm />);
       }
 
       // Category Edit
       if (currentPath.startsWith('/admin/categories/')) {
         const slug = currentPath.split('/admin/categories/')[1];
-        return <AdminLayout><CategoryForm slug={slug} /></AdminLayout>;
+        return protectedAdmin(<CategoryForm slug={slug} />);
       }
 
       // Orders List
       if (currentPath === '/admin/orders') {
-        return <AdminLayout><OrdersList /></AdminLayout>;
+        return protectedAdmin(<OrdersList />);
       }
     }
 
