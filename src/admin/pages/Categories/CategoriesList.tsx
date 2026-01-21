@@ -25,18 +25,17 @@ const CategoriesList: React.FC = () => {
         window.dispatchEvent(new Event('popstate'));
     };
 
-    const handleDelete = async (_slug: string, title: string) => {
+    const handleDelete = async (slug: string, title: string) => {
         if (confirm(`Tem certeza que deseja excluir "${title}"?`)) {
-            // Updated signature check: previously it took 1 arg, now warns 0 expected. 
-            // In src/admin/services/categoriesAdminService.ts we saw delete: async () => ...
-            // Use it correctly, or if we need slug, we must update the service interface.
-            // For now, let's assume the service is what it is (no-op) and just call it.
-            // BUT, the user intent is delete(slug). 
-            // The service definition was: delete: async (): Promise<void> => { console.warn... }
-            // Let's call it without args to satisfy TS, knowing it's a no-op anyway.
-            await categoriesAdminService.delete();
-            const data = await categoriesAdminService.getAll();
-            setCategories(data);
+            try {
+                await categoriesAdminService.delete(slug);
+                // Refresh list
+                const data = await categoriesAdminService.getAll();
+                setCategories(data);
+            } catch (error) {
+                console.error("Failed to delete category", error);
+                alert("Erro ao excluir categoria");
+            }
         }
     };
 

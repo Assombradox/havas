@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import AnnouncementBar from './components/AnnouncementBar';
 import Header from './components/Header';
 import DeliveryAvailabilityBar from './components/DeliveryAvailabilityBar';
@@ -171,6 +172,7 @@ function App() {
 
   return (
     <CartProvider>
+      <SpeedInsights />
       {renderContent()}
       <CartContainer />
     </CartProvider>
