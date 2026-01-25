@@ -9,6 +9,7 @@ import CategoryCarousel from './components/CategoryCarousel';
 import EditorialBanner from './components/EditorialBanner';
 import CategoryCarousel2 from './components/CategoryCarousel2';
 import FeaturedSection from './components/FeaturedSection';
+import IconicSection from './components/IconicSection';
 import ScrollingAnnouncementBarDelivery from './components/ScrollingAnnouncementBarDelivery';
 import FAQSection from './components/FAQSection';
 import Footer from './components/Footer';
@@ -171,6 +172,7 @@ function App() {
         <HeroBanner />
         <ScrollingAnnouncementBar />
         <FeaturedSection title="Lançamentos" categorySlug="chinelos" limit={5} />
+        <IconicSection title="Os mais icônicos" categorySlug="iconicos" />
         <CategoryCarousel />
         <FeaturedSection title="Feminino" categorySlug="feminino" limit={4} />
         <FeaturedSection title="Masculino" categorySlug="masculino" limit={4} />
