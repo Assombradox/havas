@@ -12,7 +12,7 @@ import DeliveryInfo from '../components/DeliveryInfo';
 import ProductDescription from '../components/ProductDescription';
 import ScrollingAnnouncementBarDelivery from '../components/ScrollingAnnouncementBarDelivery';
 import FAQSection from '../components/FAQSection';
-import ProductGrid from '../components/ProductGrid';
+import FeaturedSection from '../components/FeaturedSection';
 import FixedBottomPurchaseBar from '../components/FixedBottomPurchaseBar';
 import Footer from '../components/Footer';
 
@@ -23,7 +23,7 @@ const ProductPDP: React.FC = () => {
     const [selectedColor, setSelectedColor] = useState<ProductColor | null>(null);
     const [notFound, setNotFound] = useState(false);
     const [colorVariations, setColorVariations] = useState<Product[]>([]);
-    const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
+
 
     const { addToCart } = useCart();
 
@@ -64,16 +64,6 @@ const ProductPDP: React.FC = () => {
         };
         loadProduct();
     }, [window.location.pathname]);
-
-    // Load Recommended Products (Related) - Depends on product
-    useEffect(() => {
-        if (product) {
-            productsService.getAll().then(all => {
-                const others = all.filter(p => p.id !== product.id).slice(0, 4);
-                setRelatedProducts(others);
-            });
-        }
-    }, [product]);
 
     // 3. Handlers & Logic
     const handleColorSelect = (color: ProductColor) => {
@@ -247,13 +237,12 @@ const ProductPDP: React.FC = () => {
                     </div>
                 )}
 
-                {/* Recommended Products */}
-                {relatedProducts.length > 0 && (
-                    <ProductGrid
-                        title="Leve também 🛍️"
-                        products={relatedProducts}
-                    />
-                )}
+                {/* Recommended Products - Using FeaturedSection for better UX/Links */}
+                <FeaturedSection
+                    title="Leve também 🛍️"
+                    categorySlug={product.categories?.[0] || 'lancamentos'}
+                    limit={4}
+                />
 
 
                 {/* Delivery Marquee */}
