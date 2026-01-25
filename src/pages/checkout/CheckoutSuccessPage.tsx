@@ -8,12 +8,36 @@ const CheckoutSuccessPage: React.FC = () => {
     const { cartItems, subtotal } = useCart();
     const { checkoutData } = useCheckout();
 
-    // Defaults for safety if context is empty
-    const deadline = checkoutData?.delivery?.deadline || "A definir";
-    const address = checkoutData?.address;
-    const fullAddress = address
-        ? `${address.street}, ${address.number} - ${address.city}/${address.state}`
-        : "Endereço não informado";
+    // Mock Data for Debug/Direct Access
+    let finalItems = cartItems;
+    let finalSubtotal = subtotal;
+    let finalDeadline = checkoutData?.delivery?.deadline || "A definir";
+    let finalAddress = checkoutData?.address;
+
+    // Detect Debug Mode (Empty Cart logic)
+    if (cartItems.length === 0) {
+        finalItems = [
+            { id: 'mock-1', name: 'Chinelo Havaianas Top', unitPrice: 49.99, discountedPrice: 49.99, quantity: 1, image: 'https://havaianas.com.br/dw/image/v2/BDDJ_PRD/on/demandware.static/-/Sites-havaianas-master/default/dw12271876/product-images/4000029_0090_HAVAIANAS%20TOP_C.png', color: 'Preto', size: '39/40' },
+            { id: 'mock-2', name: 'Chinelo Slim Glitter', unitPrice: 89.99, discountedPrice: 79.99, quantity: 1, image: 'https://havaianas.com.br/dw/image/v2/BDDJ_PRD/on/demandware.static/-/Sites-havaianas-master/default/dw90295dae/product-images/4146975_0090_HAVAIANAS%20SLIM%20GLITTER%20II_C.png', color: 'Dourado', size: '35/36' }
+        ];
+        finalSubtotal = 129.98;
+        finalDeadline = "3 dias úteis";
+        finalAddress = {
+            street: "Av. Paulista",
+            number: "1578",
+            city: "São Paulo",
+            state: "SP",
+            zip: "01310-200",
+            country: "Brasil",
+            neighborhood: "Bela Vista",
+            uf: "SP",
+            complement: ""
+        };
+    }
+
+    const fullAddress = finalAddress
+        ? `${finalAddress.street}, ${finalAddress.number} - ${finalAddress.city}/${finalAddress.state}`
+        : "Endereço não informado/Retirada";
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('pt-BR', {
@@ -53,7 +77,7 @@ const CheckoutSuccessPage: React.FC = () => {
                                 Previsão de Entrega
                             </p>
                             <p className="font-bold text-gray-900 text-sm">
-                                {deadline}
+                                {finalDeadline}
                             </p>
                         </div>
                     </div>
@@ -82,7 +106,7 @@ const CheckoutSuccessPage: React.FC = () => {
                     </p>
 
                     <div className="space-y-3 mb-4">
-                        {cartItems.map((item) => (
+                        {finalItems.map((item) => (
                             <div key={item.id} className="flex gap-3">
                                 <div className="w-12 h-12 border border-gray-100 bg-gray-50 relative shrink-0">
                                     <span className="absolute -top-1.5 -right-1.5 bg-gray-500 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full z-10">
@@ -106,7 +130,7 @@ const CheckoutSuccessPage: React.FC = () => {
                     {/* Total Row */}
                     <div className="pt-3 border-t border-gray-100 flex justify-between items-center">
                         <span className="text-sm font-medium text-gray-600">Total Pago</span>
-                        <span className="text-lg font-bold text-gray-900">{formatPrice(subtotal)}</span>
+                        <span className="text-lg font-bold text-gray-900">{formatPrice(finalSubtotal)}</span>
                     </div>
                 </div>
             </div>
