@@ -51,20 +51,6 @@ export const productsService = {
         }
     },
 
-    createBulk: async (productsData: any[]): Promise<IProduct[]> => {
-        try {
-            // Sanitize: remove system fields if present
-            const cleanData = productsData.map(p => {
-                const { _id, createdAt, updatedAt, __v, ...rest } = p;
-                return rest;
-            });
-            return await Product.insertMany(cleanData);
-        } catch (error) {
-            console.error('Error creating bulk products:', error);
-            throw error;
-        }
-    },
-
     update: async (id: string, updates: Partial<IProduct>): Promise<IProduct | null> => {
         try {
             return await Product.findOneAndUpdate(

@@ -26,20 +26,6 @@ router.get('/:slug', async (req, res) => {
     }
 });
 
-// POST /products/bulk
-router.post('/bulk', async (req, res) => {
-    try {
-        const products = req.body;
-        if (!Array.isArray(products)) {
-            return res.status(400).json({ error: 'Body must be an array of products' });
-        }
-        const createdProducts = await productsService.createBulk(products);
-        res.status(201).json({ success: true, count: createdProducts.length });
-    } catch (error: any) {
-        res.status(400).json({ error: error.message });
-    }
-});
-
 // POST /products
 router.post('/', async (req, res) => {
     try {

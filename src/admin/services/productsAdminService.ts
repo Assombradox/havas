@@ -48,18 +48,6 @@ export const productsAdminService = {
         }
     },
 
-    createBulk: async (products: any[]): Promise<void> => {
-        const response = await fetch(`${API_URL}/bulk`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(products)
-        });
-        if (!response.ok) {
-            const err = await response.json();
-            throw new Error(err.error || 'Failed to bulk import products');
-        }
-    },
-
     delete: async (id: string): Promise<void> => {
         const response = await fetch(`${API_URL}/${id}`, {
             method: 'DELETE'
