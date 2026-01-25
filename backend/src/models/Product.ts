@@ -17,6 +17,7 @@ export interface IProduct extends Document {
     name: string;
     price: number;
     originalPrice?: number;
+    coverImage?: string;
     description: string;
     colors: IProductColor[];
     sizes: IProductSize[];
@@ -33,6 +34,7 @@ const ProductSchema: Schema = new Schema({
     name: { type: String, required: true },
     price: { type: Number, required: true },
     originalPrice: { type: Number },
+    coverImage: { type: String },
     description: { type: String },
     categories: [{ type: String }], // Array of slugs
     colors: [{

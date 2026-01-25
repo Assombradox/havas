@@ -254,6 +254,21 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
                             onChange={handleChange}
                         />
                     </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Imagem de Capa - Marketing <span className="text-gray-400 font-normal">(Opcional)</span></label>
+                        <div className="flex gap-2">
+                            <input
+                                type="text"
+                                name="coverImage"
+                                placeholder="URL da imagem (ex: banner ou poster)"
+                                className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                value={formData.coverImage || ''}
+                                onChange={handleChange}
+                            />
+                            {formData.coverImage && <ImagePreview url={formData.coverImage} />}
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">Usada na seção "Os mais icônicos". Se vazio, usa a primeira imagem do produto.</p>
+                    </div>
                 </section>
 
                 {/* Pricing & Ratings */}

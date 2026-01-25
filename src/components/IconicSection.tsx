@@ -49,7 +49,7 @@ const IconicSection: React.FC<IconicSectionProps> = ({ title, categorySlug }) =>
             {/* Horizontal Scroll Container */}
             <div className="flex overflow-x-auto w-full px-4 pb-4 gap-4 snap-x snap-mandatory scrollbar-hide">
                 {products.map((product) => {
-                    const mainImage = product.colors?.[0]?.images?.[0] || product.colors?.[0]?.thumbnail || '';
+                    const mainImage = product.coverImage || product.colors?.[0]?.images?.[0] || product.colors?.[0]?.thumbnail || '';
 
                     return (
                         <div

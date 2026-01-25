@@ -17,6 +17,7 @@ export interface Product {
     description?: string;
     price: number;
     originalPrice?: number;
+    coverImage?: string;
     rating: number;
     reviewCount: number;
     colors: ProductColor[];

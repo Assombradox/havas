@@ -171,13 +171,20 @@ function App() {
 
         <HeroBanner />
         <ScrollingAnnouncementBar />
-        <FeaturedSection title="Lançamentos" categorySlug="chinelos" limit={5} />
-        <IconicSection title="Os mais icônicos" categorySlug="iconicos" />
+
         <CategoryCarousel />
-        <FeaturedSection title="Feminino" categorySlug="feminino" limit={4} />
-        <FeaturedSection title="Masculino" categorySlug="masculino" limit={4} />
-        <EditorialBanner />
+
+        <FeaturedSection title="Lançamentos" categorySlug="lancamentos" limit={8} />
+
+        <IconicSection title="Os mais icônicos" categorySlug="iconicos" />
+
+        <FeaturedSection title="Destaques Femininos" categorySlug="feminino" limit={8} />
+
         <CategoryCarousel2 />
+
+        <FeaturedSection title="Para Eles" categorySlug="masculino" limit={8} />
+
+        <EditorialBanner />
         <ScrollingAnnouncementBarDelivery />
         <FAQSection />
 
