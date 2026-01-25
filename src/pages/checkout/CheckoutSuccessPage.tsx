@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { CheckCircle2, MessageCircle, ShoppingBag, Calendar, MapPin } from 'lucide-react';
 import logo from '../../assets/logo.png';
 
