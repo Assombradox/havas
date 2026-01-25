@@ -1,50 +1,66 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { CheckCircle2, MessageCircle, ShoppingBag, Calendar, MapPin } from 'lucide-react';
-import { useCart } from '../../context/CartContext';
-import { useCheckout } from '../../context/CheckoutContext';
 import logo from '../../assets/logo.png';
 
-const CheckoutSuccessPage: React.FC = () => {
-    const { cartItems, subtotal } = useCart();
-    const { checkoutData } = useCheckout();
-
-    // Mock Data for Debug/Direct Access
-    let finalItems = cartItems;
-    let finalSubtotal = subtotal;
-    let finalDeadline = checkoutData?.delivery?.deadline || "A definir";
-    let finalAddress = checkoutData?.address;
-
-    // Detect Debug Mode (Empty Cart logic)
-    if (cartItems.length === 0) {
-        finalItems = [
-            { id: 'mock-1', name: 'Chinelo Havaianas Top', unitPrice: 49.99, discountedPrice: 49.99, quantity: 1, image: 'https://havaianas.com.br/dw/image/v2/BDDJ_PRD/on/demandware.static/-/Sites-havaianas-master/default/dw12271876/product-images/4000029_0090_HAVAIANAS%20TOP_C.png', color: 'Preto', size: '39/40' },
-            { id: 'mock-2', name: 'Chinelo Slim Glitter', unitPrice: 89.99, discountedPrice: 79.99, quantity: 1, image: 'https://havaianas.com.br/dw/image/v2/BDDJ_PRD/on/demandware.static/-/Sites-havaianas-master/default/dw90295dae/product-images/4146975_0090_HAVAIANAS%20SLIM%20GLITTER%20II_C.png', color: 'Dourado', size: '35/36' }
-        ];
-        finalSubtotal = 129.98;
-        finalDeadline = "3 dias úteis";
-        finalAddress = {
-            street: "Av. Paulista",
-            number: "1578",
-            city: "São Paulo",
-            state: "SP",
-            zip: "01310-200",
-            country: "Brasil",
-            neighborhood: "Bela Vista",
-            uf: "SP",
-            complement: ""
-        };
+// Fallback Mock Data
+const MOCK_ORDER = {
+    id: 'MOCK-123456',
+    items: [
+        {
+            id: 'mock-1',
+            name: 'Chinelo Havaianas Top',
+            color: 'Preto',
+            size: '39/40',
+            quantity: 1,
+            unitPrice: 49.99,
+            image: 'https://havaianas.com.br/dw/image/v2/BDDJ_PRD/on/demandware.static/-/Sites-havaianas-master/default/dw12271876/product-images/4000029_0090_HAVAIANAS%20TOP_C.png'
+        },
+        {
+            id: 'mock-2',
+            name: 'Chinelo Slim Glitter',
+            color: 'Dourado',
+            size: '35/36',
+            quantity: 1,
+            unitPrice: 89.99,
+            image: 'https://havaianas.com.br/dw/image/v2/BDDJ_PRD/on/demandware.static/-/Sites-havaianas-master/default/dw90295dae/product-images/4146975_0090_HAVAIANAS%20SLIM%20GLITTER%20II_C.png'
+        }
+    ],
+    total: 139.98,
+    shipping: {
+        deadline: '3 dias úteis',
+        address: {
+            street: 'Av. Paulista',
+            number: '1578',
+            city: 'São Paulo',
+            state: 'SP',
+            zip: '01310-200'
+        }
     }
+};
 
-    const fullAddress = finalAddress
-        ? `${finalAddress.street}, ${finalAddress.number} - ${finalAddress.city}/${finalAddress.state}`
-        : "Endereço não informado/Retirada";
+const CheckoutSuccessPage: React.FC = () => {
+    // 1. Safe State Access via Window History (Custom Router)
+    const historyState = window.history.state as any; // Type as needed
 
+    // We try to get the order from navigation state (real flow)
+    // If missing, we fallback to MOCK_ORDER (debug/direct access)
+    // We assume if state.order exists, it has the valid structure.
+    const hasRealOrder = !!historyState?.order;
+    const order = hasRealOrder ? historyState.order : MOCK_ORDER;
+
+    // Helper to format price
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('pt-BR', {
             style: 'currency',
             currency: 'BRL'
         }).format(price);
     };
+
+    // Address formatting fallback
+    const address = order.shipping?.address;
+    const fullAddress = address
+        ? `${address.street}, ${address.number} - ${address.city}/${address.state}`
+        : "Endereço não informado";
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-start p-4 font-sans pb-12">
@@ -61,8 +77,13 @@ const CheckoutSuccessPage: React.FC = () => {
                 </div>
                 <h1 className="text-2xl font-bold text-gray-900 mb-1">Pedido Confirmado!</h1>
                 <p className="text-gray-600 text-sm">
-                    Obrigado pela compra. Abaixo estão os detalhes do seu pedido.
+                    Obrigado pela compra. Abaixo estão os detalhes do pedido.
                 </p>
+                {!hasRealOrder && (
+                    <span className="inline-block mt-2 px-2 py-0.5 bg-yellow-100 text-yellow-800 text-[10px] font-bold uppercase rounded-sm border border-yellow-200">
+                        Modo Visualização (Mock)
+                    </span>
+                )}
             </div>
 
             {/* Receipt Card */}
@@ -77,7 +98,7 @@ const CheckoutSuccessPage: React.FC = () => {
                                 Previsão de Entrega
                             </p>
                             <p className="font-bold text-gray-900 text-sm">
-                                {finalDeadline}
+                                {order.shipping?.deadline || 'A definir'}
                             </p>
                         </div>
                     </div>
@@ -106,13 +127,13 @@ const CheckoutSuccessPage: React.FC = () => {
                     </p>
 
                     <div className="space-y-3 mb-4">
-                        {finalItems.map((item) => (
-                            <div key={item.id} className="flex gap-3">
+                        {order.items.map((item: any, idx: number) => (
+                            <div key={item.id || idx} className="flex gap-3">
                                 <div className="w-12 h-12 border border-gray-100 bg-gray-50 relative shrink-0">
                                     <span className="absolute -top-1.5 -right-1.5 bg-gray-500 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full z-10">
                                         {item.quantity}
                                     </span>
-                                    <img src={item.image} alt={item.name} className="w-full h-full object-contain p-0.5" />
+                                    {item.image && <img src={item.image} alt={item.name} className="w-full h-full object-contain p-0.5" />}
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <h4 className="text-sm font-medium text-gray-900 truncate">{item.name}</h4>
@@ -130,7 +151,7 @@ const CheckoutSuccessPage: React.FC = () => {
                     {/* Total Row */}
                     <div className="pt-3 border-t border-gray-100 flex justify-between items-center">
                         <span className="text-sm font-medium text-gray-600">Total Pago</span>
-                        <span className="text-lg font-bold text-gray-900">{formatPrice(finalSubtotal)}</span>
+                        <span className="text-lg font-bold text-gray-900">{formatPrice(order.total)}</span>
                     </div>
                 </div>
             </div>
