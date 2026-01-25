@@ -7,7 +7,14 @@ import { handleSimulatePixPay } from './api/pix/simulate';
 const app = express();
 
 // Middlewares
-app.use(cors()); // Allow Frontend to access
+app.use(cors({
+    origin: (origin, callback) => {
+        // Allow all origins for now to prevent blocking, or whitelist specific ones
+        callback(null, true);
+    },
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+}));
 app.use(express.json());
 
 import { paymentStore } from './store/paymentStore';
