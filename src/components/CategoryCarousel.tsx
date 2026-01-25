@@ -46,11 +46,17 @@ const CategoryCarousel: React.FC = () => {
                         <div className="w-full aspect-[2/2] mb-2 rounded-lg overflow-hidden relative">
                             {/* Background color placeholder */}
                             <div className="w-full h-full bg-gray-100 transition-transform duration-300 group-hover:scale-105">
-                                {category.image && (
+                                {category.image ? (
                                     <img
                                         src={category.image}
                                         alt={category.title}
                                         className="w-full h-full object-cover"
+                                    />
+                                ) : (
+                                    <img
+                                        src={`https://placehold.co/400x400/eee/999?text=${(category.title || '').substring(0, 3).toUpperCase()}`}
+                                        alt={category.title}
+                                        className="w-full h-full object-cover opacity-50"
                                     />
                                 )}
                             </div>

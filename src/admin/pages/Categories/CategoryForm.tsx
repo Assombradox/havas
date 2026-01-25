@@ -140,11 +140,10 @@ const CategoryForm: React.FC<CategoryFormProps> = ({ slug }) => {
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Imagem Key (Asset)</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Imagem Key (Asset) <span className="text-gray-400 font-normal">(Opcional)</span></label>
                         <input
                             type="text"
                             name="image"
-                            required
                             placeholder="ex: categoryChinelos"
                             className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                             value={formData.image}

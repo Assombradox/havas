@@ -15,7 +15,7 @@ const CategorySchema: Schema = new Schema({
     id: { type: String, required: true, unique: true, index: true },
     slug: { type: String, required: true, unique: true, index: true },
     name: { type: String, required: true },
-    image: { type: String, required: true },
+    image: { type: String },
     title: { type: String },
     description: { type: String },
     order: { type: Number },
