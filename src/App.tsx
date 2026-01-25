@@ -172,19 +172,18 @@ function App() {
         <HeroBanner />
         <ScrollingAnnouncementBar />
 
+        <FeaturedSection title="Outlet" categorySlug="outlet" limit={4} />
+
         <CategoryCarousel />
 
-        <FeaturedSection title="Lançamentos" categorySlug="lancamentos" limit={8} />
+        <FeaturedSection title="Verão é com as originais do Brasil" categorySlug="promo-as-originais" limit={4} />
 
         <IconicSection title="Os mais icônicos" categorySlug="iconicos" />
 
-        <FeaturedSection title="Destaques Femininos" categorySlug="feminino" limit={8} />
+        <EditorialBanner />
 
         <CategoryCarousel2 />
 
-        <FeaturedSection title="Para Eles" categorySlug="masculino" limit={8} />
-
-        <EditorialBanner />
         <ScrollingAnnouncementBarDelivery />
         <FAQSection />
 
