@@ -49,4 +49,17 @@ router.put('/:id', async (req, res) => {
     }
 });
 
+// DELETE /products/:id
+router.delete('/:id', async (req, res) => {
+    try {
+        const success = await productsService.delete(req.params.id);
+        if (!success) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+        res.status(204).send();
+    } catch (error: any) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 export const productsRouter = router;

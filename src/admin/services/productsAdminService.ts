@@ -48,10 +48,11 @@ export const productsAdminService = {
         }
     },
 
-    delete: async (_id: string): Promise<void> => {
-        // Backend didn't implement DELETE yet (as per "delete() (optional)" in plan).
-        // leaving strictly as requested with no-op or error
-        console.warn('Delete not implemented in V1 Backend');
+    delete: async (id: string): Promise<void> => {
+        const response = await fetch(`${API_URL}/${id}`, {
+            method: 'DELETE'
+        });
+        if (!response.ok) throw new Error('Failed to delete product');
     }
 };
 

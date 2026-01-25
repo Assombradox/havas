@@ -62,5 +62,15 @@ export const productsService = {
             console.error('Error updating product:', error);
             throw error;
         }
+    },
+
+    delete: async (id: string): Promise<boolean> => {
+        try {
+            const result = await Product.findOneAndDelete({ id: id });
+            return !!result;
+        } catch (error) {
+            console.error('Error deleting product:', error);
+            throw error;
+        }
     }
 };

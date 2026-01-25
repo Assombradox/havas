@@ -49,4 +49,17 @@ router.put('/:slug', async (req, res) => {
     }
 });
 
+// DELETE /categories/:slug
+router.delete('/:slug', async (req, res) => {
+    try {
+        const success = await categoriesService.delete(req.params.slug);
+        if (!success) {
+            return res.status(404).json({ error: 'Category not found' });
+        }
+        res.status(204).send();
+    } catch (error: any) {
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 export const categoriesRouter = router;

@@ -40,5 +40,15 @@ export const categoriesService = {
             console.error('Error updating category:', error);
             throw error;
         }
+    },
+
+    delete: async (slug: string): Promise<boolean> => {
+        try {
+            const result = await Category.findOneAndDelete({ slug: slug });
+            return !!result;
+        } catch (error) {
+            console.error('Error deleting category:', error);
+            throw error;
+        }
     }
 };
