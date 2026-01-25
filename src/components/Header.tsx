@@ -143,6 +143,11 @@ const Header: React.FC = () => {
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && searchQuery.trim()) {
+                                    handleMenuClick(`/search?q=${encodeURIComponent(searchQuery)}`);
+                                }
+                            }}
                             placeholder="O que você procura?"
                             className="w-full bg-transparent outline-none text-sm text-gray-700 placeholder:text-gray-400 font-medium"
                         />
@@ -161,8 +166,9 @@ const Header: React.FC = () => {
 
                     {/* Panel */}
                     <div className="relative w-[80%] max-w-[300px] bg-white h-full shadow-2xl animate-in slide-in-from-left duration-300 flex flex-col">
-                        {/* Drawer Header - Minimalist */}
-                        <div className="flex items-center justify-end p-6">
+                        {/* Drawer Header - New Design */}
+                        <div className="flex items-center justify-between p-6 border-b border-gray-100">
+                            <h2 className="text-xl font-bold text-gray-900">Navegação</h2>
                             <button
                                 onClick={() => setIsMenuOpen(false)}
                                 className="p-2 -mr-2 text-gray-400 hover:text-gray-900 transition-colors"
@@ -171,55 +177,47 @@ const Header: React.FC = () => {
                             </button>
                         </div>
 
-                        {/* Drawer Links - Clean List */}
-                        <nav className="flex-1 px-8 pb-8">
+                        {/* Drawer Links - Curated List */}
+                        <nav className="flex-1 px-8 py-8">
                             <ul className="flex flex-col gap-6">
                                 <li>
                                     <button
-                                        onClick={() => handleMenuClick('/category/lancamentos')}
-                                        className="text-[15px] font-medium text-gray-800 hover:text-red-600 lowercase tracking-wide transition-colors block w-full text-left"
+                                        onClick={() => handleMenuClick('/categoria/lancamentos')}
+                                        className="text-[15px] font-medium text-gray-800 hover:text-red-600 transition-colors block w-full text-left"
                                     >
-                                        novidades
+                                        Lançamentos
                                     </button>
                                 </li>
                                 <li>
                                     <button
-                                        onClick={() => handleMenuClick('/category/feminino')}
-                                        className="text-[15px] font-medium text-gray-800 hover:text-red-600 lowercase tracking-wide transition-colors block w-full text-left"
+                                        onClick={() => handleMenuClick('/categoria/masculino')}
+                                        className="text-[15px] font-medium text-gray-800 hover:text-red-600 transition-colors block w-full text-left"
                                     >
-                                        mulher
+                                        Masculino
                                     </button>
                                 </li>
                                 <li>
                                     <button
-                                        onClick={() => handleMenuClick('/category/masculino')}
-                                        className="text-[15px] font-medium text-gray-800 hover:text-red-600 lowercase tracking-wide transition-colors block w-full text-left"
+                                        onClick={() => handleMenuClick('/categoria/feminino')}
+                                        className="text-[15px] font-medium text-gray-800 hover:text-red-600 transition-colors block w-full text-left"
                                     >
-                                        homem
+                                        Feminino
                                     </button>
                                 </li>
                                 <li>
                                     <button
-                                        onClick={() => handleMenuClick('/category/infantil')}
-                                        className="text-[15px] font-medium text-gray-800 hover:text-red-600 lowercase tracking-wide transition-colors block w-full text-left"
+                                        onClick={() => handleMenuClick('/categoria/outlet')}
+                                        className="text-[15px] font-medium text-red-600 hover:text-red-700 transition-colors block w-full text-left"
                                     >
-                                        kids
+                                        Outlet
                                     </button>
                                 </li>
                                 <li>
                                     <button
-                                        onClick={() => handleMenuClick('/category/acessorios')}
-                                        className="text-[15px] font-medium text-gray-800 hover:text-red-600 lowercase tracking-wide transition-colors block w-full text-left"
+                                        onClick={() => handleMenuClick('/categoria/iconicos')}
+                                        className="text-[15px] font-medium text-gray-800 hover:text-red-600 transition-colors block w-full text-left"
                                     >
-                                        acessórios
-                                    </button>
-                                </li>
-                                <li>
-                                    <button
-                                        onClick={() => handleMenuClick('/category/outlet')}
-                                        className="text-[15px] font-medium text-red-600 hover:text-red-700 lowercase tracking-wide transition-colors block w-full text-left"
-                                    >
-                                        outlet
+                                        Destaques
                                     </button>
                                 </li>
                             </ul>

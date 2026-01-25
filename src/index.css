@@ -50,3 +50,9 @@
     animation: scroll-infinite 42.85s linear infinite;
   }
 }
+
+@media screen and (max-width: 768px) {
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}

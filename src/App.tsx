@@ -15,6 +15,7 @@ import FAQSection from './components/FAQSection';
 import Footer from './components/Footer';
 import ProductPDP from './pages/ProductPDP';
 import CategoryListingPage from './pages/CategoryListingPage';
+import SearchPage from './pages/SearchPage';
 import CheckoutLayout from './pages/checkout/CheckoutLayout';
 import PixPaymentPage from './pages/checkout/PixPaymentPage';
 import CheckoutSuccessPage from './pages/checkout/CheckoutSuccessPage';
@@ -138,6 +139,10 @@ function App() {
       if (slug) {
         return <CategoryListingPage categorySlug={slug} />;
       }
+    }
+
+    if (currentPath === '/search' || currentPath.startsWith('/search?')) {
+      return <SearchPage />;
     }
 
     // Default Home
