@@ -7,11 +7,15 @@ const CategoryCarousel: React.FC = () => {
     const [carouselCategories, setCarouselCategories] = useState<CategoryConfig[]>([]);
 
     useEffect(() => {
+        const DISPLAY_ORDER = ['chinelos', 'slides', 'rasteirinhas', 'alpargatas'];
+
         categoriesService.getAll().then(all => {
-            const filtered = all
-                .filter(c => c.type === 'category')
-                .sort((a, b) => (a.order || 0) - (b.order || 0));
-            setCarouselCategories(filtered);
+            // Map strictly to the display order, ignoring missing categories
+            const curated = DISPLAY_ORDER
+                .map(slug => all.find(c => c.slug === slug))
+                .filter((c): c is CategoryConfig => !!c);
+
+            setCarouselCategories(curated);
         });
     }, []);
 
