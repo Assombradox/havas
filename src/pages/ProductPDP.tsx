@@ -250,19 +250,11 @@ const ProductPDP: React.FC = () => {
                 {/* Recommended Products */}
                 {relatedProducts.length > 0 && (
                     <ProductGrid
-                        key={product.id}
                         title="Leve também 🛍️"
                         products={relatedProducts}
                     />
                 )}
-                {/* Recommended Products */}
-                {relatedProducts.length > 0 && (
-                    <ProductGrid
-                        key={product.id}
-                        title="Estão levando 🔥"
-                        products={relatedProducts}
-                    />
-                )}
+
 
                 {/* Delivery Marquee */}
                 <ScrollingAnnouncementBarDelivery />
