@@ -132,32 +132,12 @@ function App() {
       return <ProductPDP />;
     }
 
-    if (currentPath === '/category' || currentPath === '/categoria/chinelos') {
-      return <CategoryListingPage categorySlug="chinelos" />;
-    }
-
-    if (currentPath === '/categoria/rasteirinhas') {
-      return <CategoryListingPage categorySlug="rasteirinhas" />;
-    }
-
-    if (currentPath === '/categoria/farm') {
-      return <CategoryListingPage categorySlug="farm" />;
-    }
-
-    if (currentPath === '/categoria/times-futebol') {
-      return <CategoryListingPage categorySlug="times-futebol" />;
-    }
-
-    if (currentPath === '/categoria/pride') {
-      return <CategoryListingPage categorySlug="pride" />;
-    }
-
-    if (currentPath === '/categoria/glitter') {
-      return <CategoryListingPage categorySlug="glitter" />;
-    }
-
-    if (currentPath === '/categoria/floral') {
-      return <CategoryListingPage categorySlug="floral" />;
+    // Dynamic Category Routing
+    if (currentPath.startsWith('/categoria/')) {
+      const slug = currentPath.split('/categoria/')[1];
+      if (slug) {
+        return <CategoryListingPage categorySlug={slug} />;
+      }
     }
 
     // Default Home

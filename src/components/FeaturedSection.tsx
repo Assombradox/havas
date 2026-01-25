@@ -42,7 +42,7 @@ const FeaturedSection: React.FC<FeaturedSectionProps> = ({
     };
 
     const navigateToCategory = () => {
-        const path = `/category/${categorySlug}`;
+        const path = `/categoria/${categorySlug}`;
         window.history.pushState({}, '', path);
         window.dispatchEvent(new Event('popstate'));
         window.scrollTo(0, 0);
