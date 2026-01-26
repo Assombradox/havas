@@ -39,6 +39,7 @@ interface ProductFormProps {
 const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
     const isEditMode = !!id;
     const [allCategories, setAllCategories] = useState<any[]>([]); // Using any for simplicity in V1 refactor, or import type
+    const [relatedProductsInput, setRelatedProductsInput] = useState(''); // Local state to allow typing commas freely
 
     // Initial empty state
     const [formData, setFormData] = useState<Product>({
@@ -71,6 +72,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
                 const existing = await productsAdminService.getById(id);
                 if (existing) {
                     setFormData(existing);
+                    if (existing.relatedProducts) {
+                        setRelatedProductsInput(existing.relatedProducts.join(', '));
+                    }
                 }
             } else {
                 // Generate robust ID: Timestamp (base36) + Random (base36)
@@ -431,13 +435,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
                                 placeholder="slug-1, slug-2, slug-3"
                                 rows={2}
                                 className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                                value={formData.relatedProducts?.join(', ') || ''}
-                                onChange={(e) => {
-                                    const val = e.target.value;
-                                    setFormData(prev => ({
-                                        ...prev,
-                                        relatedProducts: val.split(',').map(s => s.trim()).filter(s => s.length > 0)
-                                    }));
+                                value={relatedProductsInput}
+                                onChange={(e) => setRelatedProductsInput(e.target.value)}
+                                onBlur={() => {
+                                    const slugs = relatedProductsInput.split(',').map(s => s.trim()).filter(s => s.length > 0);
+                                    setFormData(prev => ({ ...prev, relatedProducts: slugs }));
                                 }}
                             />
                             <p className="text-xs text-gray-500 mt-1">Separe os slugs por vírgula. Isso criará o seletor de cores no PDP.</p>
