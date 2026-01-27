@@ -81,7 +81,7 @@ export const productsService = {
             const original = await Product.findOne({ id });
             if (!original) throw new Error('Product not found');
 
-            const originalObj = original.toObject();
+            const originalObj = original.toObject() as any;
 
             // Generate new IDs
             const newId = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 5);
@@ -101,7 +101,7 @@ export const productsService = {
                 // Ensure unique IDs for sub-documents if necessary (e.g. colors)
                 // Assuming simple structure for now, but strictly speaking we should regenerate IDs for colors if they have them.
                 // Based on previous code, colors have 'id'. Let's regen them.
-                colors: originalObj.colors ? originalObj.colors.map(c => ({
+                colors: originalObj.colors ? originalObj.colors.map((c: any) => ({
                     ...c,
                     id: Date.now().toString() + Math.random().toString().slice(2, 5) // Simple unique gen 
                 })) : []
