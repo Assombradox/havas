@@ -24,6 +24,10 @@ app.use('/categories', categoriesRouter);
 import { authRouter } from './routes/auth.routes';
 app.use('/api/auth', authRouter);
 
+// Upload Routes
+import { uploadRouter } from './routes/upload.routes';
+app.use('/api/upload', uploadRouter);
+
 app.post('/api/pix/create', handleCreatePixPayment);
 app.get('/api/pix/:paymentId', handleGetPixPayment);
 app.post('/api/pix/webhook', handlePixWebhook);

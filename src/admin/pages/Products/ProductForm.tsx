@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { productsAdminService } from '../../services/productsAdminService';
 import type { Product } from '../../../types/Product';
 import { categoriesAdminService } from '../../services/categoriesAdminService';
-import { ArrowLeft, Save, Plus, X, ImageOff, Wand2 } from 'lucide-react';
+import { ArrowLeft, Save, Plus, X, ImageOff, Wand2, CloudUpload } from 'lucide-react';
+import { uploadAdminService } from '../../services/uploadAdminService';
 
 const ImagePreview: React.FC<{ url: string }> = ({ url }) => {
     const [error, setError] = useState(false);
@@ -42,6 +43,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
     const [relatedProductsInput, setRelatedProductsInput] = useState(''); // Local state to allow typing commas freely
     const [magicLink, setMagicLink] = useState('');
     const [isMagicLoading, setIsMagicLoading] = useState(false);
+    const [uploadingStates, setUploadingStates] = useState<Record<string, boolean>>({});
 
     // Initial empty state
     const [formData, setFormData] = useState<Product>({
@@ -222,6 +224,51 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
         }
     };
 
+    const handleCloudUpload = async (key: string, url: string, onSuccess: (newUrl: string) => void) => {
+        if (!url || !url.startsWith('http') || url.includes('cloudinary')) {
+            alert('URL inválida ou já está no Cloudinary.');
+            return;
+        }
+
+        setUploadingStates(prev => ({ ...prev, [key]: true }));
+        try {
+            const newUrl = await uploadAdminService.uploadFromUrl(url);
+            onSuccess(newUrl);
+            alert('☁️ Upload concluído com sucesso!');
+        } catch (error) {
+            console.error(error);
+            alert('Erro ao fazer upload para Cloudinary.');
+        } finally {
+            setUploadingStates(prev => ({ ...prev, [key]: false }));
+        }
+    };
+
+    const handleBulkCloudUpload = async (key: string, text: string, onSuccess: (newText: string) => void) => {
+        if (!text.trim()) return;
+
+        setUploadingStates(prev => ({ ...prev, [key]: true }));
+        try {
+            const lines = text.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+            const newLines = await Promise.all(lines.map(async (line) => {
+                if (line.startsWith('http') && !line.includes('cloudinary')) {
+                    try {
+                        return await uploadAdminService.uploadFromUrl(line);
+                    } catch (e) {
+                        console.error(`Falha ao upar ${line}`, e);
+                        return line; // Keep original if fail
+                    }
+                }
+                return line;
+            }));
+            onSuccess(newLines.join('\n'));
+            alert('☁️ Galeria atualizada com links do Cloudinary!');
+        } catch (error) {
+            alert('Erro no upload em massa.');
+        } finally {
+            setUploadingStates(prev => ({ ...prev, [key]: false }));
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
@@ -343,6 +390,16 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
                                 value={formData.coverImage || ''}
                                 onChange={handleChange}
                             />
+
+                            <button
+                                type="button"
+                                onClick={() => handleCloudUpload('cover', formData.coverImage || '', (url) => setFormData(prev => ({ ...prev, coverImage: url })))}
+                                disabled={uploadingStates['cover'] || !formData.coverImage}
+                                className="p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-lg shrink-0 disabled:opacity-50"
+                                title="Upload para Cloudinary"
+                            >
+                                {uploadingStates['cover'] ? <span className="animate-spin">⌛</span> : <CloudUpload size={20} />}
+                            </button>
                             {formData.coverImage && <ImagePreview url={formData.coverImage} />}
                         </div>
                         <p className="text-xs text-gray-500 mt-1">Usada na seção "Os mais icônicos". Se vazio, usa a primeira imagem do produto.</p>
@@ -566,14 +623,33 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
                                                 className="w-full p-2 border border-gray-300 rounded bg-white font-mono text-xs"
                                                 placeholder="https://..."
                                             />
+
+                                            <button
+                                                type="button"
+                                                onClick={() => handleCloudUpload(`thumb-${idx}`, color.thumbnail, (url) => updateColor(idx, 'thumbnail', url))}
+                                                disabled={uploadingStates[`thumb-${idx}`] || !color.thumbnail}
+                                                className="p-2 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded shrink-0 disabled:opacity-50"
+                                                title="Salvar na Nuvem"
+                                            >
+                                                {uploadingStates[`thumb-${idx}`] ? '...' : <CloudUpload size={16} />}
+                                            </button>
                                             <ImagePreview url={color.thumbnail} />
                                         </div>
                                     </div>
 
                                     {/* Images List */}
                                     <div className="md:col-span-2">
-                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1">
-                                            Imagens do Produto (URLs) <span className="text-gray-400 font-normal lowercase">(uma por linha ou separadas por vírgula)</span>
+
+                                        <label className="block text-xs font-bold text-gray-500 uppercase mb-1 flex justify-between items-center">
+                                            <span>Imagens do Produto (URLs) <span className="text-gray-400 font-normal lowercase">(uma por linha)</span></span>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleBulkCloudUpload(`gallery-${idx}`, color.images.join('\n'), (txt) => updateColor(idx, 'images', txt))}
+                                                className="text-blue-600 hover:underline text-[10px] flex items-center gap-1"
+                                                disabled={uploadingStates[`gallery-${idx}`]}
+                                            >
+                                                {uploadingStates[`gallery-${idx}`] ? 'Processando...' : <><CloudUpload size={12} /> Salvar Tudo na Nuvem</>}
+                                            </button>
                                         </label>
                                         <textarea
                                             rows={3}
