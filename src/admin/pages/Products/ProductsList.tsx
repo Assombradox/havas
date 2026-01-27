@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { productsAdminService } from '../../services/productsAdminService';
 import type { Product } from '../../../types/Product';
-import { Edit, Trash2, Plus, Search, ImageOff, Eye } from 'lucide-react';
+import { Edit, Trash2, Plus, Search, ImageOff, Eye, Copy } from 'lucide-react';
 
 const ProductsList: React.FC = () => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -29,6 +29,19 @@ const ProductsList: React.FC = () => {
             await productsAdminService.delete(id);
             const data = await productsAdminService.getAll();
             setProducts(data);
+        }
+    };
+
+    const handleDuplicate = async (id: string) => {
+        if (confirm('Deseja duplicar este produto?')) {
+            try {
+                const newProduct = await productsAdminService.duplicate(id);
+                alert('Produto duplicado! Você está editando a cópia.');
+                handleNavigate(`/admin/products/${newProduct.id}`);
+            } catch (error) {
+                alert('Erro ao duplicar produto.');
+                console.error(error);
+            }
         }
     };
 
@@ -128,6 +141,13 @@ const ProductsList: React.FC = () => {
                                             title="Editar"
                                         >
                                             <Edit size={18} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDuplicate(product.id)}
+                                            className="p-2 text-green-600 hover:bg-green-50 rounded transition-colors"
+                                            title="Duplicar"
+                                        >
+                                            <Copy size={18} />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(product.id, product.name)}

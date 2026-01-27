@@ -55,6 +55,14 @@ export const productsAdminService = {
         if (!response.ok) throw new Error('Failed to delete product');
     },
 
+    duplicate: async (id: string): Promise<Product> => {
+        const response = await fetch(`${API_URL}/${id}/duplicate`, {
+            method: 'POST'
+        });
+        if (!response.ok) throw new Error('Failed to duplicate product');
+        return response.json();
+    },
+
     extractMetadata: async (url: string): Promise<Partial<Product>> => {
         const response = await fetch(`${API_URL}/extract-metadata`, {
             method: 'POST',

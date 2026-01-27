@@ -63,6 +63,16 @@ router.put('/:id', async (req, res) => {
     }
 });
 
+// POST /products/:id/duplicate
+router.post('/:id/duplicate', async (req, res) => {
+    try {
+        const newProduct = await productsService.duplicate(req.params.id);
+        res.status(201).json(newProduct);
+    } catch (error: any) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
 // DELETE /products/:id
 router.delete('/:id', async (req, res) => {
     try {
