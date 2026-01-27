@@ -44,6 +44,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
     const [magicLink, setMagicLink] = useState('');
     const [isMagicLoading, setIsMagicLoading] = useState(false);
     const [uploadingStates, setUploadingStates] = useState<Record<string, boolean>>({});
+    const [uploadProgress, setUploadProgress] = useState<Record<string, string>>({});
 
     // Initial empty state
     const [formData, setFormData] = useState<Product>({
@@ -249,17 +250,47 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
         setUploadingStates(prev => ({ ...prev, [key]: true }));
         try {
             const lines = text.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
-            const newLines = await Promise.all(lines.map(async (line) => {
+            const newLines: string[] = [];
+
+            // Sequential processing (not Promise.all) to avoid 429/500 errors
+            let count = 0;
+            const total = lines.length;
+            for (const line of lines) {
+                count++;
+                setUploadProgress(prev => ({ ...prev, [key]: `Processando ${count}/${total}...` }));
+
                 if (line.startsWith('http') && !line.includes('cloudinary')) {
+                    // Update generic loading state if we had a specific field, but here we can just alert progress or rely on console
+                    // To show UI progress would require a new state variable, but user asked for "Processando 1/5..." visual feedback.
+                    // Let's repurpose uploadingStates for this key to be a string or add a temporary feedback mechanism.
+                    // Given the constraints, let's just log and maybe update a quick ref if we could, 
+                    // but for now let's use the browser title or a temporary alert (bad UX) or just slower reliable processing.
+
+                    // Actually, the user asked for: Mostre "Processando 1/5..."
+                    // We need to change uploadingStates to support strings or use a separate state.
+                    // But to keep it simple with existing `uploadingStates<string, boolean>`, we can't easily put text there.
+                    // Let's assume we just want it safe first. 
+                    // Wait! The user SPECIFICALLY asked for "Processando 1/5...".
+                    // I should change `uploadingStates` type or add a `progressState`.
+                    // Let's check `uploadingStates` definition. It is `Record<string, boolean>`.
+                    // I will stick to logging for now to ensure stability first as a quick fix, 
+                    // OR I can use a `alert` for each step (too annoying).
+                    // Better: Update the button text! But the button logic checks `uploadingStates[key] ? ...`.
+                    // Real fix: I'll hack it slightly: I won't change state type to avoid breaking other buttons.
+                    // I will just do the sequential upload. "reliability" is the main goal.
+
                     try {
-                        return await uploadAdminService.uploadFromUrl(line);
+                        const newUrl = await uploadAdminService.uploadFromUrl(line);
+                        newLines.push(newUrl);
                     } catch (e) {
                         console.error(`Falha ao upar ${line}`, e);
-                        return line; // Keep original if fail
+                        newLines.push(line); // Keep original if fail
                     }
+                } else {
+                    newLines.push(line);
                 }
-                return line;
-            }));
+            }
+
             onSuccess(newLines.join('\n'));
             alert('☁️ Galeria atualizada com links do Cloudinary!');
         } catch (error) {
@@ -642,13 +673,14 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
 
                                         <label className="block text-xs font-bold text-gray-500 uppercase mb-1 flex justify-between items-center">
                                             <span>Imagens do Produto (URLs) <span className="text-gray-400 font-normal lowercase">(uma por linha)</span></span>
+
                                             <button
                                                 type="button"
                                                 onClick={() => handleBulkCloudUpload(`gallery-${idx}`, color.images.join('\n'), (txt) => updateColor(idx, 'images', txt))}
                                                 className="text-blue-600 hover:underline text-[10px] flex items-center gap-1"
                                                 disabled={uploadingStates[`gallery-${idx}`]}
                                             >
-                                                {uploadingStates[`gallery-${idx}`] ? 'Processando...' : <><CloudUpload size={12} /> Salvar Tudo na Nuvem</>}
+                                                {uploadingStates[`gallery-${idx}`] ? (uploadProgress[`gallery-${idx}`] || 'Processando...') : <><CloudUpload size={12} /> Salvar Tudo na Nuvem</>}
                                             </button>
                                         </label>
                                         <textarea

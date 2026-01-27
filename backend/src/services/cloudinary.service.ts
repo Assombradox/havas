@@ -26,9 +26,11 @@ export const cloudinaryService = {
             });
 
             return result.secure_url;
-        } catch (error) {
-            console.error('Cloudinary Upload Error:', error);
-            throw new Error('Failed to upload image to Cloudinary');
+
+        } catch (error: any) {
+            console.error('Cloudinary Upload Error Full Object:', error);
+            const msg = error.message || error.error?.message || 'Unknown Error';
+            throw new Error(`Cloudinary Error: ${msg}`);
         }
     }
 };
