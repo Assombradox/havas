@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { productsAdminService } from '../../services/productsAdminService';
 import type { Product } from '../../../types/Product';
-import { Edit, Trash2, Plus, Search } from 'lucide-react';
+import { Edit, Trash2, Plus, Search, ImageOff, Eye } from 'lucide-react';
 
 const ProductsList: React.FC = () => {
     const [products, setProducts] = useState<Product[]>([]);
@@ -75,9 +75,28 @@ const ProductsList: React.FC = () => {
                         {filteredProducts.map((product) => (
                             <tr key={product.id} className="hover:bg-gray-50 transition-colors">
                                 <td className="p-4">
-                                    <div>
-                                        <p className="font-semibold text-gray-900">{product.name}</p>
-                                        <p className="text-xs text-gray-500">{product.slug}</p>
+                                    <div className="flex items-center gap-3">
+                                        {(() => {
+                                            const imgUrl = product.coverImage || product.colors?.[0]?.thumbnail || product.colors?.[0]?.images?.[0];
+                                            if (imgUrl) {
+                                                return (
+                                                    <img
+                                                        src={imgUrl}
+                                                        alt={product.name}
+                                                        className="w-10 h-10 object-cover rounded-lg border border-gray-200 shrink-0 bg-gray-50"
+                                                    />
+                                                );
+                                            }
+                                            return (
+                                                <div className="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center text-gray-400 shrink-0">
+                                                    <ImageOff size={16} />
+                                                </div>
+                                            );
+                                        })()}
+                                        <div>
+                                            <p className="font-semibold text-gray-900">{product.name}</p>
+                                            <p className="text-xs text-gray-500">{product.slug}</p>
+                                        </div>
                                     </div>
                                 </td>
                                 <td className="p-4 font-medium text-gray-700">
@@ -94,6 +113,15 @@ const ProductsList: React.FC = () => {
                                 </td>
                                 <td className="p-4">
                                     <div className="flex items-center justify-center gap-2">
+                                        <a
+                                            href={`/product/${product.slug}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="p-2 text-gray-400 hover:text-blue-600 hover:bg-gray-100 rounded transition-colors"
+                                            title="Ver na Loja"
+                                        >
+                                            <Eye size={18} />
+                                        </a>
                                         <button
                                             onClick={() => handleNavigate(`/admin/products/${product.id}`)}
                                             className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
