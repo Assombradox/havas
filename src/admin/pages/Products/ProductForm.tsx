@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { productsAdminService } from '../../services/productsAdminService';
 import type { Product } from '../../../types/Product';
 import { categoriesAdminService } from '../../services/categoriesAdminService';
-import { ArrowLeft, Save, Plus, X, ImageOff } from 'lucide-react';
+import { ArrowLeft, Save, Plus, X, ImageOff, Wand2 } from 'lucide-react';
 
 const ImagePreview: React.FC<{ url: string }> = ({ url }) => {
     const [error, setError] = useState(false);
@@ -40,6 +40,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
     const isEditMode = !!id;
     const [allCategories, setAllCategories] = useState<any[]>([]); // Using any for simplicity in V1 refactor, or import type
     const [relatedProductsInput, setRelatedProductsInput] = useState(''); // Local state to allow typing commas freely
+    const [magicLink, setMagicLink] = useState('');
+    const [isMagicLoading, setIsMagicLoading] = useState(false);
 
     // Initial empty state
     const [formData, setFormData] = useState<Product>({
@@ -183,6 +185,43 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
         setFormData(prev => ({ ...prev, colors: newColors }));
     };
 
+    const handleMagicFill = async () => {
+        if (!magicLink.trim()) {
+            alert('Por favor, insira uma URL válida.');
+            return;
+        }
+
+        setIsMagicLoading(true);
+        try {
+            const metadata = await productsAdminService.extractMetadata(magicLink);
+
+            // Merge metadata into formData
+            setFormData(prev => ({
+                ...prev,
+                name: metadata.name || prev.name,
+                description: metadata.description || prev.description,
+                originalPrice: metadata.originalPrice || prev.originalPrice,
+                price: metadata.price || prev.price,
+                rating: metadata.rating || prev.rating,
+                reviewCount: metadata.reviewCount || prev.reviewCount,
+                // If images found, maybe set coverImage? metadata returns "images" array.
+                // Depending on backend, metadata.images[0] can be set as coverImage
+                coverImage: (metadata as any).images?.[0] || prev.coverImage,
+                // Also update slug if name changed and it was new... logic handled in handleChange, 
+                // but here we force update slug if empty or new product.
+                slug: !isEditMode ? generateSlug(metadata.name || '') : prev.slug
+            }));
+
+            alert('✨ Dados carregados com sucesso!');
+            setMagicLink(''); // Clear input after success
+        } catch (error) {
+            console.error(error);
+            alert('❌ Erro ao ler link. Verifique a URL e tente novamente.');
+        } finally {
+            setIsMagicLoading(false);
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
@@ -210,6 +249,41 @@ const ProductForm: React.FC<ProductFormProps> = ({ id }) => {
             </div>
 
             <form onSubmit={handleSubmit} className="bg-white p-8 rounded-xl shadow-sm border border-gray-200 space-y-8">
+                {/* Magic Link Section */}
+                <section className="bg-blue-50 p-6 rounded-xl border border-blue-100">
+                    <h3 className="text-lg font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                        <Wand2 className="w-5 h-5 text-blue-600" />
+                        Link Mágico
+                    </h3>
+                    <p className="text-sm text-blue-700 mb-4">
+                        Cole o link de um produto existente para preencher os dados automaticamente
+                    </p>
+                    <div className="flex gap-2">
+                        <input
+                            type="url"
+                            placeholder="https://loja-exemplo.com/produto/..."
+                            className="flex-1 p-2 border border-blue-200 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white"
+                            value={magicLink}
+                            onChange={(e) => setMagicLink(e.target.value)}
+                        />
+                        <button
+                            type="button"
+                            onClick={handleMagicFill}
+                            disabled={isMagicLoading}
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed font-medium"
+                        >
+                            {isMagicLoading ? (
+                                'Carregando...'
+                            ) : (
+                                <>
+                                    <Wand2 size={18} />
+                                    🔮 Preencher Automaticamente
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </section>
+
                 {/* Basic Info */}
                 <section className="space-y-4">
                     <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">Informações Básicas</h3>

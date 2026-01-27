@@ -1,0 +1,75 @@
+{
+    "tech_stack": [
+        "TypeScript",
+        "React",
+        "Vite",
+        "Tailwind CSS"
+    ],
+    "features": [
+        {
+            "name": "Admin Product Management",
+            "description": "Create, read, update, and delete products in the admin panel.",
+            "files": [
+                "src/admin/pages/Products/ProductForm.tsx",
+                "src/admin/pages/Products/ProductsList.tsx",
+                "src/admin/services/productsAdminService.ts"
+            ]
+        },
+        {
+            "name": "Admin Category Management",
+            "description": "Manage product categories including creating and editing.",
+            "files": [
+                "src/admin/pages/Categories/CategoriesList.tsx",
+                "src/admin/pages/Categories/CategoryForm.tsx",
+                "src/admin/services/categoriesAdminService.ts"
+            ]
+        },
+        {
+            "name": "Admin Order Management",
+            "description": "View and manage customer orders.",
+            "files": [
+                "src/admin/pages/Orders/OrdersList.tsx",
+                "src/admin/components/OrderDetailsModal.tsx",
+                "src/admin/services/ordersAdminService.ts"
+            ]
+        },
+        {
+            "name": "Admin Authentication",
+            "description": "Login functionality and protected routes for admin area.",
+            "files": [
+                "src/admin/pages/Login.tsx",
+                "src/admin/services/authService.ts",
+                "src/admin/components/ProtectedRoute.tsx",
+                "src/admin/AdminLayout.tsx"
+            ]
+        },
+        {
+            "name": "Storefront Product Browsing",
+            "description": "Product Detail Page, Related Products, and Search.",
+            "files": [
+                "src/pages/ProductPDP.tsx",
+                "src/components/FeaturedSection.tsx",
+                "src/services/productsService.ts",
+                "src/pages/SearchPage.tsx",
+                "src/components/CategoryProductGrid.tsx"
+            ]
+        },
+        {
+            "name": "Checkout Flow",
+            "description": "Handling of cart and successful checkout updates.",
+            "files": [
+                "src/pages/checkout/CheckoutSuccessPage.tsx",
+                "src/context/CartContext.tsx",
+                "src/context/CheckoutContext.tsx"
+            ]
+        },
+        {
+            "name": "Navigation and Layout",
+            "description": "Main application layout, global routing, and header navigation.",
+            "files": [
+                "src/App.tsx",
+                "src/components/Header.tsx"
+            ]
+        }
+    ]
+}

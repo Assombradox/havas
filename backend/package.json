@@ -8,7 +8,9 @@
         "dev": "ts-node src/server.ts"
     },
     "dependencies": {
+        "@types/cheerio": "^0.22.35",
         "axios": "^1.6.0",
+        "cheerio": "^1.2.0",
         "cors": "^2.8.5",
         "dotenv": "^16.6.1",
         "express": "^4.22.1",

@@ -13,6 +13,20 @@ router.get('/', async (req, res) => {
     }
 });
 
+// POST /products/extract-metadata (Must be before /:slug)
+router.post('/extract-metadata', async (req, res) => {
+    try {
+        const { url } = req.body;
+        if (!url) {
+            return res.status(400).json({ error: 'URL is required' });
+        }
+        const metadata = await productsService.extractMetadata(url);
+        res.json(metadata);
+    } catch (error: any) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
 // GET /products/:slug
 router.get('/:slug', async (req, res) => {
     try {

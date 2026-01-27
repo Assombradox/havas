@@ -53,6 +53,16 @@ export const productsAdminService = {
             method: 'DELETE'
         });
         if (!response.ok) throw new Error('Failed to delete product');
+    },
+
+    extractMetadata: async (url: string): Promise<Partial<Product>> => {
+        const response = await fetch(`${API_URL}/extract-metadata`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ url })
+        });
+        if (!response.ok) throw new Error('Failed to extract metadata');
+        return response.json();
     }
 };
 
