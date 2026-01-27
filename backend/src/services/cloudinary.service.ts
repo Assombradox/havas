@@ -21,7 +21,7 @@ export const cloudinaryService = {
             console.log(`Uploading to Cloudinary from: ${imageUrl}`);
 
             const result = await cloudinary.uploader.upload(imageUrl, {
-                folder: 'brpix-products', // Organize uploads
+                folder: 'havas-products', // Organize uploads
                 resource_type: 'image'
             });
 
