@@ -137,7 +137,15 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
                 phone: customerPhone,
                 document: customerCpf
             },
-            shippingAddress: shippingAddress, // SAVE ADDRESS
+            shippingAddress: shippingAddress ? {
+                street: shippingAddress.street,
+                number: shippingAddress.number,
+                neighborhood: shippingAddress.neighborhood,
+                city: shippingAddress.city,
+                state: shippingAddress.state,
+                zipCode: shippingAddress.zip || shippingAddress.zipCode, // Handle Mapping
+                complement: shippingAddress.complement
+            } : undefined,
             items: enrichedItems // SAVE SNAPSHOT
         });
 
