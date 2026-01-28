@@ -1,4 +1,7 @@
 import { Resend } from 'resend';
+import { render } from '@react-email/render';
+import React from 'react';
+import { OrderPixTemplate } from '../emails/OrderPixTemplate';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -20,6 +23,30 @@ export const emailService = {
             return data;
         } catch (error) {
             console.error('Failed to send test email:', error);
+            throw error;
+        }
+    },
+
+    sendPixNotification: async (toEmail: string, data: { customerName: string; orderId: string; total: string; pixCode: string }) => {
+        try {
+            const emailHtml = await render(React.createElement(OrderPixTemplate, {
+                customerName: data.customerName,
+                orderId: data.orderId,
+                total: data.total,
+                pixCode: data.pixCode
+            }));
+
+            const result = await resend.emails.send({
+                from: 'onboarding@resend.dev',
+                to: toEmail,
+                subject: `Pedido #${data.orderId} Recebido! 💸`,
+                html: emailHtml
+            });
+
+            if (result.error) throw new Error(result.error.message);
+            return result;
+        } catch (error) {
+            console.error('Failed to send Pix email:', error);
             throw error;
         }
     }
