@@ -32,6 +32,10 @@ app.use('/api/upload', uploadRouter);
 import bannerRouter from './routes/banners.routes';
 app.use('/api/banners', bannerRouter);
 
+// Email Routes
+import emailRouter from './routes/email.routes';
+app.use('/api/email', emailRouter);
+
 app.post('/api/pix/create', handleCreatePixPayment);
 app.get('/api/pix/:paymentId', handleGetPixPayment);
 app.post('/api/pix/webhook', handlePixWebhook);
