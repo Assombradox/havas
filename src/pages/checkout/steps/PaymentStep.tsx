@@ -39,7 +39,7 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
                 customerEmail: checkoutData.contact.email,
                 customerCpf: checkoutData.contact.cpf,
                 customerPhone: checkoutData.contact.phone,
-                customerAddress: {
+                shippingAddress: { // Matches backend now
                     zip: checkoutData.address.zip,
                     street: checkoutData.address.street,
                     number: checkoutData.address.number,
@@ -50,10 +50,11 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
                 },
                 amount: subtotal,
                 items: cartItems.map(item => ({
+                    productId: item.id, // Critical: Send ID for Backend Snapshot
                     title: item.name,
                     quantity: item.quantity,
                     tangible: true,
-                    unitPrice: (item.discountedPrice || item.unitPrice) * 100 // service usually expects cents or you handle it in service? logic in service is amount * 100, checking item
+                    unitPrice: (item.discountedPrice || item.unitPrice) * 100
                 }))
             });
 

@@ -8,7 +8,7 @@ export interface PixPaymentPayload {
     customerEmail: string;
     customerCpf: string;
     customerPhone: string;
-    customerAddress: {
+    shippingAddress: { // Renamed from customerAddress to match backend
         zip: string;
         street: string;
         number: string;
@@ -19,6 +19,7 @@ export interface PixPaymentPayload {
     };
     amount: number;
     items?: Array<{
+        productId: string; // Critical for Backend Snapshot
         title: string;
         quantity: number;
         unitPrice: number;
