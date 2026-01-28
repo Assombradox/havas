@@ -46,6 +46,8 @@ export const emailService = {
 
             const qrUrl = data.qrCodeUrl || 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(data.pixCode);
 
+            console.log('[EmailService] Items passed to template:', JSON.stringify(data.items, null, 2));
+
             const emailHtml = await render(React.createElement(OrderPixTemplate, {
                 customerName: data.customerName,
                 orderId: data.orderId,

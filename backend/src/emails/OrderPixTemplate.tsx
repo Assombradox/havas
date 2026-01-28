@@ -110,15 +110,18 @@ const codeLabel = {
 };
 
 const codeText = {
-    fontSize: '14px',
+    fontSize: '12px',
     color: '#333',
     fontFamily: 'monospace',
     wordBreak: 'break-all' as const,
+    whiteSpace: 'pre-wrap' as const,
     lineHeight: '1.5',
-    backgroundColor: '#fff',
-    padding: '12px',
+    backgroundColor: '#f3f4f6',
+    padding: '10px',
     borderRadius: '4px',
     border: '1px border-dashed #ccc',
+    width: '100%',
+    display: 'block'
 };
 
 const qrPlaceholder = {
@@ -234,6 +237,9 @@ export const OrderPixTemplate = ({
                     <Section style={pixBox}>
                         <Text style={codeLabel}>Código Pix (Copia e Cola)</Text>
                         <div style={codeText}>{pixCode}</div>
+                        <Text style={{ fontSize: '11px', color: '#666', marginTop: '4px', textAlign: 'center' }}>
+                            Selecione o código acima para copiar
+                        </Text>
                         <div style={{ marginTop: '20px' }}>
                             <Img src={qrCodeUrl} alt="QR Code Pix" style={qrPlaceholder} />
                             <Text style={{ fontSize: '12px', color: '#888', marginTop: '8px' }}>

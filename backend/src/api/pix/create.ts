@@ -52,39 +52,50 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
 
         // --- ENRICH ITEMS (Fetch from DB) ---
         let enrichedItems: any[] = [];
-        const rawItems = req.body.items || []; // Frontend should pass items: [{ productId, quantity }]
+        const rawItems = req.body.items || [];
 
         if (Array.isArray(rawItems) && rawItems.length > 0) {
+            console.log('[Create] Enriching items:', JSON.stringify(rawItems));
             try {
                 // Determine if items have full details or just ID
-                // Ideally, we fetch fresh data to avoid client-side spoofing of names/prices
                 const { Product } = require('../../models/Product');
 
                 enrichedItems = await Promise.all(rawItems.map(async (item: any) => {
-                    // Try to find product by ID (assuming item.id or item._id or item.productId)
-                    const pId = item.productId || item.id || item._id;
+                    const pId = item.productId || item.product || item.id || item._id;
+
                     if (pId) {
-                        const product = await Product.findById(pId).select('name images price');
-                        if (product) {
-                            return {
-                                name: product.name,
-                                quantity: item.quantity || 1,
-                                price: Number(item.price || product.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-                                image: product.images?.[0] || null
-                            };
+                        try {
+                            const product = await Product.findById(pId).select('name images price');
+                            if (product) {
+                                return {
+                                    name: product.name,
+                                    quantity: item.quantity || 1,
+                                    price: Number(item.price || product.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+                                    image: product.images?.[0] || null
+                                };
+                            }
+                        } catch (docErr) {
+                            console.warn(`[Create] Product not found for ID ${pId}`, docErr);
                         }
                     }
-                    // Fallback if no product found (or if item is just text)
+
+                    // Fallback
                     return {
-                        name: item.name || 'Produto',
+                        name: item.name || 'Produto sem nome',
                         quantity: item.quantity || 1,
                         price: Number(item.price || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-                        image: item.image || null
+                        image: item.image || 'https://via.placeholder.com/50'
                     };
                 }));
             } catch (err) {
                 console.error('[Create] Failed to enrich items:', err);
-                enrichedItems = []; // Fallback to empty
+                // Fallback to raw mapping
+                enrichedItems = rawItems.map(i => ({
+                    name: i.name || 'Produto',
+                    quantity: i.quantity || 1,
+                    price: Number(i.price || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+                    image: i.image
+                }));
             }
         }
 
