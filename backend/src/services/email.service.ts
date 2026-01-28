@@ -51,7 +51,10 @@ export const emailService = {
             let finalItems = data.items || [];
             if (finalItems.length > 0) {
                 try {
-                    const { Product } = require('../models/Product');
+                    // Safe Dynamic Import
+                    const ProductModule = require('../models/Product');
+                    const Product = ProductModule.default || ProductModule;
+
                     console.log('[EmailService] Starting Brute Force Item Enrichment...');
 
                     finalItems = await Promise.all(finalItems.map(async (item: any) => {

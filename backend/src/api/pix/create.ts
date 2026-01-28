@@ -10,6 +10,9 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
         // 1. Receber dados
         const { amount, customerName, customerEmail, customerCpf, customerPhone, shippingAddress, items } = req.body;
 
+        console.log('📦 FULL BODY KEYS:', Object.keys(req.body));
+        console.log('📦 SHIPPING ADDRESS PAYLOAD:', JSON.stringify(shippingAddress, null, 2));
+
         // Validação simples
         if (!amount || !customerName || !customerEmail || !customerCpf) {
             return res.status(400).json({ error: 'Campos obrigatórios: amount, customerName, customerEmail, customerCpf' });
