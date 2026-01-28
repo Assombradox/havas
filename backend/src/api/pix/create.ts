@@ -143,8 +143,8 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
                 neighborhood: shippingAddress.neighborhood,
                 city: shippingAddress.city,
                 state: shippingAddress.state,
-                zipCode: shippingAddress.zip || shippingAddress.zipCode, // Handle Mapping
-                complement: shippingAddress.complement
+                complement: shippingAddress.complement,
+                zipCode: shippingAddress.zip || shippingAddress.zipCode // Explicit Mapping
             } : undefined,
             items: enrichedItems // SAVE SNAPSHOT
         });

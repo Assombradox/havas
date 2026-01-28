@@ -40,13 +40,13 @@ const PaymentSchema: Schema = new Schema({
         document: String
     },
     shippingAddress: {
-        street: String,
-        number: String,
-        neighborhood: String,
-        city: String,
-        state: String,
-        zipCode: String,
-        complement: String
+        zipCode: { type: String },
+        street: { type: String },
+        number: { type: String },
+        neighborhood: { type: String },
+        city: { type: String },
+        state: { type: String },
+        complement: { type: String }
     },
     items: [{
         product: { type: Schema.Types.ObjectId, ref: 'Product' },
