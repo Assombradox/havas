@@ -77,7 +77,18 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
 
                 if (pId) {
                     try {
-                        const product = await Product.findById(pId);
+                        let product;
+                        // Hybrid Search: Check if it's a valid Mongo ObjectId (24 hex chars)
+                        const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(pId.toString());
+
+                        if (isValidObjectId) {
+                            product = await Product.findById(pId);
+                        } else {
+                            // Assume it's a Short ID (String)
+                            console.log(`[Create] Searching Product by Short ID: ${pId}`);
+                            product = await Product.findOne({ id: pId });
+                        }
+
                         if (product) {
                             const unitPrice = typeof product.price === 'number' ? product.price : parseFloat(product.price.toString().replace('R$', '').replace('.', '').replace(',', '.'));
                             const qty = item.quantity || 1;
