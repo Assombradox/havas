@@ -4,13 +4,19 @@ export interface IStoreConfig extends Document {
     logoUrl: string;
     primaryColor: string;
     storeName: string;
+    emailTitle?: string;
+    emailMessage?: string;
+    emailFooter?: string;
     updatedAt: Date;
 }
 
 const StoreConfigSchema: Schema = new Schema({
     logoUrl: { type: String, required: false },
     primaryColor: { type: String, default: '#000000' },
-    storeName: { type: String, default: 'Havas Store' }
+    storeName: { type: String, default: 'Havas Store' },
+    emailTitle: { type: String, default: 'Pedido Recebido!' },
+    emailMessage: { type: String, default: 'Olá {name}, recebemos seu pedido **#{orderId}**.' },
+    emailFooter: { type: String, default: 'Se tiver dúvidas, responda a este email.' }
 }, {
     timestamps: true
 });

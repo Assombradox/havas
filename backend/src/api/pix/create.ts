@@ -45,11 +45,48 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
         };
 
         // 5. Short ID & Persistence
-        // Generate Short ID (Concurrency Safe-ish)
         const lastOrder = await Payment.findOne({ shortId: { $ne: null } }).sort({ shortId: -1 }).select('shortId');
         const nextId = (lastOrder?.shortId || 1000) + 1;
 
         console.log(`[Create] Saving payment ${orderId} (ShortID: ${nextId}) to MongoDB...`);
+
+        // --- ENRICH ITEMS (Fetch from DB) ---
+        let enrichedItems: any[] = [];
+        const rawItems = req.body.items || []; // Frontend should pass items: [{ productId, quantity }]
+
+        if (Array.isArray(rawItems) && rawItems.length > 0) {
+            try {
+                // Determine if items have full details or just ID
+                // Ideally, we fetch fresh data to avoid client-side spoofing of names/prices
+                const { Product } = require('../../models/Product');
+
+                enrichedItems = await Promise.all(rawItems.map(async (item: any) => {
+                    // Try to find product by ID (assuming item.id or item._id or item.productId)
+                    const pId = item.productId || item.id || item._id;
+                    if (pId) {
+                        const product = await Product.findById(pId).select('name images price');
+                        if (product) {
+                            return {
+                                name: product.name,
+                                quantity: item.quantity || 1,
+                                price: Number(item.price || product.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+                                image: product.images?.[0] || null
+                            };
+                        }
+                    }
+                    // Fallback if no product found (or if item is just text)
+                    return {
+                        name: item.name || 'Produto',
+                        quantity: item.quantity || 1,
+                        price: Number(item.price || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+                        image: item.image || null
+                    };
+                }));
+            } catch (err) {
+                console.error('[Create] Failed to enrich items:', err);
+                enrichedItems = []; // Fallback to empty
+            }
+        }
 
         // Save using orderId as the key
         await paymentStore.set(orderId, {
@@ -58,23 +95,14 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
             externalId: orderId,
             transactionId: transaction.transaction_id,
             shortId: nextId,
-
-            // New Fields for Admin List
-            totalAmount: Number(amount), // Original input (Reais usually, based on context)
+            totalAmount: Number(amount),
             customer: {
                 name: customerName,
                 email: customerEmail,
                 phone: customerPhone,
                 document: customerCpf
             },
-            items: [
-                {
-                    title: "Pedido Checkout",
-                    quantity: 1,
-                    unitPrice: Number(amount),
-                    tangible: true
-                }
-            ]
+            items: enrichedItems
         });
 
         const storeSize = await paymentStore.size();
@@ -83,21 +111,19 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
         // --- EMAIL NOTIFICATION (ASYNC/NON-BLOCKING) ---
         try {
             console.log(`[Email] Sending Pix instructions to ${customerEmail}...`);
-            // Format amount (assuming amount is in Reais string or number)
             const formattedTotal = Number(amount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
 
             await emailService.sendPixNotification(customerEmail, {
-                customerName: customerName.split(' ')[0], // First Name
-                orderId: nextId.toString(), // Use Short ID
+                customerName: customerName.split(' ')[0],
+                orderId: nextId.toString(),
                 total: formattedTotal,
                 pixCode: responseData.pixCode,
-                isShortId: true
-                // qrCodeUrl: responseData.qrCodeImage // Add if available
+                isShortId: true,
+                items: enrichedItems
             });
             console.log(`[Email] Pix instructions sent successfully.`);
         } catch (emailError) {
             console.error(`[Email] Failed to send Pix instructions:`, emailError);
-            // Don't fail the request
         }
         // ----------------------------------------------
 

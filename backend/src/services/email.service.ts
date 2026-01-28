@@ -27,13 +27,19 @@ export const emailService = {
         }
     },
 
-    sendPixNotification: async (toEmail: string, data: { customerName: string; orderId: string; total: string; pixCode: string; qrCodeUrl?: string; isShortId?: boolean }, overrideConfig?: any) => {
+    sendPixNotification: async (toEmail: string, data: {
+        customerName: string;
+        orderId: string;
+        total: string;
+        pixCode: string;
+        qrCodeUrl?: string;
+        isShortId?: boolean;
+        items?: any[];
+    }, overrideConfig?: any) => {
         try {
             // Fetch Config (DB) or use Override (Preview)
             let config = overrideConfig;
             if (!config) {
-                // Import dynammically to avoid circular deps if any, or just import top level.
-                // Assuming getStoreConfig is importable.
                 const { getStoreConfig } = require('../models/StoreConfig');
                 config = await getStoreConfig();
             }
@@ -48,7 +54,12 @@ export const emailService = {
                 qrCodeUrl: qrUrl,
                 brandColor: config.primaryColor,
                 logoUrl: config.logoUrl,
-                storeName: config.storeName
+                storeName: config.storeName,
+                // Rich Content
+                items: data.items,
+                emailTitle: config.emailTitle,
+                emailMessage: config.emailMessage,
+                emailFooter: config.emailFooter
             }));
 
             const subject = data.isShortId
@@ -62,8 +73,10 @@ export const emailService = {
                 html: emailHtml
             });
 
-            if (result.error) throw new Error(result.error.message);
+            if (result.error) throw new Error(result.error.message || 'Unknown Error');
             return result;
+
+
         } catch (error) {
             console.error('Failed to send Pix email:', error);
             throw error;

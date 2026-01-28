@@ -143,6 +143,46 @@ const EmailEditor = () => {
                     </div>
                 </div>
 
+                {/* Text Content */}
+                <div className="bg-gray-800 p-6 rounded-xl border border-gray-700 md:col-span-2">
+                    <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                        <Type size={20} className="text-yellow-400" />
+                        Texto do Email
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label className="block text-sm text-gray-400 mb-1">Título do Email</label>
+                            <input
+                                type="text"
+                                value={config.emailTitle || ''}
+                                onChange={e => setConfig({ ...config, emailTitle: e.target.value })}
+                                className="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white outline-none focus:border-yellow-500"
+                                placeholder="Ex: Pedido Recebido!"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm text-gray-400 mb-1">Mensagem de Saudação</label>
+                            <input
+                                type="text"
+                                value={config.emailMessage || ''}
+                                onChange={e => setConfig({ ...config, emailMessage: e.target.value })}
+                                className="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white outline-none focus:border-yellow-500"
+                                placeholder="Ex: Olá {name}, recebemos seu pedido."
+                            />
+                            <p className="text-xs text-gray-500 mt-1">Variáveis: {'{name}'}, {'{orderId}'}</p>
+                        </div>
+                        <div className="md:col-span-2">
+                            <label className="block text-sm text-gray-400 mb-1">Rodapé</label>
+                            <textarea
+                                value={config.emailFooter || ''}
+                                onChange={e => setConfig({ ...config, emailFooter: e.target.value })}
+                                className="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white outline-none focus:border-yellow-500 h-24 resize-none"
+                                placeholder="Texto do rodapé..."
+                            />
+                        </div>
+                    </div>
+                </div>
+
                 {/* Logo Upload */}
                 <div className="bg-gray-800 p-6 rounded-xl border border-gray-700">
                     <h2 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">

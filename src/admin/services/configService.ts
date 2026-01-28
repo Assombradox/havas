@@ -6,6 +6,9 @@ export interface StoreConfig {
     logoUrl?: string;
     primaryColor: string;
     storeName: string;
+    emailTitle?: string;
+    emailMessage?: string;
+    emailFooter?: string;
 }
 
 export const configService = {
