@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { bannersAdminService } from '../../services/bannersAdminService';
 import type { Banner } from '../../../types/Banner';
-import { Edit, Trash2, Plus, Image, Eye, EyeOff } from 'lucide-react';
+import { Edit, Trash2, Plus, Eye, EyeOff } from 'lucide-react';
 
 const BannersList: React.FC = () => {
     const [banners, setBanners] = useState<Banner[]>([]);

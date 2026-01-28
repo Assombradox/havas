@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { bannersAdminService } from '../../services/bannersAdminService';
 import { BannerLocation, type Banner } from '../../../types/Banner';
 import { ArrowLeft, Save, CloudUpload, Image as LucideImage } from 'lucide-react';
-import { handleCloudinaryUpload } from '../../services/uploadAdminService';
+import { uploadAdminService } from '../../services/uploadAdminService';
 
 interface BannerFormProps {
     id?: string;
@@ -73,7 +73,7 @@ const BannerForm: React.FC<BannerFormProps> = ({ id }) => {
 
             setUploading(true);
             try {
-                const url = await handleCloudinaryUpload(file);
+                const url = await uploadAdminService.handleCloudinaryUpload(file);
                 setFormData(prev => ({ ...prev, imageUrl: url }));
             } catch (error) {
                 alert('Erro no upload da imagem');
