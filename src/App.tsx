@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-// import { SpeedInsights } from "@vercel/speed-insights/react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import AnnouncementBar from './components/AnnouncementBar';
 import Header from './components/Header';
 import DeliveryAvailabilityBar from './components/DeliveryAvailabilityBar';
@@ -20,8 +20,8 @@ import CheckoutLayout from './pages/checkout/CheckoutLayout';
 import PixPaymentPage from './pages/checkout/PixPaymentPage';
 import CheckoutSuccessPage from './pages/checkout/CheckoutSuccessPage';
 // import { SpeedInsights } from "@vercel/speed-insights/react";
-// import { CartProvider } from './context/CartContext';
-// import CartContainer from './components/CartContainer';
+import { CartProvider } from './context/CartContext';
+import CartContainer from './components/CartContainer';
 
 // ADMIN IMPORTS
 import AdminLayout from './admin/AdminLayout';
@@ -38,7 +38,7 @@ import OrdersList from './admin/pages/Orders/OrdersList';
 import Login from './admin/pages/Login';
 import ProtectedRoute from './admin/components/ProtectedRoute';
 
-function App() {
+function InnerApp() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
   useEffect(() => {
@@ -215,6 +215,16 @@ function App() {
     </div>
   );
 };
+
+function App() {
+  return (
+    <CartProvider>
+      <SpeedInsights />
+      <InnerApp />
+      <CartContainer />
+    </CartProvider>
+  );
+}
 
 
 export default App;
