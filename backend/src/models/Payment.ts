@@ -39,10 +39,23 @@ const PaymentSchema: Schema = new Schema({
         phone: String,
         document: String
     },
+    shippingAddress: {
+        street: String,
+        number: String,
+        neighborhood: String,
+        city: String,
+        state: String,
+        zipCode: String,
+        complement: String
+    },
     items: [{
-        title: String,
+        product: { type: Schema.Types.ObjectId, ref: 'Product' },
+        name: String, // Snapshot Name
+        title: String, // Legacy fallback
         quantity: Number,
-        unitPrice: Number,
+        price: Schema.Types.Mixed, // Can be Number or String "R$..."
+        unitPrice: Number, // Legacy
+        image: String,
         tangible: Boolean
     }],
     pixData: {
@@ -53,7 +66,8 @@ const PaymentSchema: Schema = new Schema({
         amount: { type: Number }
     }
 }, {
-    timestamps: true
+    timestamps: true,
+    strict: false // Allow flexibility for now
 });
 
 export default mongoose.model<IPayment>('Payment', PaymentSchema);

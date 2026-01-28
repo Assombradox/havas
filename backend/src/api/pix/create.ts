@@ -8,7 +8,7 @@ import crypto from 'crypto';
 export const handleCreatePixPayment = async (req: Request, res: Response) => {
     try {
         // 1. Receber dados
-        const { amount, customerName, customerEmail, customerCpf, customerPhone } = req.body;
+        const { amount, customerName, customerEmail, customerCpf, customerPhone, shippingAddress, items } = req.body;
 
         // Validação simples
         if (!amount || !customerName || !customerEmail || !customerCpf) {
@@ -16,7 +16,7 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
         }
 
         // 2. Preparar Dados
-        // Convert to cents as per standard financial practice and previous legacy behavior
+        // Convert to cents as per standard financial practice
         const amountInCents = Math.round(Number(amount) * 100);
 
         // Generate Order ID (External ID)
@@ -35,10 +35,9 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
         console.log('✅ PIX CRIADO (Nova API)! ID da Transação:', transaction.transaction_id);
 
         // 4. Normalizar Resposta
-        // We use `orderId` as our internal paymentId to match Webhook logic
         const responseData = {
             paymentId: orderId,
-            qrCodeImage: transaction.pix_qr_code, // EMV as Image placeholder if needed, or check frontend
+            qrCodeImage: transaction.pix_qr_code,
             pixCode: transaction.pix_code || transaction.pix_qr_code,
             expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
             amount: amountInCents
@@ -50,53 +49,52 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
 
         console.log(`[Create] Saving payment ${orderId} (ShortID: ${nextId}) to MongoDB...`);
 
-        // --- ENRICH ITEMS (Fetch from DB) ---
+        // --- SNAPSHOT LOGIC (Enrich Items) ---
         let enrichedItems: any[] = [];
-        const rawItems = req.body.items || [];
+        let calculatedTotal = 0;
 
-        if (Array.isArray(rawItems) && rawItems.length > 0) {
-            console.log('[Create] Enriching items:', JSON.stringify(rawItems));
-            try {
-                // Determine if items have full details or just ID
-                const { Product } = require('../../models/Product');
+        // Load Product Model dynamically
+        const { Product } = require('../../models/Product');
 
-                enrichedItems = await Promise.all(rawItems.map(async (item: any) => {
-                    const pId = item.productId || item.product || item.id || item._id;
+        if (Array.isArray(items) && items.length > 0) {
+            console.log('[Create] Snapshotting items from DB...');
 
-                    if (pId) {
-                        try {
-                            const product = await Product.findById(pId).select('name images price');
-                            if (product) {
-                                return {
-                                    name: product.name,
-                                    quantity: item.quantity || 1,
-                                    price: Number(item.price || product.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-                                    image: product.images?.[0] || null
-                                };
-                            }
-                        } catch (docErr) {
-                            console.warn(`[Create] Product not found for ID ${pId}`, docErr);
+            // Force fetch for ALL items
+            enrichedItems = await Promise.all(items.map(async (item: any) => {
+                const pId = item.productId || item.product || item.id || item._id;
+
+                if (pId) {
+                    try {
+                        const product = await Product.findById(pId);
+                        if (product) {
+                            const unitPrice = typeof product.price === 'number' ? product.price : parseFloat(product.price.toString().replace('R$', '').replace('.', '').replace(',', '.'));
+                            const qty = item.quantity || 1;
+
+                            calculatedTotal += (unitPrice * qty);
+
+                            return {
+                                product: product._id,
+                                name: product.name,           // SNAPSHOT NAME
+                                quantity: qty,
+                                price: product.price,         // SNAPSHOT PRICE (Number from DB)
+                                unitPrice: unitPrice,         // Helper for maths
+                                image: product.images?.[0] || '', // SNAPSHOT IMAGE
+                                tangible: true // Default
+                            };
                         }
+                    } catch (err) {
+                        console.error(`[Create] Error snapshotting product ${pId}:`, err);
                     }
+                }
 
-                    // Fallback
-                    return {
-                        name: item.name || 'Produto sem nome',
-                        quantity: item.quantity || 1,
-                        price: Number(item.price || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-                        image: item.image || 'https://via.placeholder.com/50'
-                    };
-                }));
-            } catch (err) {
-                console.error('[Create] Failed to enrich items:', err);
-                // Fallback to raw mapping
-                enrichedItems = rawItems.map(i => ({
-                    name: i.name || 'Produto',
-                    quantity: i.quantity || 1,
-                    price: Number(i.price || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
-                    image: i.image
-                }));
-            }
+                // Fallback (Should typically not happen if ID is valid)
+                return {
+                    name: item.name || 'Produto Não Encontrado',
+                    quantity: item.quantity || 1,
+                    price: item.price || 0,
+                    image: item.image || ''
+                };
+            }));
         }
 
         // Save using orderId as the key
@@ -106,20 +104,21 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
             externalId: orderId,
             transactionId: transaction.transaction_id,
             shortId: nextId,
-            totalAmount: Number(amount),
+            totalAmount: calculatedTotal > 0 ? calculatedTotal : Number(amount), // Prefer calculated, fallback to request
             customer: {
                 name: customerName,
                 email: customerEmail,
                 phone: customerPhone,
                 document: customerCpf
             },
-            items: enrichedItems
+            shippingAddress: shippingAddress, // SAVE ADDRESS
+            items: enrichedItems // SAVE SNAPSHOT
         });
 
         const storeSize = await paymentStore.size();
         console.log(`[Create] Saved. Total payments in store: ${storeSize}`);
 
-        // --- EMAIL NOTIFICATION (ASYNC/NON-BLOCKING) ---
+        // --- EMAIL NOTIFICATION ---
         try {
             console.log(`[Email] Sending Pix instructions to ${customerEmail}...`);
             const formattedTotal = Number(amount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
@@ -132,7 +131,6 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
                 isShortId: true,
                 items: enrichedItems
             });
-            console.log(`[Email] Pix instructions sent successfully.`);
         } catch (emailError) {
             console.error(`[Email] Failed to send Pix instructions:`, emailError);
         }
