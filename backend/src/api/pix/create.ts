@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import Payment from '../../models/Payment';
 import { createPixPayment } from '../../services/brPixPaymentsService';
 import { paymentStore } from '../../store/paymentStore';
 import { emailService } from '../../services/email.service';
@@ -43,8 +44,12 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
             amount: amountInCents
         };
 
-        // 5. Persistir no MongoDB
-        console.log(`[Create] Saving payment ${orderId} (Trans: ${transaction.transaction_id}) to MongoDB...`);
+        // 5. Short ID & Persistence
+        // Generate Short ID (Concurrency Safe-ish)
+        const lastOrder = await Payment.findOne({ shortId: { $ne: null } }).sort({ shortId: -1 }).select('shortId');
+        const nextId = (lastOrder?.shortId || 1000) + 1;
+
+        console.log(`[Create] Saving payment ${orderId} (ShortID: ${nextId}) to MongoDB...`);
 
         // Save using orderId as the key
         await paymentStore.set(orderId, {
@@ -52,6 +57,7 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
             pixData: responseData,
             externalId: orderId,
             transactionId: transaction.transaction_id,
+            shortId: nextId,
 
             // New Fields for Admin List
             totalAmount: Number(amount), // Original input (Reais usually, based on context)
@@ -82,9 +88,10 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
 
             await emailService.sendPixNotification(customerEmail, {
                 customerName: customerName.split(' ')[0], // First Name
-                orderId: orderId, // Or a short version if preferred
+                orderId: nextId.toString(), // Use Short ID
                 total: formattedTotal,
                 pixCode: responseData.pixCode,
+                isShortId: true
                 // qrCodeUrl: responseData.qrCodeImage // Add if available
             });
             console.log(`[Email] Pix instructions sent successfully.`);

@@ -2,6 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IPayment extends Document {
     paymentId: string;
+    shortId?: number;
     status: string;
     pixData: {
         paymentId: string;
@@ -29,6 +30,7 @@ export interface IPayment extends Document {
 
 const PaymentSchema: Schema = new Schema({
     paymentId: { type: String, required: true, unique: true, index: true },
+    shortId: { type: Number, unique: true, sparse: true },
     status: { type: String, required: true, default: 'waiting_payment' },
     totalAmount: { type: Number },
     customer: {

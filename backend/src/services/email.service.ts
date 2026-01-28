@@ -27,8 +27,17 @@ export const emailService = {
         }
     },
 
-    sendPixNotification: async (toEmail: string, data: { customerName: string; orderId: string; total: string; pixCode: string; qrCodeUrl?: string }) => {
+    sendPixNotification: async (toEmail: string, data: { customerName: string; orderId: string; total: string; pixCode: string; qrCodeUrl?: string; isShortId?: boolean }, overrideConfig?: any) => {
         try {
+            // Fetch Config (DB) or use Override (Preview)
+            let config = overrideConfig;
+            if (!config) {
+                // Import dynammically to avoid circular deps if any, or just import top level.
+                // Assuming getStoreConfig is importable.
+                const { getStoreConfig } = require('../models/StoreConfig');
+                config = await getStoreConfig();
+            }
+
             const qrUrl = data.qrCodeUrl || 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(data.pixCode);
 
             const emailHtml = await render(React.createElement(OrderPixTemplate, {
@@ -36,13 +45,20 @@ export const emailService = {
                 orderId: data.orderId,
                 total: data.total,
                 pixCode: data.pixCode,
-                qrCodeUrl: qrUrl
+                qrCodeUrl: qrUrl,
+                brandColor: config.primaryColor,
+                logoUrl: config.logoUrl,
+                storeName: config.storeName
             }));
+
+            const subject = data.isShortId
+                ? `${config.storeName}: Pedido #${data.orderId} Recebido!`
+                : `${config.storeName}: Pedido Recebido!`;
 
             const result = await resend.emails.send({
                 from: 'onboarding@resend.dev',
                 to: toEmail,
-                subject: `Pedido #${data.orderId} Recebido! 💸`,
+                subject: subject,
                 html: emailHtml
             });
 

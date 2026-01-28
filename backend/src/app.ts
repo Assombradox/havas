@@ -36,6 +36,10 @@ app.use('/api/banners', bannerRouter);
 import emailRouter from './routes/email.routes';
 app.use('/api/email', emailRouter);
 
+// Config Routes
+import configRouter from './routes/config.routes';
+app.use('/api/config', configRouter);
+
 app.post('/api/pix/create', handleCreatePixPayment);
 app.get('/api/pix/:paymentId', handleGetPixPayment);
 app.post('/api/pix/webhook', handlePixWebhook);

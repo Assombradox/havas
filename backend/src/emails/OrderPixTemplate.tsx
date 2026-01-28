@@ -21,6 +21,9 @@ interface OrderPixTemplateProps {
     total: string;
     pixCode: string;
     qrCodeUrl?: string;
+    brandColor?: string;
+    logoUrl?: string;
+    storeName?: string;
 }
 
 const main = {
@@ -118,6 +121,9 @@ export const OrderPixTemplate = ({
     total,
     pixCode,
     qrCodeUrl = 'https://via.placeholder.com/200x200?text=QR+Code',
+    brandColor = '#32cd32',
+    logoUrl,
+    storeName = 'HAVAS STORE'
 }: OrderPixTemplateProps) => (
     <Html>
         <Head />
@@ -125,9 +131,13 @@ export const OrderPixTemplate = ({
         <Body style={main}>
             <Container style={container}>
                 <Section style={header}>
-                    <Text style={{ fontSize: '20px', fontWeight: 'bold', color: '#333' }}>
-                        HAVAS STORE
-                    </Text>
+                    {logoUrl ? (
+                        <Img src={logoUrl} alt={storeName} style={logo} />
+                    ) : (
+                        <Text style={{ fontSize: '20px', fontWeight: 'bold', color: '#333' }}>
+                            {storeName}
+                        </Text>
+                    )}
                 </Section>
                 <Section style={heroSection}>
                     <Heading style={heading}>Pedido Recebido!</Heading>
@@ -137,7 +147,7 @@ export const OrderPixTemplate = ({
                     <Text style={{ fontSize: '16px', color: '#525f7f' }}>
                         Para finalizar, realize o pagamento via Pix:
                     </Text>
-                    <Text style={totalText}>{total}</Text>
+                    <Text style={{ ...totalText, color: brandColor }}>{total}</Text>
                 </Section>
 
                 <Section style={pixBox}>
@@ -162,7 +172,7 @@ export const OrderPixTemplate = ({
                 <Section style={{ textAlign: 'center', padding: '0 32px' }}>
                     <Button
                         style={{
-                            backgroundColor: '#32cd32',
+                            backgroundColor: brandColor,
                             borderRadius: '5px',
                             color: '#fff',
                             fontSize: '16px',

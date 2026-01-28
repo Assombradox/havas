@@ -1,5 +1,5 @@
 import React from 'react';
-import { Package, FolderTree, LayoutDashboard, Menu, X, ArrowLeft, ShoppingBag, Image as ImageIcon } from 'lucide-react';
+import { Package, FolderTree, LayoutDashboard, Menu, X, ArrowLeft, ShoppingBag, Image as ImageIcon, Palette } from 'lucide-react';
 
 interface AdminLayoutProps {
     children: React.ReactNode;
@@ -81,6 +81,16 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                     >
                         <ImageIcon size={22} />
                         {isSidebarOpen && <span>Banners</span>}
+                    </button>
+
+                    <button
+                        onClick={() => navigate('/admin/email-editor')}
+                        className={`flex items-center gap-3 p-3 rounded-lg transition-colors
+                        ${isActive('/admin/email-editor') ? 'bg-blue-600 text-white' : 'hover:bg-gray-800 text-gray-400'}`}
+                        title="Editar Email"
+                    >
+                        <Palette size={22} />
+                        {isSidebarOpen && <span>Editar Email</span>}
                     </button>
 
                     <div className="mt-auto pt-6 border-t border-gray-800">

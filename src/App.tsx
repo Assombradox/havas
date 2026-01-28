@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { SpeedInsights } from "@vercel/speed-insights/react";
+// import { SpeedInsights } from "@vercel/speed-insights/react";
 import AnnouncementBar from './components/AnnouncementBar';
 import Header from './components/Header';
 import DeliveryAvailabilityBar from './components/DeliveryAvailabilityBar';
@@ -19,8 +19,9 @@ import SearchPage from './pages/SearchPage';
 import CheckoutLayout from './pages/checkout/CheckoutLayout';
 import PixPaymentPage from './pages/checkout/PixPaymentPage';
 import CheckoutSuccessPage from './pages/checkout/CheckoutSuccessPage';
-import { CartProvider } from './context/CartContext';
-import CartContainer from './components/CartContainer';
+// import { SpeedInsights } from "@vercel/speed-insights/react";
+// import { CartProvider } from './context/CartContext';
+// import CartContainer from './components/CartContainer';
 
 // ADMIN IMPORTS
 import AdminLayout from './admin/AdminLayout';
@@ -31,6 +32,7 @@ import CategoriesList from './admin/pages/Categories/CategoriesList';
 import CategoryForm from './admin/pages/Categories/CategoryForm';
 import CategoryProducts from './admin/pages/Categories/CategoryProducts';
 import BannersList from './admin/pages/Banners/BannersList';
+import EmailEditor from './admin/pages/Settings/EmailEditor';
 import BannerForm from './admin/pages/Banners/BannerForm';
 import OrdersList from './admin/pages/Orders/OrdersList';
 import Login from './admin/pages/Login';
@@ -129,88 +131,90 @@ function App() {
         const id = currentPath.split('/admin/banners/')[1];
         return protectedAdmin(<BannerForm id={id} />);
       }
-    }
 
-
-    const isProductRoute = currentPath.startsWith('/produto/');
-    const isPixRoute = currentPath.startsWith('/checkout/pix/');
-
-    if (isPixRoute) {
-      const parts = currentPath.split('/checkout/pix/');
-      const paymentId = parts[1];
-      return <PixPaymentPage paymentId={paymentId} />;
-    }
-
-    if (currentPath === '/checkout/pix') { // Legacy or direct access fallback
-      return <PixPaymentPage />;
-    }
-
-    if (currentPath === '/checkout/success') {
-      return <CheckoutSuccessPage />;
-    }
-
-    if (currentPath === '/checkout') {
-      return <CheckoutLayout />;
-    }
-
-    if (isProductRoute) {
-      return <ProductPDP />;
-    }
-
-    if (currentPath === '/pdp') {
-      return <ProductPDP />;
-    }
-
-    // Dynamic Category Routing
-    if (currentPath.startsWith('/categoria/')) {
-      const slug = currentPath.split('/categoria/')[1];
-      if (slug) {
-        return <CategoryListingPage categorySlug={slug} />;
+      // Email Editor
+      if (currentPath === '/admin/email-editor') {
+        return protectedAdmin(<EmailEditor />);
       }
     }
-
-    if (currentPath === '/search' || currentPath.startsWith('/search?')) {
-      return <SearchPage />;
-    }
-
-    // Default Home
-    return (
-      <div className="w-full">
-        <AnnouncementBar />
-        <Header />
-        <DeliveryAvailabilityBar />
-
-
-
-        <HeroBanner />
-        <ScrollingAnnouncementBar />
-
-        <FeaturedSection title="Outlet" categorySlug="outlet" limit={4} />
-
-        <CategoryCarousel />
-
-        <FeaturedSection title="Verão é com as originais do Brasil" categorySlug="promo-as-originais" limit={4} />
-
-        <IconicSection title="Os mais icônicos" categorySlug="iconicos" />
-
-        <EditorialBanner />
-
-        <CategoryCarousel2 />
-
-        <ScrollingAnnouncementBarDelivery />
-        <FAQSection />
-
-        <Footer />
-      </div>
-    );
   };
 
+  const adminContent = renderContent();
+  if (adminContent) return adminContent;
+
+
+  const isProductRoute = currentPath.startsWith('/produto/');
+  const isPixRoute = currentPath.startsWith('/checkout/pix/');
+
+  if (isPixRoute) {
+    const parts = currentPath.split('/checkout/pix/');
+    const paymentId = parts[1];
+    return <PixPaymentPage paymentId={paymentId} />;
+  }
+
+  if (currentPath === '/checkout/pix') { // Legacy or direct access fallback
+    return <PixPaymentPage />;
+  }
+
+  if (currentPath === '/checkout/success') {
+    return <CheckoutSuccessPage />;
+  }
+
+  if (currentPath === '/checkout') {
+    return <CheckoutLayout />;
+  }
+
+  if (isProductRoute) {
+    return <ProductPDP />;
+  }
+
+  if (currentPath === '/pdp') {
+    return <ProductPDP />;
+  }
+
+  // Dynamic Category Routing
+  if (currentPath.startsWith('/categoria/')) {
+    const slug = currentPath.split('/categoria/')[1];
+    if (slug) {
+      return <CategoryListingPage categorySlug={slug} />;
+    }
+  }
+
+  if (currentPath === '/search' || currentPath.startsWith('/search?')) {
+    return <SearchPage />;
+  }
+
+  // Default Home
   return (
-    <CartProvider>
-      <SpeedInsights />
-      {renderContent()}
-      <CartContainer />
-    </CartProvider>
+    <div className="w-full">
+      <AnnouncementBar />
+      <Header />
+      <DeliveryAvailabilityBar />
+
+
+
+      <HeroBanner />
+      <ScrollingAnnouncementBar />
+
+      <FeaturedSection title="Outlet" categorySlug="outlet" limit={4} />
+
+      <CategoryCarousel />
+
+      <FeaturedSection title="Verão é com as originais do Brasil" categorySlug="promo-as-originais" limit={4} />
+
+      <IconicSection title="Os mais icônicos" categorySlug="iconicos" />
+
+      <EditorialBanner />
+
+      <CategoryCarousel2 />
+
+      <ScrollingAnnouncementBarDelivery />
+      <FAQSection />
+
+      <Footer />
+    </div>
   );
-}
+};
+
+
 export default App;
