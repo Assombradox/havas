@@ -53,8 +53,20 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
         let enrichedItems: any[] = [];
         let calculatedTotal = 0;
 
-        // Load Product Model dynamically
-        const { Product } = require('../../models/Product');
+        // Load Product Model dynamically (Lazy Load to prevent circular deps)
+        let Product: any;
+        try {
+            const ProductModule = require('../../models/Product');
+            Product = ProductModule.default || ProductModule;
+
+            if (!Product || typeof Product.findById !== 'function') {
+                console.error('[Create] 🔥 FATAL: Product Model failed to load correctly!', Product);
+                Product = null;
+            }
+        } catch (loadErr) {
+            console.error('[Create] 🔥 FATAL: require("../../models/Product") threw error:', loadErr);
+            Product = null;
+        }
 
         if (Array.isArray(items) && items.length > 0) {
             console.log('[Create] Snapshotting items from DB...');
