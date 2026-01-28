@@ -45,7 +45,24 @@ const CategoryProducts: React.FC<CategoryProductsProps> = ({ slug }) => {
 
     const handleOrderChange = (id: string, newOrder: string) => {
         const orderNum = parseInt(newOrder) || 0;
-        setProducts(prev => prev.map(p => p.id === id ? { ...p, order: orderNum } : p));
+
+        setProducts(prev => {
+            // Find if any product already has this order (excluding the one being changed)
+            const collision = prev.find(p => p.order === orderNum && p.id !== id);
+
+            if (collision) {
+                // Ripple effect: Shift everyone with order >= newOrder down by 1
+                return prev.map(p => {
+                    if (p.id === id) return { ...p, order: orderNum };
+                    if ((p.order || 0) >= orderNum) return { ...p, order: (p.order || 0) + 1 };
+                    return p;
+                }).sort((a, b) => (a.order || 0) - (b.order || 0));
+            }
+
+            // No collision, just update and sort
+            return prev.map(p => p.id === id ? { ...p, order: orderNum } : p)
+                .sort((a, b) => (a.order || 0) - (b.order || 0));
+        });
     };
 
     const handleSave = async () => {
@@ -109,11 +126,11 @@ const CategoryProducts: React.FC<CategoryProductsProps> = ({ slug }) => {
                                 </td>
                                 <td className="p-4">
                                     <div className="w-12 h-12 rounded-lg bg-gray-100 border border-gray-200 overflow-hidden flex items-center justify-center">
-                                        {product.coverImage ? (
-                                            <img src={product.coverImage} className="w-full h-full object-cover" alt="" />
-                                        ) : (
-                                            <Image size={20} className="text-gray-400" />
-                                        )}
+                                        {(() => {
+                                            const img = product.colors?.[0]?.thumbnail || product.colors?.[0]?.images?.[0] || product.coverImage;
+                                            if (img) return <img src={img} className="w-full h-full object-cover" alt="" />;
+                                            return <Image size={20} className="text-gray-400" />;
+                                        })()}
                                     </div>
                                 </td>
                                 <td className="p-4">

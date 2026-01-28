@@ -5,7 +5,7 @@ import * as cheerio from 'cheerio';
 export const productsService = {
     getAll: async (): Promise<IProduct[]> => {
         try {
-            const products = await Product.find({});
+            const products = await Product.find({}).sort({ order: 1 });
             return products || [];
         } catch (error) {
             console.error('Error fetching products:', error);
