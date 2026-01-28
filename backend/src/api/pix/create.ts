@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import Payment from '../../models/Payment';
 import { createPixPayment } from '../../services/brPixPaymentsService';
-import Product from '../../models/Product';
 import { paymentStore } from '../../store/paymentStore';
 import { emailService } from '../../services/email.service';
 import crypto from 'crypto';
@@ -54,13 +53,11 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
         let enrichedItems: any[] = [];
         let calculatedTotal = 0;
 
+        // Load Product Model dynamically
+        const { Product } = require('../../models/Product');
+
         if (Array.isArray(items) && items.length > 0) {
             console.log('[Create] Snapshotting items from DB...');
-
-            if (!Product) {
-                console.error('🔥 CRITICAL: Product Model is UNDEFINED! Check imports.');
-                throw new Error('Internal Server Error: Product Model missing');
-            }
 
             // Force fetch for ALL items
             enrichedItems = await Promise.all(items.map(async (item: any) => {
