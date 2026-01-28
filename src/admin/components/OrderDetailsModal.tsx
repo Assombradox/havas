@@ -8,14 +8,30 @@ interface OrderDetailsModalProps {
 }
 
 const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ order, onClose }) => {
-    // Calculate subtotal from items using unitPrice
-    const subtotal = order.items?.reduce((acc, item) => acc + ((item.unitPrice || 0) * item.quantity), 0) || 0;
-    const fixedFreight = 0.99;
-    const total = subtotal + fixedFreight;
+    // Source of Truth: order.totalAmount
+    const total = order.totalAmount || 0;
 
-    const formatCurrency = (val: number) => {
-        if (isNaN(val)) return 'R$ 0,00';
-        return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+    const formatCurrency = (val: number | string | undefined) => {
+        if (!val) return 'R$ 0,00';
+        if (typeof val === 'number') {
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(val);
+        }
+        return val; // It's already a formatted string ("R$ 50,00")
+    };
+
+    // Helper to render address
+    const renderAddress = () => {
+        if (order.shippingAddress) {
+            const { street, number, neighborhood, city, state, zipCode } = order.shippingAddress;
+            return (
+                <div className="text-gray-600 text-xs text-right">
+                    <p>{street}, {number}</p>
+                    <p>{neighborhood} - {city}/{state}</p>
+                    <p>{zipCode}</p>
+                </div>
+            );
+        }
+        return <span className="text-gray-400 italic">Endereço não capturado no checkout</span>;
     };
 
     return (
@@ -51,45 +67,51 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ order, onClose })
                                     <Phone size={12} /> {order.customer?.phone || "-"}
                                 </div>
                             </div>
-                            <div className="text-gray-600 md:text-right">
+                            <div className="text-gray-600 md:text-right flex flex-col items-start md:items-end">
                                 {order.customer?.document && (
-                                    <p className="text-xs text-gray-500 mb-1">Doc: {order.customer.document}</p>
+                                    <p className="text-xs text-gray-500 mb-2">Doc: {order.customer.document}</p>
                                 )}
-                                <div className="flex items-center md:justify-end gap-2 text-xs italic text-gray-400">
-                                    <MapPin size={12} />
-                                    <span>Endereço não disponível via API</span>
+                                <div className="flex items-center gap-2 text-xs">
+                                    <MapPin size={12} className="text-gray-400" />
+                                    {renderAddress()}
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* Items Table (Text Only, No Thumbnails) */}
+                    {/* Items Table */}
                     <div>
                         <h3 className="text-xs font-bold uppercase text-gray-500 mb-2">Itens do Pedido</h3>
-                        <div className="border border-gray-200 overflow-hidden">
+                        <div className="border border-gray-200 overflow-hidden unstackable-table">
                             <table className="w-full text-left text-sm">
                                 <thead className="bg-gray-100 text-gray-600 font-semibold uppercase text-xs">
                                     <tr>
                                         <th className="p-3">Produto</th>
-                                        <th className="p-3">Variação</th>
                                         <th className="p-3 text-center">Qtd</th>
-                                        <th className="p-3 text-right">Unitário</th>
-                                        <th className="p-3 text-right">Total</th>
+                                        <th className="p-3 text-right">Valor</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100">
                                     {order.items?.map((item, idx) => (
                                         <tr key={idx}>
-                                            <td className="p-3 font-medium text-gray-900">{item.title}</td>
-                                            <td className="p-3 text-gray-500">{item.color ? `${item.color} / ${item.size}` : '-'}</td>
-                                            <td className="p-3 text-center">{item.quantity}</td>
-                                            <td className="p-3 text-right text-gray-600">{formatCurrency(item.unitPrice)}</td>
-                                            <td className="p-3 text-right font-semibold text-gray-900">{formatCurrency((item.unitPrice || 0) * item.quantity)}</td>
+                                            <td className="p-3 font-medium text-gray-900 flex items-center gap-3">
+                                                {item.image && (
+                                                    <img src={item.image} alt="" className="w-8 h-8 rounded object-cover border border-gray-200" />
+                                                )}
+                                                <div className="flex flex-col">
+                                                    <span>{item.name || item.title || 'Produto sem nome'}</span>
+                                                    {item.color && <span className="text-xs text-gray-400">{item.color} {item.size ? `/ ${item.size}` : ''}</span>}
+                                                </div>
+                                            </td>
+                                            <td className="p-3 text-center text-gray-600">{item.quantity}</td>
+                                            <td className="p-3 text-right font-semibold text-gray-900">
+                                                {formatCurrency(item.price || item.unitPrice)}
+                                            </td>
                                         </tr>
                                     ))}
                                     {(!order.items || order.items.length === 0) && (
                                         <tr>
-                                            <td colSpan={5} className="p-4 text-center text-gray-500 italic">
+                                            <td colSpan={3} className="p-4 text-center text-gray-500 italic">
                                                 Nenhum item listado neste pedido.
                                             </td>
                                         </tr>
@@ -103,15 +125,7 @@ const OrderDetailsModal: React.FC<OrderDetailsModalProps> = ({ order, onClose })
                 {/* Footer Financial Summary */}
                 <div className="bg-gray-50 p-4 border-t border-gray-200">
                     <div className="flex flex-col gap-1 items-end text-sm">
-                        <div className="flex justify-between w-48 text-gray-600">
-                            <span>Subtotal:</span>
-                            <span>{formatCurrency(subtotal)}</span>
-                        </div>
-                        <div className="flex justify-between w-48 text-gray-600">
-                            <span>Frete Fixo:</span>
-                            <span>{formatCurrency(fixedFreight)}</span>
-                        </div>
-                        <div className="flex justify-between w-48 mt-2 pt-2 border-t border-gray-300 font-bold text-lg text-gray-900">
+                        <div className="flex justify-between w-48 mt-2 pt-2 text-lg font-bold text-gray-900">
                             <span>TOTAL:</span>
                             <span>{formatCurrency(total)}</span>
                         </div>

@@ -13,13 +13,24 @@ export interface DashboardOrder {
         document?: string;
     } | null;
     items: Array<{
-        title: string;
+        name?: string;  // New Backend
+        title?: string; // Fallback
         quantity: number;
-        unitPrice: number;
+        price?: string | number; // Can be "R$ 50,00" or number
+        unitPrice?: number;
+        image?: string;
         tangible: boolean;
-        color?: string; // Optional if not coming from backend yet
-        size?: string;  // Optional if not coming from backend yet
+        color?: string;
+        size?: string;
     }>;
+    shippingAddress?: {
+        street: string;
+        number: string;
+        neighborhood: string;
+        city: string;
+        state: string;
+        zipCode: string;
+    };
     createdAt: string;
 }
 
