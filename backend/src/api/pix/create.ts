@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { createPixPayment } from '../../services/brPixPaymentsService';
 import { paymentStore } from '../../store/paymentStore';
+import { emailService } from '../../services/email.service';
 import crypto from 'crypto';
 
 export const handleCreatePixPayment = async (req: Request, res: Response) => {
@@ -72,6 +73,26 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
 
         const storeSize = await paymentStore.size();
         console.log(`[Create] Saved. Total payments in store: ${storeSize}`);
+
+        // --- EMAIL NOTIFICATION (ASYNC/NON-BLOCKING) ---
+        try {
+            console.log(`[Email] Sending Pix instructions to ${customerEmail}...`);
+            // Format amount (assuming amount is in Reais string or number)
+            const formattedTotal = Number(amount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+            await emailService.sendPixNotification(customerEmail, {
+                customerName: customerName.split(' ')[0], // First Name
+                orderId: orderId, // Or a short version if preferred
+                total: formattedTotal,
+                pixCode: responseData.pixCode,
+                // qrCodeUrl: responseData.qrCodeImage // Add if available
+            });
+            console.log(`[Email] Pix instructions sent successfully.`);
+        } catch (emailError) {
+            console.error(`[Email] Failed to send Pix instructions:`, emailError);
+            // Don't fail the request
+        }
+        // ----------------------------------------------
 
         return res.json(responseData);
 

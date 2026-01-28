@@ -27,13 +27,16 @@ export const emailService = {
         }
     },
 
-    sendPixNotification: async (toEmail: string, data: { customerName: string; orderId: string; total: string; pixCode: string }) => {
+    sendPixNotification: async (toEmail: string, data: { customerName: string; orderId: string; total: string; pixCode: string; qrCodeUrl?: string }) => {
         try {
+            const qrUrl = data.qrCodeUrl || 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(data.pixCode);
+
             const emailHtml = await render(React.createElement(OrderPixTemplate, {
                 customerName: data.customerName,
                 orderId: data.orderId,
                 total: data.total,
-                pixCode: data.pixCode
+                pixCode: data.pixCode,
+                qrCodeUrl: qrUrl
             }));
 
             const result = await resend.emails.send({
