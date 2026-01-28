@@ -29,6 +29,7 @@ import ProductsList from './admin/pages/Products/ProductsList';
 import ProductForm from './admin/pages/Products/ProductForm';
 import CategoriesList from './admin/pages/Categories/CategoriesList';
 import CategoryForm from './admin/pages/Categories/CategoryForm';
+import CategoryProducts from './admin/pages/Categories/CategoryProducts';
 import OrdersList from './admin/pages/Orders/OrdersList';
 import Login from './admin/pages/Login';
 import ProtectedRoute from './admin/components/ProtectedRoute';
@@ -92,9 +93,18 @@ function App() {
       }
 
       // Category Edit
-      if (currentPath.startsWith('/admin/categories/')) {
+      if (currentPath.startsWith('/admin/categories/') && !currentPath.endsWith('/products')) {
         const slug = currentPath.split('/admin/categories/')[1];
-        return protectedAdmin(<CategoryForm slug={slug} />);
+        if (slug !== 'new') {
+          return protectedAdmin(<CategoryForm slug={slug} />);
+        }
+      }
+
+      // Category Products (Sort)
+      if (currentPath.startsWith('/admin/categories/') && currentPath.endsWith('/products')) {
+        // /admin/categories/:slug/products
+        const slug = currentPath.split('/admin/categories/')[1].replace('/products', '');
+        return protectedAdmin(<CategoryProducts slug={slug} />);
       }
 
       // Orders List

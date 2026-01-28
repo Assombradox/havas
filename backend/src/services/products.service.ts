@@ -33,7 +33,7 @@ export const productsService = {
 
     getByCategory: async (categorySlug: string): Promise<IProduct[]> => {
         try {
-            const products = await Product.find({ categories: categorySlug });
+            const products = await Product.find({ categories: categorySlug }).sort({ order: 1 });
             return products || [];
         } catch (error) {
             console.error('Error fetching products by category:', error);
@@ -112,6 +112,24 @@ export const productsService = {
 
         } catch (error) {
             console.error('Error duplicating product:', error);
+            throw error;
+        }
+    },
+
+
+
+    batchReorder: async (items: { id: string, order: number }[]): Promise<boolean> => {
+        try {
+            const operations = items.map(item => ({
+                updateOne: {
+                    filter: { id: item.id },
+                    update: { $set: { order: item.order } }
+                }
+            }));
+            await Product.bulkWrite(operations);
+            return true;
+        } catch (error) {
+            console.error('Error in batch reorder:', error);
             throw error;
         }
     },

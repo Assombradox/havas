@@ -25,4 +25,5 @@ export interface Product {
     categories: string[];
     color?: string;
     relatedProducts?: string[];
+    order?: number;
 }

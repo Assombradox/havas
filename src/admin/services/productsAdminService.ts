@@ -3,8 +3,9 @@ import type { Product } from '../../types/Product';
 const API_URL = `${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/products`;
 
 export const productsAdminService = {
-    getAll: async (): Promise<Product[]> => {
-        const response = await fetch(API_URL);
+    getAll: async (category?: string): Promise<Product[]> => {
+        const url = category ? `${API_URL}?category=${category}` : API_URL;
+        const response = await fetch(url);
         if (!response.ok) throw new Error('Failed to fetch products');
         return response.json();
     },
@@ -61,6 +62,15 @@ export const productsAdminService = {
         });
         if (!response.ok) throw new Error('Failed to duplicate product');
         return response.json();
+    },
+
+    batchReorder: async (items: { id: string, order: number }[]): Promise<void> => {
+        const response = await fetch(`${API_URL}/reorder-batch`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ items })
+        });
+        if (!response.ok) throw new Error('Failed to reorder products');
     },
 
     extractMetadata: async (url: string): Promise<Partial<Product>> => {

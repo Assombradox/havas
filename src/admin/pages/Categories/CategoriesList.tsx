@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { categoriesAdminService } from '../../services/categoriesAdminService';
 import type { CategoryConfig } from '../../../types/Category';
-import { Edit, Trash2, Plus } from 'lucide-react';
+import { Edit, Trash2, Plus, LayoutList } from 'lucide-react';
 
 const CategoriesList: React.FC = () => {
     const [categories, setCategories] = useState<CategoryConfig[]>([]);
@@ -84,6 +84,13 @@ const CategoriesList: React.FC = () => {
                                             className="p-2 text-blue-600 hover:bg-blue-50 rounded transition-colors"
                                         >
                                             <Edit size={18} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleNavigate(`/admin/categories/${category.slug}/products`)}
+                                            className="p-2 text-purple-600 hover:bg-purple-50 rounded transition-colors"
+                                            title="Gerenciar Vitrine"
+                                        >
+                                            <LayoutList size={18} />
                                         </button>
                                         <button
                                             onClick={() => handleDelete(category.slug, category.title || category.name || 'Categoria')}

@@ -4,10 +4,17 @@ import { productsService } from '../services/products.service';
 const router = Router();
 
 // GET /products
+// GET /products
 router.get('/', async (req, res) => {
     try {
-        const products = await productsService.getAll();
-        res.json(products);
+        const categorySlug = req.query.category as string;
+        if (categorySlug) {
+            const products = await productsService.getByCategory(categorySlug);
+            res.json(products);
+        } else {
+            const products = await productsService.getAll();
+            res.json(products);
+        }
     } catch (error) {
         res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -68,6 +75,20 @@ router.post('/:id/duplicate', async (req, res) => {
     try {
         const newProduct = await productsService.duplicate(req.params.id);
         res.status(201).json(newProduct);
+    } catch (error: any) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+// PATCH /products/reorder-batch
+router.patch('/reorder-batch', async (req, res) => {
+    try {
+        const { items } = req.body;
+        if (!items || !Array.isArray(items)) {
+            return res.status(400).json({ error: 'Items array is required' });
+        }
+        await productsService.batchReorder(items);
+        res.status(200).json({ message: 'Batch reorder successful' });
     } catch (error: any) {
         res.status(400).json({ error: error.message });
     }

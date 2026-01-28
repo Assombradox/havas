@@ -26,6 +26,7 @@ export interface IProduct extends Document {
     isNewRelease: boolean;
     categories: string[]; // Array of slugs
     relatedProducts?: string[]; // Array of slugs
+    order: number;
 }
 
 const ProductSchema: Schema = new Schema({
@@ -49,7 +50,8 @@ const ProductSchema: Schema = new Schema({
     rating: { type: Number, default: 0 },
     reviewCount: { type: Number, default: 0 },
     isNewRelease: { type: Boolean, default: false },
-    relatedProducts: [{ type: String }] // Store slugs
+    relatedProducts: [{ type: String }], // Store slugs
+    order: { type: Number, default: 0 }
 }, {
     timestamps: true
 });
