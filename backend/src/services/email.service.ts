@@ -46,7 +46,41 @@ export const emailService = {
 
             const qrUrl = data.qrCodeUrl || 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=' + encodeURIComponent(data.pixCode);
 
-            console.log('[EmailService] Items passed to template:', JSON.stringify(data.items, null, 2));
+            // --- BRUTE FORCE PRODUCT DATA FETCHING ---
+            // The user reported items coming empty. We will force fetch them here to be absolutely sure.
+            let finalItems = data.items || [];
+            if (finalItems.length > 0) {
+                try {
+                    const { Product } = require('../models/Product');
+                    console.log('[EmailService] Starting Brute Force Item Enrichment...');
+
+                    finalItems = await Promise.all(finalItems.map(async (item: any) => {
+                        const pId = item.productId || item.product || item.id || item._id;
+                        if (pId) {
+                            try {
+                                const productDetails = await Product.findById(pId).select('name price images');
+                                if (productDetails) {
+                                    console.log(`[EmailService] Found Product: ${productDetails.name}`);
+                                    return {
+                                        name: productDetails.name,
+                                        quantity: item.quantity,
+                                        price: typeof item.price === 'string' ? item.price : Number(productDetails.price).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+                                        image: productDetails.images?.[0] || item.image || ''
+                                    };
+                                }
+                            } catch (pErr) {
+                                console.warn(`[EmailService] Product lookup failed for ${pId}`, pErr);
+                            }
+                        }
+                        return item;
+                    }));
+                } catch (err) {
+                    console.error('[EmailService] Brute force enrichment failed:', err);
+                }
+            }
+            // ------------------------------------------
+
+            console.log('[EmailService] Final Items passed to template:', JSON.stringify(finalItems, null, 2));
 
             const emailHtml = await render(React.createElement(OrderPixTemplate, {
                 customerName: data.customerName,
@@ -58,7 +92,7 @@ export const emailService = {
                 logoUrl: config.logoUrl,
                 storeName: config.storeName,
                 // Rich Content
-                items: data.items,
+                items: finalItems,
                 emailTitle: config.emailTitle,
                 emailMessage: config.emailMessage,
                 emailFooter: config.emailFooter

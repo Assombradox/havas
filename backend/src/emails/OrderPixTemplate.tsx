@@ -111,17 +111,19 @@ const codeLabel = {
 
 const codeText = {
     fontSize: '12px',
-    color: '#333',
+    color: '#555555',
     fontFamily: 'monospace',
     wordBreak: 'break-all' as const,
     whiteSpace: 'pre-wrap' as const,
-    lineHeight: '1.5',
+    lineHeight: '1.4',
     backgroundColor: '#f3f4f6',
     padding: '10px',
     borderRadius: '4px',
     border: '1px border-dashed #ccc',
     width: '100%',
-    display: 'block'
+    display: 'block',
+    textAlign: 'center' as const,
+    textDecoration: 'none'
 };
 
 const qrPlaceholder = {
