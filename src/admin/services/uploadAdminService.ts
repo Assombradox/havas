@@ -15,5 +15,23 @@ export const uploadAdminService = {
 
         const data = await response.json();
         return data.url;
+    },
+
+    handleCloudinaryUpload: async (file: File): Promise<string> => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = async () => {
+                try {
+                    const base64 = reader.result as string;
+                    // Reuse existing endpoint which handles string URLs (and Data URIs)
+                    const url = await uploadAdminService.uploadFromUrl(base64);
+                    resolve(url);
+                } catch (error) {
+                    reject(error);
+                }
+            };
+            reader.onerror = (error) => reject(error);
+        });
     }
 };

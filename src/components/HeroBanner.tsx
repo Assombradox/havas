@@ -1,48 +1,67 @@
 import React, { useState, useEffect } from 'react';
+import { bannersAdminService } from '../admin/services/bannersAdminService';
+import { BannerLocation } from '../types/Banner';
 
 interface BannerData {
-    id: number;
+    id: string; // Updated to string
     src: string;
     alt: string;
+    link?: string;
 }
 
-// Banners from public/images
-const banners: BannerData[] = [
-    {
-        id: 1,
-        src: "/images/banner 1.gif.webp",
-        alt: "Havaianas Clássicas"
-    },
-    {
-        id: 2,
-        src: "/images/banner 2.webp",
-        alt: "Havaianas Nova Coleção"
-    },
-    {
-        id: 3,
-        src: "/images/banner 3.gif.webp",
-        alt: "Havaianas Estilo"
-    },
-    {
-        id: 4,
-        src: "/images/banner 4.webp",
-        alt: "Havaianas Ofertas"
-    }
-];
-
-const SLIDE_DURATION = 5000; // 5 seconds per slide
+const SLIDE_DURATION = 5000;
 
 const HeroBanner: React.FC = () => {
+    const [banners, setBanners] = useState<BannerData[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
+
+    // Fetch Banners
+    useEffect(() => {
+        const fetchBanners = async () => {
+            try {
+                const data = await bannersAdminService.getPublic(BannerLocation.HERO);
+                if (data.length > 0) {
+                    setBanners(data.map(b => ({
+                        id: b.id,
+                        src: b.imageUrl,
+                        alt: b.title,
+                        link: b.link
+                    })));
+                } else {
+                    // Fallback to legacy static banners if API empty
+                    setBanners([
+                        { id: '1', src: "/images/banner 1.gif.webp", alt: "Havaianas Clássicas" },
+                        { id: '2', src: "/images/banner 2.webp", alt: "Havaianas Nova Coleção" },
+                        { id: '3', src: "/images/banner 3.gif.webp", alt: "Havaianas Estilo" },
+                        { id: '4', src: "/images/banner 4.webp", alt: "Havaianas Ofertas" }
+                    ]);
+                }
+            } catch (error) {
+                console.error("Failed to load hero banners", error);
+                // Fallback
+                setBanners([
+                    { id: '1', src: "/images/banner 1.gif.webp", alt: "Havaianas Clássicas" },
+                    { id: '2', src: "/images/banner 2.webp", alt: "Havaianas Nova Coleção" },
+                    { id: '3', src: "/images/banner 3.gif.webp", alt: "Havaianas Estilo" },
+                    { id: '4', src: "/images/banner 4.webp", alt: "Havaianas Ofertas" }
+                ]);
+            }
+        };
+        fetchBanners();
+    }, []);
 
     // Handle slide change
     useEffect(() => {
+        if (banners.length <= 1) return;
+
         const timer = setInterval(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % banners.length);
         }, SLIDE_DURATION);
 
         return () => clearInterval(timer);
-    }, []);
+    }, [banners.length]);
+
+    if (banners.length === 0) return null;
 
     return (
         <div className="w-full flex flex-col items-center py-4 px-4">
@@ -54,14 +73,21 @@ const HeroBanner: React.FC = () => {
                         className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"
                             }`}
                     >
-                        <img
-                            src={banner.src}
-                            alt={banner.alt}
-                            className="w-full h-full object-cover"
-                        // GIFs/WebPs play automatically
-                        />
-
-
+                        {banner.link ? (
+                            <a href={banner.link} className="block w-full h-full">
+                                <img
+                                    src={banner.src}
+                                    alt={banner.alt}
+                                    className="w-full h-full object-cover"
+                                />
+                            </a>
+                        ) : (
+                            <img
+                                src={banner.src}
+                                alt={banner.alt}
+                                className="w-full h-full object-cover"
+                            />
+                        )}
                     </div>
                 ))}
             </div>

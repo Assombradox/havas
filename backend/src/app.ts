@@ -28,6 +28,10 @@ app.use('/api/auth', authRouter);
 import { uploadRouter } from './routes/upload.routes';
 app.use('/api/upload', uploadRouter);
 
+// Banner Routes
+import bannerRouter from './routes/banners.routes';
+app.use('/api/banners', bannerRouter);
+
 app.post('/api/pix/create', handleCreatePixPayment);
 app.get('/api/pix/:paymentId', handleGetPixPayment);
 app.post('/api/pix/webhook', handlePixWebhook);

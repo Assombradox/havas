@@ -30,6 +30,8 @@ import ProductForm from './admin/pages/Products/ProductForm';
 import CategoriesList from './admin/pages/Categories/CategoriesList';
 import CategoryForm from './admin/pages/Categories/CategoryForm';
 import CategoryProducts from './admin/pages/Categories/CategoryProducts';
+import BannersList from './admin/pages/Banners/BannersList';
+import BannerForm from './admin/pages/Banners/BannerForm';
 import OrdersList from './admin/pages/Orders/OrdersList';
 import Login from './admin/pages/Login';
 import ProtectedRoute from './admin/components/ProtectedRoute';
@@ -110,6 +112,22 @@ function App() {
       // Orders List
       if (currentPath === '/admin/orders') {
         return protectedAdmin(<OrdersList />);
+      }
+
+      // Banners List
+      if (currentPath === '/admin/banners') {
+        return protectedAdmin(<BannersList />);
+      }
+
+      // Banner Create
+      if (currentPath === '/admin/banners/new') {
+        return protectedAdmin(<BannerForm />);
+      }
+
+      // Banner Edit
+      if (currentPath.startsWith('/admin/banners/')) {
+        const id = currentPath.split('/admin/banners/')[1];
+        return protectedAdmin(<BannerForm id={id} />);
       }
     }
 

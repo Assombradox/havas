@@ -1,5 +1,5 @@
 import React from 'react';
-import { Package, FolderTree, LayoutDashboard, Menu, X, ArrowLeft, ShoppingBag } from 'lucide-react';
+import { Package, FolderTree, LayoutDashboard, Menu, X, ArrowLeft, ShoppingBag, Image as ImageIcon } from 'lucide-react';
 
 interface AdminLayoutProps {
     children: React.ReactNode;
@@ -73,6 +73,16 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                         {isSidebarOpen && <span>Vendas</span>}
                     </button>
 
+                    <button
+                        onClick={() => navigate('/admin/banners')}
+                        className={`flex items-center gap-3 p-3 rounded-lg transition-colors
+                        ${isActive('/admin/banners') ? 'bg-blue-600 text-white' : 'hover:bg-gray-800 text-gray-400'}`}
+                        title="Banners"
+                    >
+                        <ImageIcon size={22} />
+                        {isSidebarOpen && <span>Banners</span>}
+                    </button>
+
                     <div className="mt-auto pt-6 border-t border-gray-800">
                         <button
                             onClick={() => navigate('/')}
@@ -93,6 +103,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
                         {window.location.pathname === '/admin' && 'Dashboard'}
                         {window.location.pathname.includes('/admin/products') && 'Gerenciar Produtos'}
                         {window.location.pathname.includes('/admin/categories') && 'Gerenciar Categorias'}
+                        {window.location.pathname.includes('/admin/banners') && 'Gerenciar Banners'}
                     </h1>
                 </header>
                 <div className="flex-1 overflow-auto p-8">
