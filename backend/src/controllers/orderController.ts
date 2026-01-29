@@ -18,6 +18,7 @@ export const getAllOrders = async (req: Request, res: Response) => {
             totalAmount: order.totalAmount || order.pixData?.amount, // Fallback
             customer: order.customer || { name: 'N/A' }, // Fallback for old records
             items: order.items || [],
+            shippingAddress: order.shippingAddress, // ✅ Added missing field
             createdAt: order.createdAt
         }));
 
