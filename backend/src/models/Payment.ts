@@ -17,10 +17,23 @@ export interface IPayment extends Document {
         phone: string;
         document: string;
     };
+    shippingAddress?: {
+        zipCode: string;
+        street: string;
+        number: string;
+        neighborhood: string;
+        city: string;
+        state: string;
+        complement?: string;
+    };
     items?: Array<{
-        title: string;
+        product?: any;
+        name?: string;
+        title?: string;
         quantity: number;
-        unitPrice: number;
+        price?: number | string;
+        unitPrice?: number;
+        image?: string;
         tangible: boolean;
     }>;
     totalAmount?: number;
