@@ -19,6 +19,7 @@ import SearchPage from './pages/SearchPage';
 import CheckoutLayout from './pages/checkout/CheckoutLayout';
 import PixPaymentPage from './pages/checkout/PixPaymentPage';
 import CheckoutSuccessPage from './pages/checkout/CheckoutSuccessPage';
+import PesquisaPage from './app/pesquisa/page';
 // import { SpeedInsights } from "@vercel/speed-insights/react";
 import { CartProvider } from './context/CartContext';
 import CartContainer from './components/CartContainer';
@@ -178,6 +179,10 @@ function InnerApp() {
     if (slug) {
       return <CategoryListingPage categorySlug={slug} />;
     }
+  }
+
+  if (currentPath === '/pesquisa') {
+    return <PesquisaPage />;
   }
 
   if (currentPath === '/search' || currentPath.startsWith('/search?')) {
