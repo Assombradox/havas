@@ -21,10 +21,52 @@ const FeaturedSection: React.FC<FeaturedSectionProps> = ({
         const loadProducts = async () => {
             try {
                 const allProducts = await productsService.getAll();
-                const filtered = allProducts
-                    .filter(p => p.categories && p.categories.includes(categorySlug))
-                    .slice(0, limit);
-                setProducts(filtered);
+                let filtered = allProducts
+                    .filter(p => p.categories && p.categories.includes(categorySlug));
+
+                // Context Awareness: Gender Sort
+                const params = new URLSearchParams(window.location.search);
+                const gender = params.get('gender') || localStorage.getItem('havaianas_promo_gender');
+
+                if (gender) {
+                    const targetGender = gender.toLowerCase();
+                    const isFemale = targetGender === 'feminino' || targetGender === 'female' || targetGender === 'mulher';
+                    const isMale = targetGender === 'masculino' || targetGender === 'male' || targetGender === 'homem';
+
+                    filtered = filtered.sort((a, b) => {
+                        const getScore = (p: Product) => {
+                            let score = 0;
+                            const textToCheck = (p.name + ' ' + (p.categories || []).join(' ')).toLowerCase();
+
+                            if (isFemale) {
+                                if (textToCheck.includes('feminino') || textToCheck.includes('slim') || textToCheck.includes('glitter')) score += 100;
+                                if (textToCheck.includes('unissex') || textToCheck.includes('neutro')) score += 50;
+                            } else if (isMale) {
+                                if (textToCheck.includes('masculino') || textToCheck.includes('power')) score += 100;
+                                if (textToCheck.includes('unissex') || textToCheck.includes('neutro')) score += 50;
+                            } else if (targetGender === 'neutral' || targetGender === 'unissex') {
+                                // Neutral Logic
+                                if (textToCheck.includes('pride') || textToCheck.includes('arco-íris') || textToCheck.includes('rainbow')) score += 100;
+                                if (textToCheck.includes('unissex') || textToCheck.includes('brasil') || textToCheck.includes('neutro')) score += 80;
+
+                                const hasNeutralColor = textToCheck.includes('preto') || textToCheck.includes('branco') || textToCheck.includes('azul') || textToCheck.includes('cinza') || textToCheck.includes('verde');
+                                if (textToCheck.includes('top') && hasNeutralColor) score += 60;
+
+                                if (p.categories && p.categories.includes('slide')) score += 50;
+                            }
+                            return score;
+                        };
+
+                        return getScore(b) - getScore(a);
+                    });
+
+                    // Persist for future visits (optional, good UX)
+                    if (params.get('gender')) {
+                        localStorage.setItem('havaianas_promo_gender', targetGender);
+                    }
+                }
+
+                setProducts(filtered.slice(0, limit));
             } catch (error) {
                 console.error('Failed to load filtered products:', error);
             } finally {

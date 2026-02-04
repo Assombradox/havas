@@ -22,7 +22,7 @@ export default function CampaignBanner() {
                 // Let's persist existing session if valid, otherwise start new.
                 const existing = localStorage.getItem(STORAGE_KEY);
                 if (!existing || parseInt(existing) < Date.now()) {
-                    const newTarget = Date.now() + 15 * 60 * 1000; // 15 mins
+                    const newTarget = Date.now() + 59 * 60 * 1000; // 59 mins
                     localStorage.setItem(STORAGE_KEY, newTarget.toString());
                 }
             }
@@ -93,8 +93,8 @@ export default function CampaignBanner() {
                     transition={{ duration: 0.5, ease: "circOut" }}
                     className="fixed top-0 left-0 w-full z-50 bg-[#dc2626] text-white shadow-2xl overflow-hidden"
                     style={{
-                        background: 'linear-gradient(90deg, #dc2626 0%, #b91c1c 100%)',
-                        boxShadow: '0 4px 20px rgba(220, 38, 38, 0.4)'
+                        background: 'linear-gradient(90deg, #ec4c33 0%, #ff8c00 100%)',
+                        boxShadow: '0 4px 20px rgba(236, 76, 51, 0.4)'
                     }}
                 >
                     <div className="container mx-auto px-4 h-12 flex items-center justify-between">
@@ -103,15 +103,17 @@ export default function CampaignBanner() {
                                 <Clock className="w-4 h-4 text-white" />
                             </div>
                             <div className="flex flex-col leading-tight sm:flex-row sm:gap-2 sm:items-center">
-                                <span className="font-bold text-sm tracking-wide">OFERTA SECRETA ATIVADA!</span>
-                                <span className="text-xs sm:text-sm text-red-100 hidden sm:inline-block">Use o cupom <span className="font-bold text-white bg-white/20 px-1 rounded">DESCONTO60</span></span>
+                                <span className="font-extrabold text-sm tracking-wide uppercase">Oferta Secreta!</span>
+                                <span className="text-xs sm:text-sm text-red-50 hidden sm:inline-block">Use cupom <span className="font-black text-white bg-white/20 px-1.5 py-0.5 rounded ml-1">DESCONTO60</span></span>
+                                {/* Mobile-only compact view */}
+                                <span className="text-xs sm:hidden font-bold text-white/90">Cupom: DESCONTO60</span>
                             </div>
                         </div>
 
                         <div className="flex items-center gap-3">
                             <div className="flex items-center gap-2 bg-black/20 px-3 py-1.5 rounded-lg backdrop-blur-sm border border-white/10">
-                                <span className="text-[10px] uppercase font-bold text-red-100 tracking-wider">Expira em</span>
-                                <span className="font-mono text-sm font-bold text-white tabular-nums w-[4ch] text-center">
+                                <span className="text-[10px] uppercase font-bold text-red-100 tracking-wider hidden sm:inline">Expira:</span>
+                                <span className="font-mono text-sm font-black text-white tabular-nums w-[4ch] text-center">
                                     {formatTime(timeLeft)}
                                 </span>
                             </div>
