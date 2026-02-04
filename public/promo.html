@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Havaianas - Censo da Folia 2026</title>
+    <link rel="preload" as="image"
+        href="https://res.cloudinary.com/ddcjebuni/image/upload/f_auto,q_auto/v1770190111/intro-bg_fqupfq.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link
@@ -20,6 +22,11 @@
 
         .font-display {
             font-family: 'Unbounded', sans-serif;
+        }
+
+        /* Critical CSS to prevent layout shift before Tailwind loads */
+        .hidden {
+            display: none !important;
         }
 
         /* Nike-like Minimalist Utilities */
@@ -157,7 +164,8 @@
             <div class="flex-grow flex flex-col justify-center items-center gap-6">
                 <div
                     class="relative w-48 h-48 rounded-full overflow-hidden border-4 border-white shadow-lg rotate-3 group hover:rotate-6 transition-transform duration-500">
-                    <img src="/img-carnaval/intro-bg.png" alt="Carnaval" class="w-full h-full object-cover">
+                    <img src="https://res.cloudinary.com/ddcjebuni/image/upload/f_auto,q_auto/v1770190111/intro-bg_fqupfq.png"
+                        alt="Carnaval" width="192" height="192" fetchpriority="high" class="w-full h-full object-cover">
                 </div>
 
                 <div class="space-y-2">
@@ -175,11 +183,13 @@
         </div>
 
         <!-- QUIZ UI -->
-        <div id="quiz-view" class="hidden w-full h-full flex flex-col">
+        <div id="quiz-view" class="hidden w-full h-full flex flex-col" style="display: none;">
             <!-- Header Image -->
             <div
                 class="relative w-full aspect-[16/10] rounded-[2rem] overflow-hidden shadow-lg mb-6 flex-shrink-0 animate-fade-in-up">
-                <img id="quiz-header-img" src="/img-carnaval/quiz-header-genero.jpg" alt="Quiz Context"
+                <img id="quiz-header-img"
+                    src="https://res.cloudinary.com/ddcjebuni/image/upload/f_auto,q_auto/v1770190117/quiz-header-genero_c41hkk.jpg"
+                    alt="Quiz Context" width="800" height="500" loading="lazy" decoding="async"
                     class="w-full h-full object-cover transition-transform duration-700 hover:scale-105">
                 <div class="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div class="absolute bottom-4 left-6 text-white">
@@ -204,14 +214,16 @@
 
         <!-- LOADING TRANSITION -->
         <div id="transition-overlay"
-            class="hidden absolute inset-0 bg-white/90 backdrop-blur-md z-50 flex flex-col items-center justify-center">
+            class="hidden absolute inset-0 bg-white/90 backdrop-blur-md z-50 flex flex-col items-center justify-center"
+            style="display: none;">
             <h1 class="text-4xl font-black text-[#ec4c33] animate-[pulse-logo_1s_infinite]">havaianas</h1>
             <p class="mt-4 text-gray-400 font-bold uppercase tracking-widest text-xs animate-pulse">Processando Vibe...
             </p>
         </div>
 
         <!-- GAME UI (ROULETTE) -->
-        <div id="game-view" class="hidden w-full flex flex-col items-center justify-center animate-fade-in-up">
+        <div id="game-view" class="hidden w-full flex flex-col items-center justify-center animate-fade-in-up"
+            style="display: none;">
             <div class="text-center mb-8">
                 <h2 class="font-display text-3xl font-black text-gray-900">Obrigador por participar da pesquisa!</h2>
                 <p class="text-gray-500 text-sm mt-1">Gire para descobrir seu benefício</p>
@@ -220,12 +232,16 @@
             <div class="relative mb-10">
                 <!-- Indicator Arrow (Image) -->
                 <div class="absolute -top-6 left-1/2 -translate-x-1/2 z-20 w-[60px]">
-                    <img src="/img-carnaval/pino-visual.png" alt="Indicator" class="w-full drop-shadow-md">
+                    <img src="https://res.cloudinary.com/ddcjebuni/image/upload/f_auto,q_auto/v1770190112/pino-visual_yd66gg.png"
+                        alt="Indicator" width="60" height="80" loading="lazy" decoding="async"
+                        class="w-full drop-shadow-md">
                 </div>
 
                 <div class="wheel-container" id="wheel-rotation">
                     <div class="wheel flex items-center justify-center">
-                        <img src="/img-carnaval/roleta-visual.png" alt="Roleta" class="w-full h-full object-contain">
+                        <img src="https://res.cloudinary.com/ddcjebuni/image/upload/f_auto,q_auto/v1770190118/roleta-visual_o72blo.png"
+                            alt="Roleta" width="300" height="300" loading="lazy" decoding="async"
+                            class="w-full h-full object-contain">
                     </div>
                 </div>
             </div>
@@ -242,7 +258,8 @@
 
     <!-- FINAL WINNER MODAL -->
     <div id="winner-modal"
-        class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center pointer-events-none">
+        class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center pointer-events-none"
+        style="display: none;">
         <div class="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-500" onclick="noClose()">
         </div>
 
@@ -254,7 +271,8 @@
             <div class="relative z-10">
                 <!-- Premium Image Top -->
                 <div class="w-full h-64 bg-gray-100 relative">
-                    <img src="/img-carnaval/premio-final.jpg" class="w-full h-full object-cover">
+                    <img src="https://res.cloudinary.com/ddcjebuni/image/upload/f_auto,q_auto/v1770190112/premio-final_w3zimz.jpg"
+                        width="450" height="256" loading="lazy" decoding="async" class="w-full h-full object-cover">
                     <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end p-6">
                         <div class="text-white">
                             <p class="font-bold text-sm uppercase tracking-wider opacity-90">Prêmio Máximo Desbloqueado
@@ -303,7 +321,8 @@
 
     <!-- TRY AGAIN MODAL -->
     <div id="try-again-modal"
-        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in-up">
+        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in-up"
+        style="display: none;">
         <div class="bg-white rounded-3xl p-8 max-w-xs text-center shadow-2xl mx-4 relative">
             <div class="mb-4 text-4xl">😅</div>
             <h3 id="try-again-title" class="font-display text-2xl font-black text-gray-900 mb-2">Quase lá!</h3>
@@ -318,10 +337,12 @@
 
     <!-- FREE SHIPPING MODAL (NEW) -->
     <div id="free-shipping-modal"
-        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in-up">
+        class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-fade-in-up"
+        style="display: none;">
         <div class="bg-white rounded-3xl p-8 max-w-xs text-center shadow-2xl mx-4 relative overflow-hidden">
             <div class="w-full flex justify-center mb-6">
-                <img src="/img-carnaval/caminhao-frete.png" class="truck-drive-in">
+                <img src="https://res.cloudinary.com/ddcjebuni/image/upload/f_auto,q_auto/v1770190111/caminhao-frete_e0arqq.png"
+                    width="150" height="100" loading="lazy" decoding="async" class="truck-drive-in">
             </div>
             <h3 class="font-display text-2xl font-black text-gray-900 mb-2 leading-none">AÊÊ!<br>FRETE GRÁTIS! 🚚💨</h3>
             <p class="text-gray-500 text-sm mb-6">Já é seu! Mas calma que tem coisa MELHOR te esperando no último giro.
@@ -387,7 +408,9 @@
 
         function startQuiz() {
             document.getElementById('intro-view').classList.add('hidden');
-            document.getElementById('quiz-view').classList.remove('hidden');
+            const quizView = document.getElementById('quiz-view');
+            quizView.style.display = ''; // Clear inline style
+            quizView.classList.remove('hidden');
             renderQuestion();
         }
 
@@ -398,9 +421,9 @@
             const headerImg = document.getElementById('quiz-header-img');
             if (headerImg) {
                 if (currentQIndex === 0) {
-                    headerImg.src = "/img-carnaval/quiz-header-genero.jpg";
+                    headerImg.src = "https://res.cloudinary.com/ddcjebuni/image/upload/f_auto,q_auto/v1770190117/quiz-header-genero_c41hkk.jpg";
                 } else {
-                    headerImg.src = "/img-carnaval/quiz-header-atmosfera.jpg";
+                    headerImg.src = "https://res.cloudinary.com/ddcjebuni/image/upload/f_auto,q_auto/v1770190112/quiz-header-atmosfera_m8qbes.jpg";
                 }
             }
 
@@ -456,12 +479,15 @@
 
             setTimeout(() => {
                 quizView.classList.add('hidden');
+                overlay.style.display = ''; // Clear inline
                 overlay.classList.remove('hidden');
 
                 // Simulate processing
                 setTimeout(() => {
                     overlay.classList.add('hidden');
-                    document.getElementById('game-view').classList.remove('hidden');
+                    const gameView = document.getElementById('game-view');
+                    gameView.style.display = ''; // Clear inline
+                    gameView.classList.remove('hidden');
                 }, 2000);
             }, 500);
         }
@@ -529,11 +555,13 @@
                 title.innerText = "Quase! 😅";
                 desc.innerText = "Tente de novo.";
 
+                modal.style.display = ''; // Clear inline
                 modal.classList.remove('hidden');
 
             } else if (resultType === 'free_shipping') {
                 // Show Free Shipping Modal (Spin 2)
                 const modal = document.getElementById('free-shipping-modal');
+                modal.style.display = ''; // Clear inline
                 modal.classList.remove('hidden');
 
             } else {
@@ -565,6 +593,7 @@
             const modal = document.getElementById('winner-modal');
             const card = document.getElementById('winner-card');
 
+            modal.style.display = ''; // Clear inline
             modal.classList.remove('hidden');
             // Trigger Animation
             setTimeout(() => {
