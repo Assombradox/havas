@@ -1,11 +1,3 @@
-import categoryChinelos from '../assets/category-chinelos.png';
-import categoryRasteirinhas from '../assets/category-rasteirinhas.png';
-import categoryfarm from '../assets/farm.png';
-import categoryTime from '../assets/time.png';
-import categoryPride from '../assets/pride.png';
-import categoryGlitter from '../assets/glitter.png';
-import categoryFloral from '../assets/floral.png';
-
 // Import raw data from JSON
 import categoriesData from './categories.json';
 import type { CategoryConfig } from '../types/Category';
@@ -13,15 +5,25 @@ import type { CategoryConfig } from '../types/Category';
 // Re-export type for compatibility
 export type { CategoryConfig };
 
-// Map string keys to imported assets
+const CLOUDINARY_URLS = {
+    brasilLogo: 'https://res.cloudinary.com/ddcjebuni/image/upload/v1769454836/imgi_98_4110850-2079-brasil-logo-0_cgdi83.png',
+    summerVibes: 'https://res.cloudinary.com/ddcjebuni/image/upload/v1769573591/havas-products/nghwcqgkmuneim8pugap.png',
+    summerVibes2: 'https://res.cloudinary.com/ddcjebuni/image/upload/v1769573933/havas-products/m78rwue8hasssf3rav0o.png',
+    glitter: 'https://res.cloudinary.com/ddcjebuni/image/upload/glitter_qzcud1.png',
+    farmGeneric: 'https://res.cloudinary.com/ddcjebuni/image/upload/Farm_etsd1e.png',
+    floral: 'https://res.cloudinary.com/ddcjebuni/image/upload/floral_raj3lv.jpg',
+    jardimNoturno: 'https://res.cloudinary.com/ddcjebuni/image/upload/tbd-tbd-havaianas-top-jardim-noturno-0_eqcebh.png',
+};
+
+// Map string keys to Cloudinary Assets replacing local imports
 export const imageMap: Record<string, string> = {
-    categoryChinelos,
-    categoryRasteirinhas,
-    categoryfarm,
-    categoryTime,
-    categoryPride,
-    categoryGlitter,
-    categoryFloral
+    categoryChinelos: CLOUDINARY_URLS.brasilLogo,
+    categoryRasteirinhas: CLOUDINARY_URLS.summerVibes,
+    categoryfarm: CLOUDINARY_URLS.farmGeneric,
+    categoryTime: CLOUDINARY_URLS.jardimNoturno,
+    categoryPride: CLOUDINARY_URLS.summerVibes2,
+    categoryGlitter: CLOUDINARY_URLS.glitter,
+    categoryFloral: CLOUDINARY_URLS.floral
 };
 
 // Hydrate the JSON data with actual image assets

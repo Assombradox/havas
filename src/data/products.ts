@@ -3,26 +3,37 @@ import type { Product, ProductColor, ProductSize } from '../types/Product';
 // Re-export types for backward compatibility
 export type { Product, ProductColor, ProductSize };
 
-import product2 from '../assets/product-2.jpg';
-import product3 from '../assets/product-3.jpg';
-import product4 from '../assets/product-4.jpg';
-import product5 from '../assets/product-5.jpg';
-import product6 from '../assets/product-6.jpg';
-import product7 from '../assets/product-7.jpg';
-import product8 from '../assets/product-8.jpg';
-
-import farm1 from '../assets/farm-mar-de-ondas-1.jpg';
-import farm2 from '../assets/farm-mar-de-ondas-2.jpg';
-import farm3 from '../assets/farm-mar-de-ondas-3.jpg';
-import farm4 from '../assets/farm-mar-de-ondas-4.jpg';
-import farm5 from '../assets/farm-mar-de-ondas-5.jpg';
-
 import productsData from './products.json';
 
-// Map string keys to imported assets
+// Cloudinary Asset URLs
+const CLOUDINARY_URLS = {
+    brasilLogo: 'https://res.cloudinary.com/ddcjebuni/image/upload/v1769454836/imgi_98_4110850-2079-brasil-logo-0_cgdi83.png',
+    summerVibes: 'https://res.cloudinary.com/ddcjebuni/image/upload/v1769573591/havas-products/nghwcqgkmuneim8pugap.png',
+    summerVibes2: 'https://res.cloudinary.com/ddcjebuni/image/upload/v1769573933/havas-products/m78rwue8hasssf3rav0o.png',
+    glitter: 'https://res.cloudinary.com/ddcjebuni/image/upload/glitter_qzcud1.png',
+    farmGeneric: 'https://res.cloudinary.com/ddcjebuni/image/upload/Farm_etsd1e.png',
+    floral: 'https://res.cloudinary.com/ddcjebuni/image/upload/floral_raj3lv.jpg',
+    jardimNoturno: 'https://res.cloudinary.com/ddcjebuni/image/upload/tbd-tbd-havaianas-top-jardim-noturno-0_eqcebh.png',
+    farmFlor: 'https://res.cloudinary.com/ddcjebuni/image/upload/farm-flor-de-fita-26-0_qkghb0.png'
+};
+
+// Map string keys (from JSON) to Cloudinary Assets
 export const imageMap: Record<string, string> = {
-    product2, product3, product4, product5, product6, product7, product8,
-    farm1, farm2, farm3, farm4, farm5
+    // Farm Mar de Ondas (Mapping to Farm Generic/Specifics)
+    farm1: CLOUDINARY_URLS.farmGeneric,
+    farm2: CLOUDINARY_URLS.farmGeneric,
+    farm3: CLOUDINARY_URLS.farmGeneric,
+    farm4: CLOUDINARY_URLS.farmGeneric,
+    farm5: CLOUDINARY_URLS.farmGeneric,
+
+    // Specific Products
+    product2: CLOUDINARY_URLS.floral,         // Farm Brisa Serena / Floral
+    product3: CLOUDINARY_URLS.glitter,        // Aqua Glow
+    product4: CLOUDINARY_URLS.brasilLogo,     // Top Logo Metalico (Fallback to Brasil Logo as it's safe)
+    product5: CLOUDINARY_URLS.brasilLogo,     // Brasil Logo
+    product6: CLOUDINARY_URLS.summerVibes2,   // Slim Summer Bliss
+    product7: CLOUDINARY_URLS.brasilLogo,     // Brasil Logo Amarelo (Fallback)
+    product8: CLOUDINARY_URLS.summerVibes,    // Top Summer Vibes
 };
 
 // Hydrate the JSON data with actual image assets
@@ -30,8 +41,8 @@ export const products: Product[] = productsData.map((p: any) => ({
     ...p,
     colors: p.colors.map((c: any) => ({
         ...c,
-        thumbnail: imageMap[c.thumbnail] || c.thumbnail,
-        images: c.images.map((img: string) => imageMap[img] || img)
+        thumbnail: imageMap[c.thumbnail] || (c.thumbnail.startsWith('http') ? c.thumbnail : CLOUDINARY_URLS.brasilLogo),
+        images: c.images.map((img: string) => imageMap[img] || (img.startsWith('http') ? img : CLOUDINARY_URLS.brasilLogo))
     }))
 }));
 

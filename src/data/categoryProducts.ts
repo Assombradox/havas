@@ -1,7 +1,9 @@
-import product1 from '../assets/product-1.jpg';
-import product2 from '../assets/product-2.jpg';
-import product3 from '../assets/product-3.jpg';
-import product4 from '../assets/product-4.jpg';
+const CLOUDINARY_URLS = {
+    brasilLogo: 'https://res.cloudinary.com/ddcjebuni/image/upload/v1769454836/imgi_98_4110850-2079-brasil-logo-0_cgdi83.png',
+    summerVibes: 'https://res.cloudinary.com/ddcjebuni/image/upload/v1769573591/havas-products/nghwcqgkmuneim8pugap.png',
+    summerVibes2: 'https://res.cloudinary.com/ddcjebuni/image/upload/v1769573933/havas-products/m78rwue8hasssf3rav0o.png',
+    glitter: 'https://res.cloudinary.com/ddcjebuni/image/upload/glitter_qzcud1.png',
+};
 
 export interface CategoryProduct {
     id: number;
@@ -24,7 +26,12 @@ const slugify = (text: string) => {
 };
 
 export const categoryProducts: CategoryProduct[] = Array.from({ length: 24 }).map((_, index) => {
-    const images = [product1, product2, product3, product4];
+    const images = [
+        CLOUDINARY_URLS.brasilLogo,
+        CLOUDINARY_URLS.summerVibes,
+        CLOUDINARY_URLS.summerVibes2,
+        CLOUDINARY_URLS.glitter
+    ];
     const prices = [
         { original: 92.90, current: 29.90 },
         { original: 139.90, current: 59.90 },
