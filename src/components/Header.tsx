@@ -67,7 +67,7 @@ const Header: React.FC = () => {
                     {/* Center: Logo */}
                     <div className="flex-1 flex justify-center">
                         <a href="/" onClick={handleHomeClick} className="hover:opacity-80 transition-opacity">
-                            <img src={logo} alt="Havaianas" className="h-[22px]" />
+                            <img src={logo} alt="Havaianas" width="132" height="22" className="h-[22px] w-auto" />
                         </a>
                     </div>
 

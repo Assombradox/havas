@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { optimizeImage } from '../utils/imageOptimization';
 import { Star } from 'lucide-react';
 import type { Product } from '../data/products';
 
@@ -52,8 +53,10 @@ const CategoryProductGrid: React.FC<CategoryProductGridProps> = ({ products }) =
                             {/* Image Container */}
                             <div className="relative aspect-[4/4] mb-3 bg-gray-100 rounded-lg overflow-hidden">
                                 <img
-                                    src={mainImage}
+                                    src={optimizeImage(mainImage, 400)}
                                     alt={product.name}
+                                    width="400"
+                                    height="400"
                                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 />
                                 {discountBadge && (

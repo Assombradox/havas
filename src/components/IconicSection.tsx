@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { optimizeImage } from '../utils/imageOptimization';
 import { ChevronRight } from 'lucide-react';
 import { productsService } from '../services/storefront/products.service';
 import type { Product } from '../types/Product';
@@ -61,8 +62,10 @@ const IconicSection: React.FC<IconicSectionProps> = ({ title, categorySlug }) =>
                             <div className="aspect-square bg-[#f5f5f7] rounded-none overflow-hidden mb-4">
                                 {mainImage ? (
                                     <img
-                                        src={mainImage}
+                                        src={optimizeImage(mainImage, 400)}
                                         alt={product.name}
+                                        width="400"
+                                        height="400"
                                         className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
                                     />
                                 ) : (

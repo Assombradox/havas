@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { optimizeImage } from '../utils/imageOptimization';
 import { Star } from 'lucide-react';
 import { productsService } from '../services/storefront/products.service';
 import type { Product } from '../types/Product';
@@ -133,8 +134,10 @@ const FeaturedSection: React.FC<FeaturedSectionProps> = ({
                             <div className="relative aspect-[4/4] mb-0 bg-gray-100 rounded-lg overflow-hidden">
                                 {mainImage ? (
                                     <img
-                                        src={mainImage}
+                                        src={optimizeImage(mainImage, 400)}
                                         alt={product.name}
+                                        width="400"
+                                        height="400"
                                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                     />
                                 ) : (

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { optimizeImage } from '../utils/imageOptimization';
 import { bannersAdminService } from '../admin/services/bannersAdminService';
 import { BannerLocation } from '../types/Banner';
 
@@ -76,15 +77,19 @@ const HeroBanner: React.FC = () => {
                         {banner.link ? (
                             <a href={banner.link} className="block w-full h-full">
                                 <img
-                                    src={banner.src}
+                                    src={optimizeImage(banner.src, 1200)}
                                     alt={banner.alt}
+                                    width="800"
+                                    height="1088"
                                     className="w-full h-full object-cover"
                                 />
                             </a>
                         ) : (
                             <img
-                                src={banner.src}
+                                src={optimizeImage(banner.src, 1200)}
                                 alt={banner.alt}
+                                width="800"
+                                height="1088"
                                 className="w-full h-full object-cover"
                             />
                         )}

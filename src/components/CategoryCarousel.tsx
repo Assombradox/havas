@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { optimizeImage } from '../utils/imageOptimization';
 import { categoriesService } from '../services/storefront/categories.service';
 import type { CategoryConfig } from '../types/Category';
 
@@ -48,8 +49,10 @@ const CategoryCarousel: React.FC = () => {
                             <div className="w-full h-full bg-gray-100 transition-transform duration-300 group-hover:scale-105">
                                 {category.image ? (
                                     <img
-                                        src={category.image}
+                                        src={optimizeImage(category.image, 400)}
                                         alt={category.title}
+                                        width="400"
+                                        height="400"
                                         className="w-full h-full object-cover"
                                     />
                                 ) : (

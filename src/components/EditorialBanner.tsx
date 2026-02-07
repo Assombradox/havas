@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { optimizeImage } from '../utils/imageOptimization';
 import { bannersAdminService } from '../admin/services/bannersAdminService';
 import { BannerLocation, type Banner } from '../types/Banner';
 import bannerSimples from '../assets/banner-simples.png';
@@ -33,15 +34,19 @@ const EditorialBanner: React.FC = () => {
                 {link ? (
                     <a href={link} className="block transition-transform hover:scale-[1.01] duration-300">
                         <img
-                            src={imageSrc}
+                            src={optimizeImage(imageSrc, 1200)}
                             alt={banner?.title || "Havaianas Editorial"}
+                            width="1200"
+                            height="400"
                             className="w-full h-auto object-cover rounded-lg"
                         />
                     </a>
                 ) : (
                     <img
-                        src={imageSrc}
+                        src={link ? optimizeImage(imageSrc, 1200) : imageSrc}
                         alt={banner?.title || "Havaianas Editorial"}
+                        width="1200"
+                        height="400"
                         className="w-full h-auto object-cover rounded-lg"
                     />
                 )}
