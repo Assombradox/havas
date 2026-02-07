@@ -39,7 +39,7 @@ const EditorialBanner: React.FC = () => {
                             width="1200"
                             height="400"
                             loading="eager"
-                            fetchpriority="high"
+                            fetchPriority="high"
                             className="w-full h-auto object-cover rounded-lg"
                         />
                     </a>
@@ -50,7 +50,7 @@ const EditorialBanner: React.FC = () => {
                         width="1200"
                         height="400"
                         loading="eager"
-                        fetchpriority="high"
+                        fetchPriority="high"
                         className="w-full h-auto object-cover rounded-lg"
                     />
                 )}
