@@ -11,13 +11,19 @@ interface BannerData {
 }
 
 const SLIDE_DURATION = 5000;
-const FALLBACK_BANNER = 'https://res.cloudinary.com/ddcjebuni/image/upload/v1770453613/banner-simples_ctg6xp.webp';
+
 
 const HeroBanner: React.FC = () => {
-    const [banners, setBanners] = useState<BannerData[]>([]);
+    const [banners, setBanners] = useState<BannerData[]>([
+        { id: 'static-1', src: "https://res.cloudinary.com/ddcjebuni/image/upload/v1769584180/asset-havaianas-farm-alto-verao-2_q44zfy.gif", alt: "Coleção Farm Alto Verão" },
+        { id: 'static-2', src: "https://res.cloudinary.com/ddcjebuni/image/upload/v1769583937/asset_havaianas_banner_ginga_promocao_2_o3a95s.gif", alt: "Promoção Ginga" },
+        { id: 'static-3', src: "https://res.cloudinary.com/ddcjebuni/image/upload/v1769583924/asset-havaianas-outlet-60_-2_r3isra.gif", alt: "Outlet 60% OFF" },
+        { id: 'static-4', src: "https://res.cloudinary.com/ddcjebuni/image/upload/v1769584069/Asset_Hero_Banner_Site_Mobile_2_knnu7z.png", alt: "Ofertas Especiais" },
+        { id: 'static-5', src: "https://res.cloudinary.com/ddcjebuni/image/upload/v1769584394/banner_203.gif_t8zxca.webp", alt: "Verão Havaianas" }
+    ]);
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    // Fetch Banners
+    // Fetch Banners (Background Update)
     useEffect(() => {
         const fetchBanners = async () => {
             try {
@@ -29,24 +35,9 @@ const HeroBanner: React.FC = () => {
                         alt: b.title,
                         link: b.link
                     })));
-                } else {
-                    // Fallback using safe Cloudinary URL
-                    setBanners([
-                        { id: '1', src: FALLBACK_BANNER, alt: "Havaianas Clássicas" },
-                        { id: '2', src: FALLBACK_BANNER, alt: "Havaianas Nova Coleção" },
-                        { id: '3', src: FALLBACK_BANNER, alt: "Havaianas Estilo" },
-                        { id: '4', src: FALLBACK_BANNER, alt: "Havaianas Ofertas" }
-                    ]);
                 }
             } catch (error) {
-                console.error("Failed to load hero banners", error);
-                // Fallback using safe Cloudinary URL
-                setBanners([
-                    { id: '1', src: FALLBACK_BANNER, alt: "Havaianas Clássicas" },
-                    { id: '2', src: FALLBACK_BANNER, alt: "Havaianas Nova Coleção" },
-                    { id: '3', src: FALLBACK_BANNER, alt: "Havaianas Estilo" },
-                    { id: '4', src: FALLBACK_BANNER, alt: "Havaianas Ofertas" }
-                ]);
+                console.error("Failed to update hero banners", error);
             }
         };
         fetchBanners();
@@ -87,7 +78,7 @@ const HeroBanner: React.FC = () => {
                             {banner.link ? (
                                 <a href={banner.link} className="block w-full h-full">
                                     <img
-                                        src={optimizeImage(banner.src, 1200)}
+                                        src={optimizeImage(banner.src, 800)}
                                         alt={banner.alt}
                                         width="800"
                                         height="1088"
@@ -118,10 +109,10 @@ const HeroBanner: React.FC = () => {
                     <div key={index} className="h-1 flex-1 bg-gray-200 rounded-full overflow-hidden">
                         <div
                             className={`h-full bg-gray-800 rounded-full origin-left transition-all duration-300 ${index === currentIndex
-                                    ? "animate-progress-fill"
-                                    : index < currentIndex
-                                        ? "w-full"
-                                        : "w-0"
+                                ? "animate-progress-fill"
+                                : index < currentIndex
+                                    ? "w-full"
+                                    : "w-0"
                                 }`}
                             style={{
                                 animationDuration: `${SLIDE_DURATION}ms`,
