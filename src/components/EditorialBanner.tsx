@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { optimizeImage } from '../utils/imageOptimization';
 import { bannersAdminService } from '../admin/services/bannersAdminService';
 import { BannerLocation, type Banner } from '../types/Banner';
-import bannerSimples from '../assets/banner-simples.png';
+const BANNER_URL = 'https://res.cloudinary.com/ddcjebuni/image/upload/v1770453613/banner-simples_ctg6xp.webp';
 
 const EditorialBanner: React.FC = () => {
     const [banner, setBanner] = useState<Banner | null>(null);
@@ -25,7 +25,7 @@ const EditorialBanner: React.FC = () => {
     // or just don't render. User instruction says: "Exiba o primeiro banner ativo encontrado."
 
     // Default Fallback logic (optional but keeps UI stable if database empty)
-    const imageSrc = banner?.imageUrl || bannerSimples;
+    const imageSrc = banner?.imageUrl || BANNER_URL;
     const link = banner?.link;
 
     return (
@@ -38,15 +38,19 @@ const EditorialBanner: React.FC = () => {
                             alt={banner?.title || "Havaianas Editorial"}
                             width="1200"
                             height="400"
+                            loading="eager"
+                            fetchpriority="high"
                             className="w-full h-auto object-cover rounded-lg"
                         />
                     </a>
                 ) : (
                     <img
-                        src={link ? optimizeImage(imageSrc, 1200) : imageSrc}
+                        src={optimizeImage(imageSrc, 1200)}
                         alt={banner?.title || "Havaianas Editorial"}
                         width="1200"
                         height="400"
+                        loading="eager"
+                        fetchpriority="high"
                         className="w-full h-auto object-cover rounded-lg"
                     />
                 )}
