@@ -4,13 +4,14 @@ import { bannersAdminService } from '../admin/services/bannersAdminService';
 import { BannerLocation } from '../types/Banner';
 
 interface BannerData {
-    id: string; // Updated to string
+    id: string;
     src: string;
     alt: string;
     link?: string;
 }
 
 const SLIDE_DURATION = 5000;
+const FALLBACK_BANNER = 'https://res.cloudinary.com/ddcjebuni/image/upload/v1770453613/banner-simples_ctg6xp.webp';
 
 const HeroBanner: React.FC = () => {
     const [banners, setBanners] = useState<BannerData[]>([]);
@@ -29,22 +30,22 @@ const HeroBanner: React.FC = () => {
                         link: b.link
                     })));
                 } else {
-                    // Fallback to legacy static banners if API empty
+                    // Fallback using safe Cloudinary URL
                     setBanners([
-                        { id: '1', src: "/images/banner 1.gif.webp", alt: "Havaianas Clássicas" },
-                        { id: '2', src: "/images/banner 2.webp", alt: "Havaianas Nova Coleção" },
-                        { id: '3', src: "/images/banner 3.gif.webp", alt: "Havaianas Estilo" },
-                        { id: '4', src: "/images/banner 4.webp", alt: "Havaianas Ofertas" }
+                        { id: '1', src: FALLBACK_BANNER, alt: "Havaianas Clássicas" },
+                        { id: '2', src: FALLBACK_BANNER, alt: "Havaianas Nova Coleção" },
+                        { id: '3', src: FALLBACK_BANNER, alt: "Havaianas Estilo" },
+                        { id: '4', src: FALLBACK_BANNER, alt: "Havaianas Ofertas" }
                     ]);
                 }
             } catch (error) {
                 console.error("Failed to load hero banners", error);
-                // Fallback
+                // Fallback using safe Cloudinary URL
                 setBanners([
-                    { id: '1', src: "/images/banner 1.gif.webp", alt: "Havaianas Clássicas" },
-                    { id: '2', src: "/images/banner 2.webp", alt: "Havaianas Nova Coleção" },
-                    { id: '3', src: "/images/banner 3.gif.webp", alt: "Havaianas Estilo" },
-                    { id: '4', src: "/images/banner 4.webp", alt: "Havaianas Ofertas" }
+                    { id: '1', src: FALLBACK_BANNER, alt: "Havaianas Clássicas" },
+                    { id: '2', src: FALLBACK_BANNER, alt: "Havaianas Nova Coleção" },
+                    { id: '3', src: FALLBACK_BANNER, alt: "Havaianas Estilo" },
+                    { id: '4', src: FALLBACK_BANNER, alt: "Havaianas Ofertas" }
                 ]);
             }
         };
@@ -68,33 +69,47 @@ const HeroBanner: React.FC = () => {
         <div className="w-full flex flex-col items-center py-4 px-4">
             {/* Banner Container */}
             <div className="relative w-full max-w-[400px] aspect-[992/1350] overflow-hidden rounded-lg mx-auto bg-gray-50">
-                {banners.map((banner, index) => (
-                    <div
-                        key={banner.id}
-                        className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${index === currentIndex ? "opacity-100 z-10" : "opacity-0 z-0"
-                            }`}
-                    >
-                        {banner.link ? (
-                            <a href={banner.link} className="block w-full h-full">
+                {banners.map((banner, index) => {
+                    const isLCP = index === 0;
+                    const isCurrent = index === currentIndex;
+
+                    // Optimization attributes
+                    // Index 0 (first slide) is critical for LCP
+                    const loadingAttr = isLCP ? "eager" : "lazy";
+                    const priorityAttr = isLCP ? "high" : "auto";
+
+                    return (
+                        <div
+                            key={banner.id}
+                            className={`absolute inset-0 transition-opacity duration-500 ease-in-out ${isCurrent ? "opacity-100 z-10" : "opacity-0 z-0"
+                                }`}
+                        >
+                            {banner.link ? (
+                                <a href={banner.link} className="block w-full h-full">
+                                    <img
+                                        src={optimizeImage(banner.src, 1200)}
+                                        alt={banner.alt}
+                                        width="800"
+                                        height="1088"
+                                        loading={loadingAttr}
+                                        fetchPriority={priorityAttr}
+                                        className="w-full h-full object-cover"
+                                    />
+                                </a>
+                            ) : (
                                 <img
                                     src={optimizeImage(banner.src, 1200)}
                                     alt={banner.alt}
                                     width="800"
                                     height="1088"
+                                    loading={loadingAttr}
+                                    fetchPriority={priorityAttr}
                                     className="w-full h-full object-cover"
                                 />
-                            </a>
-                        ) : (
-                            <img
-                                src={optimizeImage(banner.src, 1200)}
-                                alt={banner.alt}
-                                width="800"
-                                height="1088"
-                                className="w-full h-full object-cover"
-                            />
-                        )}
-                    </div>
-                ))}
+                            )}
+                        </div>
+                    );
+                })}
             </div>
 
             {/* Segmented Progress Bar */}
@@ -103,10 +118,10 @@ const HeroBanner: React.FC = () => {
                     <div key={index} className="h-1 flex-1 bg-gray-200 rounded-full overflow-hidden">
                         <div
                             className={`h-full bg-gray-800 rounded-full origin-left transition-all duration-300 ${index === currentIndex
-                                ? "animate-progress-fill"
-                                : index < currentIndex
-                                    ? "w-full"
-                                    : "w-0"
+                                    ? "animate-progress-fill"
+                                    : index < currentIndex
+                                        ? "w-full"
+                                        : "w-0"
                                 }`}
                             style={{
                                 animationDuration: `${SLIDE_DURATION}ms`,
