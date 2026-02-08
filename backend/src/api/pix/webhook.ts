@@ -1,8 +1,13 @@
-import { Request, Response } from 'express';
-import crypto from 'crypto';
-import Payment from '../../models/Payment';
+import { utmifyService } from '../../services/utmify.service';
 
 export const handlePixWebhook = async (req: Request, res: Response) => {
+    // ... (existing code)
+
+    // --- UTMIFY TRIGGER ---
+    if (payment) {
+        await utmifyService.sendConversion(payment);
+    }
+    // ----------------------
     // Debug Logs for Signature Inspection
     console.log('📨 Webhook Headers Recebidos:', JSON.stringify(req.headers, null, 2));
     console.log('📦 Webhook Body:', JSON.stringify(req.body, null, 2));
@@ -60,11 +65,30 @@ export const handlePixWebhook = async (req: Request, res: Response) => {
                 console.log(`[Webhook] Payment Confirmed for Order: ${orderId}`);
 
                 // Update MongoDB
-                await Payment.findOneAndUpdate(
+                const payment = await Payment.findOneAndUpdate(
                     { paymentId: orderId },
                     { status: 'paid' },
                     { new: true }
                 );
+
+                // --- UTMIFY TRIGGER ---
+                if (payment?.metadata?.utm) {
+                    try {
+                        console.log('[Webhook] Triggering UTMify Postback...');
+                        // Note: Replace with actual UTMify endpoint if available
+                        /*
+                        await axios.post('https://api.utmify.com.br/v1/postback', {
+                            ...payment.metadata.utm,
+                            revenue: payment.totalAmount,
+                            transaction_id: orderId
+                        });
+                        */
+                        console.log('[Webhook] UTMify Postback Logic Placeholder Executed.');
+                    } catch (utmError) {
+                        console.error('[Webhook] UTMify Postback Failed:', utmError);
+                    }
+                }
+                // ----------------------
             } else {
                 console.warn('[Webhook] Paid event missing external_id');
             }

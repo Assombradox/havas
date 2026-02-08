@@ -8,7 +8,7 @@ import crypto from 'crypto';
 export const handleCreatePixPayment = async (req: Request, res: Response) => {
     try {
         // 1. Receber dados
-        const { amount, customerName, customerEmail, customerCpf, customerPhone, shippingAddress, items } = req.body;
+        const { amount, customerName, customerEmail, customerCpf, customerPhone, shippingAddress, items, metadata } = req.body;
 
         console.log('📦 FULL BODY KEYS:', Object.keys(req.body));
         console.log('📦 SHIPPING ADDRESS PAYLOAD:', JSON.stringify(shippingAddress, null, 2));
@@ -146,7 +146,8 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
                 complement: shippingAddress.complement,
                 zipCode: shippingAddress.zip || shippingAddress.zipCode // Explicit Mapping
             } : undefined,
-            items: enrichedItems // SAVE SNAPSHOT
+            items: enrichedItems, // SAVE SNAPSHOT
+            metadata: metadata // Save UTM/Metadata
         });
 
         const storeSize = await paymentStore.size();

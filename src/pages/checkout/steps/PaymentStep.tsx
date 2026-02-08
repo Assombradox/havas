@@ -55,7 +55,10 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
                     quantity: item.quantity,
                     tangible: true,
                     unitPrice: (item.discountedPrice || item.unitPrice) * 100
-                }))
+                })),
+                metadata: {
+                    utm: JSON.parse(localStorage.getItem('utm_data') || '{}')
+                }
             });
 
             console.log("PIX Created:", response);

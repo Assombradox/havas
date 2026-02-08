@@ -25,6 +25,7 @@ export interface PixPaymentPayload {
         unitPrice: number;
         tangible: boolean;
     }>;
+    metadata?: Record<string, any>;
 }
 
 export interface PixPaymentResponse {

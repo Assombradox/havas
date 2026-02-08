@@ -24,6 +24,8 @@ export const updateConfig = async (req: Request, res: Response) => {
         if (req.body.emailTitle !== undefined) config.emailTitle = req.body.emailTitle;
         if (req.body.emailMessage !== undefined) config.emailMessage = req.body.emailMessage;
         if (req.body.emailFooter !== undefined) config.emailFooter = req.body.emailFooter;
+        if (req.body.utmifyToken !== undefined) config.utmifyToken = req.body.utmifyToken;
+        if (req.body.utmifyActive !== undefined) config.utmifyActive = req.body.utmifyActive;
 
         await config.save();
         res.json(config);

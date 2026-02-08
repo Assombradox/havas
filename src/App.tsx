@@ -36,11 +36,15 @@ import CategoryProducts from './admin/pages/Categories/CategoryProducts';
 import BannersList from './admin/pages/Banners/BannersList';
 import EmailEditor from './admin/pages/Settings/EmailEditor';
 import BannerForm from './admin/pages/Banners/BannerForm';
+import Integrations from './admin/pages/Settings/Integrations';
 import OrdersList from './admin/pages/Orders/OrdersList';
 import Login from './admin/pages/Login';
 import ProtectedRoute from './admin/components/ProtectedRoute';
 
+import { useUtmTracking } from './hooks/useUtmTracking';
+
 function InnerApp() {
+  useUtmTracking();
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
   useEffect(() => {

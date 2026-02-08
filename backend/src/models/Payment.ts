@@ -37,6 +37,7 @@ export interface IPayment extends Document {
         tangible: boolean;
     }>;
     totalAmount?: number;
+    metadata?: Record<string, any>;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -46,6 +47,7 @@ const PaymentSchema: Schema = new Schema({
     shortId: { type: Number, unique: true, sparse: true },
     status: { type: String, required: true, default: 'waiting_payment' },
     totalAmount: { type: Number },
+    metadata: { type: Schema.Types.Mixed },
     customer: {
         name: String,
         email: String,

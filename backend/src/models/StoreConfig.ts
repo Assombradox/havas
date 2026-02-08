@@ -7,6 +7,8 @@ export interface IStoreConfig extends Document {
     emailTitle?: string;
     emailMessage?: string;
     emailFooter?: string;
+    utmifyToken?: string;
+    utmifyActive?: boolean;
     updatedAt: Date;
 }
 
@@ -16,7 +18,9 @@ const StoreConfigSchema: Schema = new Schema({
     storeName: { type: String, default: 'Havas Store' },
     emailTitle: { type: String, default: 'Pedido Recebido!' },
     emailMessage: { type: String, default: 'Olá {name}, recebemos seu pedido **#{orderId}**.' },
-    emailFooter: { type: String, default: 'Se tiver dúvidas, responda a este email.' }
+    emailFooter: { type: String, default: 'Se tiver dúvidas, responda a este email.' },
+    utmifyToken: { type: String },
+    utmifyActive: { type: Boolean, default: false }
 }, {
     timestamps: true
 });
