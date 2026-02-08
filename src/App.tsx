@@ -142,6 +142,11 @@ function InnerApp() {
       if (currentPath === '/admin/email-editor') {
         return protectedAdmin(<EmailEditor />);
       }
+
+      // Integrations
+      if (currentPath === '/admin/integrations') {
+        return protectedAdmin(<Integrations />);
+      }
     }
   };
 

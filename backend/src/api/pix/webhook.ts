@@ -1,13 +1,9 @@
+import { Request, Response } from 'express';
+import crypto from 'crypto';
+import Payment from '../../models/Payment';
 import { utmifyService } from '../../services/utmify.service';
 
 export const handlePixWebhook = async (req: Request, res: Response) => {
-    // ... (existing code)
-
-    // --- UTMIFY TRIGGER ---
-    if (payment) {
-        await utmifyService.sendConversion(payment);
-    }
-    // ----------------------
     // Debug Logs for Signature Inspection
     console.log('📨 Webhook Headers Recebidos:', JSON.stringify(req.headers, null, 2));
     console.log('📦 Webhook Body:', JSON.stringify(req.body, null, 2));
@@ -39,17 +35,15 @@ export const handlePixWebhook = async (req: Request, res: Response) => {
         const digest = hmac.update(JSON.stringify(req.body)).digest('hex');
 
         // Timing safe compare
-        // Note: signature from header might be plain hex or base64? 
-        // Docs usually specify. Assuming hex based on "digest('hex')". 
-        // If comparison fails, we reject.
-        // Let's assume hex. 
-        if (signature !== digest) {
-            // Secure compare
-            const signatureBuffer = Buffer.from(String(signature));
-            const digestBuffer = Buffer.from(digest);
-            if (signatureBuffer.length !== digestBuffer.length || !crypto.timingSafeEqual(signatureBuffer, digestBuffer)) {
-                console.error('[Webhook] Invalid signature');
-                return res.status(401).send('Invalid Signature');
+        if (typeof signature === 'string') {
+            if (signature !== digest) {
+                // Secure compare
+                const signatureBuffer = Buffer.from(signature);
+                const digestBuffer = Buffer.from(digest);
+                if (signatureBuffer.length !== digestBuffer.length || !crypto.timingSafeEqual(signatureBuffer, digestBuffer)) {
+                    console.error('[Webhook] Invalid signature');
+                    return res.status(401).send('Invalid Signature');
+                }
             }
         }
 
@@ -72,23 +66,11 @@ export const handlePixWebhook = async (req: Request, res: Response) => {
                 );
 
                 // --- UTMIFY TRIGGER ---
-                if (payment?.metadata?.utm) {
-                    try {
-                        console.log('[Webhook] Triggering UTMify Postback...');
-                        // Note: Replace with actual UTMify endpoint if available
-                        /*
-                        await axios.post('https://api.utmify.com.br/v1/postback', {
-                            ...payment.metadata.utm,
-                            revenue: payment.totalAmount,
-                            transaction_id: orderId
-                        });
-                        */
-                        console.log('[Webhook] UTMify Postback Logic Placeholder Executed.');
-                    } catch (utmError) {
-                        console.error('[Webhook] UTMify Postback Failed:', utmError);
-                    }
+                if (payment) {
+                    await utmifyService.sendConversion(payment);
                 }
                 // ----------------------
+
             } else {
                 console.warn('[Webhook] Paid event missing external_id');
             }
