@@ -6,7 +6,7 @@ export const utmifyService = {
     /**
      * Sends a conversion event to UTMify
      */
-    sendConversion: async (payment: IPayment) => {
+    sendConversion: async (payment: IPayment, status: 'paid' | 'waiting_payment' = 'paid') => {
         try {
             const config = await getStoreConfig();
 
@@ -15,7 +15,7 @@ export const utmifyService = {
                 return;
             }
 
-            console.log(`[UTMify] Sending Validated Conversion for Order ${payment.paymentId}...`);
+            console.log(`[UTMify] Sending Validated Conversion (${status}) for Order ${payment.paymentId}...`);
 
             // Prepare Items
             const products = (payment.items || []).map(item => ({
@@ -29,9 +29,9 @@ export const utmifyService = {
                 orderId: payment.paymentId,
                 platform: "HavaianasProprio",
                 paymentMethod: "pix",
-                status: "paid",
+                status: status,
                 createdAt: payment.createdAt ? new Date(payment.createdAt).toISOString().replace('T', ' ').split('.')[0] : new Date().toISOString().replace('T', ' ').split('.')[0],
-                approvedDate: new Date().toISOString().replace('T', ' ').split('.')[0],
+                approvedDate: status === 'waiting_payment' ? null : new Date().toISOString().replace('T', ' ').split('.')[0],
                 customer: {
                     name: payment.customer?.name || "Cliente",
                     email: payment.customer?.email || "email@email.com",

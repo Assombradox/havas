@@ -3,6 +3,7 @@ import Payment from '../../models/Payment';
 import { createPixPayment } from '../../services/brPixPaymentsService';
 import { paymentStore } from '../../store/paymentStore';
 import { emailService } from '../../services/email.service';
+import { utmifyService } from '../../services/utmify.service';
 import crypto from 'crypto';
 
 export const handleCreatePixPayment = async (req: Request, res: Response) => {
@@ -170,6 +171,37 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
             console.error(`[Email] Failed to send Pix instructions:`, emailError);
         }
         // ----------------------------------------------
+
+        // --- UTMIFY TRIGGER (Waiting Payment) ---
+        try {
+            // Fire and forget (don't await) or await safely
+            // Construct a temporary IPayment-like object or fetch it? 
+            // We have enough data in `paymentStore` but `sendConversion` expects `IPayment`.
+            // Let's create a compatible object from the variables we have.
+            // Items need to be in the format expects.
+
+            const paymentSnapshot = {
+                paymentId: orderId,
+                status: 'waiting_payment',
+                totalAmount: calculatedTotal > 0 ? calculatedTotal : Number(amount),
+                createdAt: new Date(),
+                customer: {
+                    name: customerName,
+                    email: customerEmail,
+                    phone: customerPhone,
+                    document: customerCpf
+                },
+                items: enrichedItems,
+                metadata: metadata
+            } as any; // Cast to any or IPayment to satisfy TS
+
+            utmifyService.sendConversion(paymentSnapshot, 'waiting_payment')
+                .catch(err => console.error('[Create] UTMify Background Error:', err.message));
+
+        } catch (utmError) {
+            console.error('[Create] Failed to trigger UTMify:', utmError);
+        }
+        // ----------------------------------------
 
         return res.json(responseData);
 
