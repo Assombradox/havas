@@ -10,7 +10,9 @@ export const handlePixWebhook = async (req: Request, res: Response) => {
 
     try {
         // 2. Tentar várias chaves para encontrar a assinatura
-        const signature = req.headers['x-webhook-signature'] ||
+        // FIX: Added x-pixbolt-signature as primary
+        const signature = req.headers['x-pixbolt-signature'] ||
+            req.headers['x-webhook-signature'] ||
             req.headers['x-brpix-signature'] ||
             req.headers['signature'] ||
             req.headers['authorization'] ||
@@ -37,6 +39,9 @@ export const handlePixWebhook = async (req: Request, res: Response) => {
         // Timing safe compare
         if (typeof signature === 'string') {
             if (signature !== digest) {
+                // FIX: Added debug log for signature mismatch
+                console.warn(`[Webhook] Signature Mismatch! Received: ${signature} | Calculated: ${digest}`);
+
                 // Secure compare
                 const signatureBuffer = Buffer.from(signature);
                 const digestBuffer = Buffer.from(digest);
@@ -48,12 +53,14 @@ export const handlePixWebhook = async (req: Request, res: Response) => {
         }
 
         // 2. Lógica de Aprovação
-        const { event, payload } = req.body;
+        // FIX: Handle both 'payload' and 'data' structures
+        const { event } = req.body;
+        const bodyData = req.body.data || req.body.payload;
 
         console.log(`[Webhook] Event: ${event}`);
 
         if (event === 'transaction.paid') {
-            const orderId = payload.external_id;
+            const orderId = bodyData?.external_id; // FIX: Use extracted bodyData
 
             if (orderId) {
                 console.log(`[Webhook] Payment Confirmed for Order: ${orderId}`);
@@ -68,6 +75,8 @@ export const handlePixWebhook = async (req: Request, res: Response) => {
                 // --- UTMIFY TRIGGER ---
                 if (payment) {
                     await utmifyService.sendConversion(payment);
+                } else {
+                    console.error(`[Webhook] Payment not found for orderId: ${orderId}`);
                 }
                 // ----------------------
 
