@@ -124,6 +124,33 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
             }));
         }
 
+        // SAVE TO MONGODB (CRITICAL FIX)
+        const newPayment = new Payment({
+            paymentId: orderId, // External ID (UUID)
+            shortId: nextId,
+            transactionId: transaction.transaction_id, // ID do Gateway
+            status: 'waiting_payment',
+            totalAmount: calculatedTotal > 0 ? calculatedTotal : Number(amount),
+            customer: {
+                name: customerName,
+                email: customerEmail,
+                phone: customerPhone,
+                document: customerCpf,
+                ip: req.ip // Capture IP for UTMify
+            },
+            shippingAddress: shippingAddress ? { ...shippingAddress, zipCode: shippingAddress.zip || shippingAddress.zipCode } : undefined,
+            items: enrichedItems,
+            metadata: metadata, // Save UTMs
+            pixData: {
+                code: responseData.pixCode,
+                qrCode: responseData.qrCodeImage,
+                expiresAt: responseData.expiresAt
+            }
+        });
+
+        await newPayment.save();
+        console.log(`[Create] Payment ${orderId} persisted to MongoDB.`);
+
         // Save using orderId as the key
         await paymentStore.set(orderId, {
             status: 'waiting_payment',
