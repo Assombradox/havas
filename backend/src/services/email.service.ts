@@ -9,7 +9,7 @@ export const emailService = {
     sendTestEmail: async (toEmail: string) => {
         try {
             const data = await resend.emails.send({
-                from: 'onboarding@resend.dev',
+                from: 'Suporte Havaianas <suporte@havaianaspromos.site>',
                 to: toEmail,
                 subject: 'Teste de Conexão Havas Store 🚀',
                 html: '<p>Seu sistema de email está <strong>funcionando</strong>!</p>'
@@ -106,7 +106,7 @@ export const emailService = {
                 : `${config.storeName}: Pedido Recebido!`;
 
             const result = await resend.emails.send({
-                from: 'onboarding@resend.dev',
+                from: 'Suporte Havaianas <suporte@havaianaspromos.site>',
                 to: toEmail,
                 subject: subject,
                 html: emailHtml
