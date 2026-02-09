@@ -62,13 +62,22 @@ export const handlePixWebhook = async (req: Request, res: Response) => {
         if (event === 'transaction.paid') {
             const orderId = bodyData?.external_id; // FIX: Use extracted bodyData
 
-            if (orderId) {
-                console.log(`[Webhook] Payment Confirmed for Order: ${orderId}`);
+            if (orderId || bodyData?.transaction_id) {
+                const transactionId = bodyData?.transaction_id;
+                console.log(`[Webhook] Searching for Order. ExternalID: ${orderId} | TransactionID: ${transactionId}`);
 
-                // Update MongoDB
+                // Update MongoDB with robust search
                 const payment = await Payment.findOneAndUpdate(
-                    { paymentId: orderId },
-                    { status: 'paid' },
+                    {
+                        $or: [
+                            { paymentId: orderId },       // Try internal UUID
+                            { transactionId: transactionId } // Try Gateway ID (Fallback)
+                        ]
+                    },
+                    {
+                        status: 'paid',
+                        approvedDate: new Date()
+                    },
                     { new: true }
                 );
 
