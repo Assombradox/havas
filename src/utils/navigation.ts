@@ -3,27 +3,27 @@
  * Preserves Query Parameters (UTMs) across client-side navigation.
  */
 
-export const MapsTo = (path: string) => {
-    // 1. Capture current params
-    const currentParams = window.location.search;
+export const MapsTo = (to: string) => {
+    // 1. Captura os params atuais (ex: ?utm_source=FB)
+    const currentParams = new URLSearchParams(window.location.search);
 
-    // 2. Prepare destination path
-    let finalPath = path;
+    // 2. Prepara a URL de destino
+    const [path, toParamsString] = to.split('?');
+    const toParams = new URLSearchParams(toParamsString);
 
-    // 3. Append params if they exist (and destination doesn't have them)
-    if (currentParams) {
-        if (finalPath.includes('?')) {
-            // If destination already has params, we append with & but avoid duplicates
-            // This is a simple concatenation. Ideally we'd parse and merge, but for speed:
-            // We assume navigation targets are clean (e.g. /product/slug)
-            finalPath += '&' + currentParams.substring(1);
-        } else {
-            finalPath += currentParams;
+    // 3. Mescla (Prioridade: Params Atuais > Params do Destino)
+    // Isso garante que se o clique tiver "?id=1", ele fica, mas as UTMs antigas também vêm junto.
+    currentParams.forEach((value, key) => {
+        if (!toParams.has(key)) {
+            toParams.set(key, value);
         }
-    }
+    });
 
-    // 4. Perform Navigation
-    window.history.pushState({}, '', finalPath);
+    const finalSearch = toParams.toString();
+    const finalUrl = finalSearch ? `${path}?${finalSearch}` : path;
+
+    // 4. Navega
+    window.history.pushState({}, '', finalUrl);
     window.dispatchEvent(new PopStateEvent('popstate'));
     window.scrollTo(0, 0);
 };

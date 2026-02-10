@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { optimizeImage } from '../utils/imageOptimization';
 import { Star } from 'lucide-react';
+import { MapsTo } from '../utils/navigation';
 import { productsService } from '../services/storefront/products.service';
 import type { Product } from '../types/Product';
 
@@ -77,18 +78,13 @@ const FeaturedSection: React.FC<FeaturedSectionProps> = ({
         loadProducts();
     }, [categorySlug, limit]);
 
+
     const navigateToProduct = (slug: string) => {
-        const path = `/produto/${slug}`;
-        window.history.pushState({}, '', path);
-        window.dispatchEvent(new Event('popstate'));
-        window.scrollTo(0, 0);
+        MapsTo(`/produto/${slug}`);
     };
 
     const navigateToCategory = () => {
-        const path = `/categoria/${categorySlug}`;
-        window.history.pushState({}, '', path);
-        window.dispatchEvent(new Event('popstate'));
-        window.scrollTo(0, 0);
+        MapsTo(`/categoria/${categorySlug}`);
     };
 
     if (loading) return null; // Or skeleton

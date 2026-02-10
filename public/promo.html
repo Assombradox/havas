@@ -629,14 +629,21 @@
         }
 
         function goToStore() {
-            // Construct URL
+            // 1. Capture current params (e.g. ?utm_source=FB)
+            const currentParams = new URLSearchParams(window.location.search);
+
+            // 2. Add/Overwrite specific campaign params
+            currentParams.set('coupon', 'DESCONTO60');
+            currentParams.set('gender', userData.gender);
+
+            // 3. Set Defaults ONLY if missing (Preserve FB/Google attribution)
+            if (!currentParams.has('utm_source')) currentParams.set('utm_source', 'quiz_carnaval');
+            if (!currentParams.has('utm_medium')) currentParams.set('utm_medium', 'promo_page');
+            if (!currentParams.has('utm_campaign')) currentParams.set('utm_campaign', 'summer_2026');
+
+            // 4. Redirect
             const baseUrl = window.location.origin;
-            const genderParam = userData.gender;
-
-            // UTM Construction
-            const utm = `?coupon=DESCONTO60&gender=${genderParam}&utm_source=quiz_carnaval&utm_medium=promo_page&utm_campaign=summer_2026`;
-
-            window.location.href = baseUrl + "/" + utm;
+            window.location.href = baseUrl + "/?" + currentParams.toString();
         }
 
         function startOfferCountdown() {
