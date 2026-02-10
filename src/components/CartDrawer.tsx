@@ -1,5 +1,6 @@
 import React from 'react';
 import { X, Trash2, Plus, Minus } from 'lucide-react';
+import { MapsTo } from '../utils/navigation';
 
 import type { CartItem } from '../context/CartContext';
 
@@ -195,9 +196,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
                         <button
                             onClick={() => {
                                 onClose();
-                                window.history.pushState({}, '', '/checkout');
-                                window.dispatchEvent(new PopStateEvent('popstate'));
-                                window.scrollTo(0, 0);
+                                MapsTo('/checkout');
                             }}
                             className="w-full bg-[#e00000] text-white h-12 rounded-none font-bold text-sm uppercase tracking-wide hover:bg-red-700 transition-colors"
                         >
@@ -205,7 +204,7 @@ const CartDrawer: React.FC<CartDrawerProps> = ({
                         </button>
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     );
 };

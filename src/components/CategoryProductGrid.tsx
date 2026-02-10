@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { optimizeImage } from '../utils/imageOptimization';
+import { MapsTo } from '../utils/navigation';
 import { Star } from 'lucide-react';
 import type { Product } from '../data/products';
 
@@ -17,10 +18,7 @@ const CategoryProductGrid: React.FC<CategoryProductGridProps> = ({ products }) =
     };
 
     const navigateToProduct = (slug: string) => {
-        const path = `/produto/${slug}`;
-        window.history.pushState({}, '', path);
-        window.dispatchEvent(new PopStateEvent('popstate'));
-        window.scrollTo(0, 0);
+        MapsTo(`/produto/${slug}`);
     };
 
     const formatPrice = (price: number) => {
