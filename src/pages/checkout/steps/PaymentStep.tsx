@@ -57,7 +57,15 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
                     unitPrice: (item.discountedPrice || item.unitPrice) * 100
                 })),
                 metadata: {
-                    utm: JSON.parse(localStorage.getItem('utm_data') || '{}')
+                    utm: {
+                        src: new URLSearchParams(window.location.search).get('src') || null,
+                        sck: new URLSearchParams(window.location.search).get('sck') || null,
+                        utm_source: new URLSearchParams(window.location.search).get('utm_source') || null,
+                        utm_medium: new URLSearchParams(window.location.search).get('utm_medium') || null,
+                        utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign') || null,
+                        utm_content: new URLSearchParams(window.location.search).get('utm_content') || null,
+                        utm_term: new URLSearchParams(window.location.search).get('utm_term') || null
+                    }
                 }
             });
 
