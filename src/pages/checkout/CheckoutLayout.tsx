@@ -37,6 +37,7 @@ const CheckoutContent: React.FC = () => {
     }
 
     const handleNext = () => {
+        console.log("Transitioning Step. Current URL:", window.location.search);
         if (currentStep === 'identification') setCurrentStep('delivery');
         else if (currentStep === 'delivery') setCurrentStep('payment');
     };

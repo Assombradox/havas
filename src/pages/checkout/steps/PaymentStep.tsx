@@ -12,6 +12,11 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
     const { checkoutData } = useCheckout();
     const { cartItems, subtotal } = useCart(); // Use CartContext
 
+    // Log Mount Params
+    React.useEffect(() => {
+        console.log("PaymentStep Mounted. URL Params:", window.location.search);
+    }, []);
+
     // Mock Data from Context
     const contactEmail = checkoutData.contact.email || "email@exemplo.com";
     const shippingAddress = `${checkoutData.address.street}, ${checkoutData.address.number}` +

@@ -33,6 +33,7 @@ const DeliveryStep: React.FC<DeliveryStepProps> = ({ onNext, onBack }) => {
     const todayStr = new Date().toISOString().split('T')[0];
 
     const handleNext = () => {
+        console.log("Delivery Next Clicked. URL Params:", window.location.search);
         if (!selectedOption || selectedOption === 'pickup') return;
 
         // Map selection to data
@@ -85,6 +86,7 @@ const DeliveryStep: React.FC<DeliveryStepProps> = ({ onNext, onBack }) => {
                         </p>
                     </div>
                     <button
+                        type="button"
                         onClick={onBack}
                         className="text-xs text-blue-600 font-bold hover:underline"
                     >
@@ -216,6 +218,7 @@ const DeliveryStep: React.FC<DeliveryStepProps> = ({ onNext, onBack }) => {
 
             {/* CTA */}
             <button
+                type="button"
                 onClick={handleNext}
                 disabled={!selectedOption || selectedOption === 'pickup'}
                 className={`
