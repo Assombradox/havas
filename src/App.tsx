@@ -42,10 +42,10 @@ import OrdersList from './admin/pages/Orders/OrdersList';
 import Login from './admin/pages/Login';
 import ProtectedRoute from './admin/components/ProtectedRoute';
 
-import { useUtmTracking } from './hooks/useUtmTracking';
+import { useUtmStorage } from './hooks/useUtmStorage';
 
 function InnerApp() {
-  useUtmTracking();
+  useUtmStorage();
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
   useEffect(() => {

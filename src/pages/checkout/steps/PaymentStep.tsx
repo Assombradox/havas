@@ -3,6 +3,7 @@ import { QrCode, Lock, CreditCard, AlertCircle } from 'lucide-react';
 import { createPixPayment } from '../../../services/pixService';
 import { useCheckout } from '../../../context/CheckoutContext';
 import { useCart } from '../../../context/CartContext'; // Import CartContext
+import { useUtmStorage } from '../../../hooks/useUtmStorage'; // Import UTM Hook
 
 interface PaymentStepProps {
     onBack: () => void;
@@ -11,11 +12,13 @@ interface PaymentStepProps {
 const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
     const { checkoutData } = useCheckout();
     const { cartItems, subtotal } = useCart(); // Use CartContext
+    const { utms, getUtms } = useUtmStorage(); // Use UTM Hook
 
     // Log Mount Params
     React.useEffect(() => {
         console.log("PaymentStep Mounted. URL Params:", window.location.search);
-    }, []);
+        console.log("PaymentStep Persisted UTMs:", utms);
+    }, [utms]);
 
     // Mock Data from Context
     const contactEmail = checkoutData.contact.email || "email@exemplo.com";
@@ -63,13 +66,13 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
                 })),
                 metadata: {
                     utm: {
-                        src: new URLSearchParams(window.location.search).get('src') || null,
-                        sck: new URLSearchParams(window.location.search).get('sck') || null,
-                        utm_source: new URLSearchParams(window.location.search).get('utm_source') || null,
-                        utm_medium: new URLSearchParams(window.location.search).get('utm_medium') || null,
-                        utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign') || null,
-                        utm_content: new URLSearchParams(window.location.search).get('utm_content') || null,
-                        utm_term: new URLSearchParams(window.location.search).get('utm_term') || null
+                        src: utms.src || null,
+                        sck: utms.sck || null,
+                        utm_source: utms.utm_source || null,
+                        utm_medium: utms.utm_medium || null,
+                        utm_campaign: utms.utm_campaign || null,
+                        utm_content: utms.utm_content || null,
+                        utm_term: utms.utm_term || null
                     }
                 }
             });
@@ -77,11 +80,11 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
             console.log("PIX Created:", response);
 
             if (response && response.paymentId) {
-                // FIX: Captura as UTMs/Query Params atuais para persistir na próxima página
-                const currentQueryParams = window.location.search;
+                // FIX: Recupera UTMs persistidas do Storage (via hook)
+                const queryParams = getUtms();
 
                 // Constrói a URL final mantendo os parâmetros
-                const pixUrl = `/checkout/pix/${response.paymentId}${currentQueryParams}`;
+                const pixUrl = `/checkout/pix/${response.paymentId}${queryParams}`;
 
                 // Executa a navegação manual
                 window.history.pushState({}, '', pixUrl);
