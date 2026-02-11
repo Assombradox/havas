@@ -53,6 +53,35 @@ function InnerApp() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
+  // Se o usuário acessar algo terminado em .html e o React carregar,
+  // significa que o servidor (Railway) não entregou o arquivo estático.
+  if (window.location.pathname.endsWith('.html')) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+        <div className="bg-white p-8 rounded-lg shadow-xl max-w-md text-center">
+          <h1 className="text-xl font-bold text-red-600 mb-4">⚠️ Arquivo estático não carregado</h1>
+          <p className="text-gray-700 mb-4">
+            O React assumiu o controle, mas você tentou acessar um arquivo físico:
+            <br />
+            <code className="bg-gray-200 px-2 py-1 rounded font-mono text-sm mt-2 block">
+              {window.location.pathname}
+            </code>
+          </p>
+          <p className="text-sm text-gray-500">
+            Verifique se o arquivo existe na pasta <b>public</b> e se o nome está em minúsculo.
+            Tente renomear para <b>quiz.html</b>.
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-6 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+            Tentar Novamente
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   // Move content rendering to a helper function or component to clean up
   const renderContent = () => {
     // --- ADMIN ROUTES ---
