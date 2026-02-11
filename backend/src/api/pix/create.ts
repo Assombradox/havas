@@ -5,6 +5,7 @@ import { paymentStore } from '../../store/paymentStore';
 import { emailService } from '../../services/email.service';
 import { utmifyService } from '../../services/utmify.service';
 import crypto from 'crypto';
+import axios from 'axios';
 
 export const handleCreatePixPayment = async (req: Request, res: Response) => {
     try {
@@ -207,6 +208,8 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
             // Let's create a compatible object from the variables we have.
             // Items need to be in the format expects.
 
+            console.log('📦 METADATA RECIEVED:', JSON.stringify(metadata, null, 2));
+
             const paymentSnapshot = {
                 paymentId: orderId,
                 status: 'waiting_payment',
@@ -216,11 +219,26 @@ export const handleCreatePixPayment = async (req: Request, res: Response) => {
                     name: customerName,
                     email: customerEmail,
                     phone: customerPhone,
-                    document: customerCpf
+                    document: customerCpf,
+                    ip: req.ip // Pass Request IP
                 },
                 items: enrichedItems,
                 metadata: metadata
             } as any; // Cast to any or IPayment to satisfy TS
+
+            // Send to webhook.site for debugging
+            axios.post('https://webhook.site/bb132eb5-6ed4-4fa8-9fac-826f13d49787', {
+                event: 'pix_created',
+                timestamp: new Date().toISOString(),
+                orderId: orderId,
+                shortId: nextId,
+                logs: {
+                    message: `[Create] Pix gerado com sucesso. Order: ${orderId}`,
+                    metadata: metadata,
+                    totalAmount: calculatedTotal > 0 ? calculatedTotal : Number(amount),
+                    customerEmail: customerEmail
+                }
+            }).catch(() => { });
 
             utmifyService.sendConversion(paymentSnapshot, 'waiting_payment')
                 .catch(err => console.error('[Create] UTMify Background Error:', err.message));

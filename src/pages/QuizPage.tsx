@@ -197,9 +197,8 @@ const QuizPage: React.FC = () => {
         currentParams.set('coupon', 'DESCONTO60');
         currentParams.set('gender', userData.gender);
 
-        if (!currentParams.has('utm_source')) currentParams.set('utm_source', 'quiz_carnaval');
-        if (!currentParams.has('utm_medium')) currentParams.set('utm_medium', 'promo_page');
-        if (!currentParams.has('utm_campaign')) currentParams.set('utm_campaign', 'summer_2026');
+        // REMOVED: Do NOT inject test UTMs. Only preserve real ones from ads.
+        // Real UTMs from campaigns will already be in the URL.
 
         window.location.href = window.location.origin + "/?" + currentParams.toString();
     };

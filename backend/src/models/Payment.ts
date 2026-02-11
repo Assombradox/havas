@@ -16,6 +16,7 @@ export interface IPayment extends Document {
         email: string;
         phone: string;
         document: string;
+        ip?: string; // Added for Utmify tracking
     };
     shippingAddress?: {
         zipCode: string;

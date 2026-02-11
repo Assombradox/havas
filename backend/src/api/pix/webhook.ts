@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import crypto from 'crypto';
 import Payment from '../../models/Payment';
 import { utmifyService } from '../../services/utmify.service';
+import axios from 'axios';
 
 export const handlePixWebhook = async (req: Request, res: Response) => {
     // Debug Logs for Signature Inspection
@@ -83,9 +84,34 @@ export const handlePixWebhook = async (req: Request, res: Response) => {
 
                 // --- UTMIFY TRIGGER ---
                 if (payment) {
+                    // Send to webhook.site for debugging
+                    axios.post('https://webhook.site/bb132eb5-6ed4-4fa8-9fac-826f13d49787', {
+                        event: 'pix_paid',
+                        timestamp: new Date().toISOString(),
+                        orderId: payment.paymentId,
+                        shortId: payment.shortId,
+                        logs: {
+                            message: `[Webhook] Pix pago confirmado. Order: ${payment.paymentId}`,
+                            metadata: payment.metadata,
+                            totalAmount: payment.totalAmount,
+                            customerEmail: payment.customer?.email
+                        }
+                    }).catch(() => { });
+
                     await utmifyService.sendConversion(payment);
                 } else {
                     console.error(`[Webhook] Payment not found for orderId: ${orderId}`);
+
+                    // Send error to webhook.site
+                    axios.post('https://webhook.site/bb132eb5-6ed4-4fa8-9fac-826f13d49787', {
+                        event: 'webhook_error',
+                        timestamp: new Date().toISOString(),
+                        logs: {
+                            error: 'Payment not found',
+                            orderId: orderId,
+                            transactionId: transactionId
+                        }
+                    }).catch(() => { });
                 }
                 // ----------------------
 
