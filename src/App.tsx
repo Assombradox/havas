@@ -21,6 +21,7 @@ import SearchPage from './pages/SearchPage';
 import CheckoutLayout from './pages/checkout/CheckoutLayout';
 import PixPaymentPage from './pages/checkout/PixPaymentPage';
 import CheckoutSuccessPage from './pages/checkout/CheckoutSuccessPage';
+import QuizPage from './pages/QuizPage';
 // import { SpeedInsights } from "@vercel/speed-insights/react";
 import { CartProvider } from './context/CartContext';
 import CartContainer from './components/CartContainer';
@@ -165,6 +166,10 @@ function InnerApp() {
 
   if (currentPath === '/checkout/pix') { // Legacy or direct access fallback
     return <PixPaymentPage />;
+  }
+
+  if (currentPath === '/quiz') {
+    return <QuizPage />;
   }
 
   if (currentPath === '/checkout/success') {
