@@ -192,13 +192,32 @@ const QuizPage: React.FC = () => {
         }, 1000);
     };
 
+
+    // Helper to retrieve UTM with persistence fallback
+    const getUtm = (key: string): string | null => {
+        const fromUrl = new URLSearchParams(window.location.search).get(key);
+        if (fromUrl) return fromUrl;
+        try {
+            const stored = JSON.parse(localStorage.getItem('utm_data') || '{}');
+            return stored[key] || null;
+        } catch {
+            return null;
+        }
+    };
+
     const goToStore = () => {
-        const currentParams = new URLSearchParams(window.location.search);
+        const currentParams = new URLSearchParams();
+
+        // Preserve standard params
         currentParams.set('coupon', 'DESCONTO60');
         currentParams.set('gender', userData.gender);
 
-        // REMOVED: Do NOT inject test UTMs. Only preserve real ones from ads.
-        // Real UTMs from campaigns will already be in the URL.
+        // Preserve UTMs (URL Priority -> LocalStorage Fallback)
+        const utmKeys = ['src', 'sck', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+        utmKeys.forEach(key => {
+            const val = getUtm(key);
+            if (val) currentParams.set(key, val);
+        });
 
         window.location.href = window.location.origin + "/?" + currentParams.toString();
     };
