@@ -33,21 +33,6 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
     const [selectedMethod, setSelectedMethod] = useState<string | null>(null);
     const [termsAccepted, setTermsAccepted] = useState(false);
 
-    // Helper to retrieve UTM with persistence fallback
-    const getUtm = (key: string): string | null => {
-        // 1. Try URL (Priority)
-        const fromUrl = new URLSearchParams(window.location.search).get(key);
-        if (fromUrl) return fromUrl;
-
-        // 2. Try LocalStorage (Persistence)
-        try {
-            const stored = JSON.parse(localStorage.getItem('utm_data') || '{}');
-            return stored[key] || null;
-        } catch (e) {
-            return null;
-        }
-    };
-
     const handlePayment = async () => {
         setIsLoading(true);
 
@@ -78,13 +63,13 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
                 })),
                 metadata: {
                     utm: {
-                        src: getUtm('src'),
-                        sck: getUtm('sck'),
-                        utm_source: getUtm('utm_source'),
-                        utm_medium: getUtm('utm_medium'),
-                        utm_campaign: getUtm('utm_campaign'),
-                        utm_content: getUtm('utm_content'),
-                        utm_term: getUtm('utm_term')
+                        src: new URLSearchParams(window.location.search).get('src') || null,
+                        sck: new URLSearchParams(window.location.search).get('sck') || null,
+                        utm_source: new URLSearchParams(window.location.search).get('utm_source') || null,
+                        utm_medium: new URLSearchParams(window.location.search).get('utm_medium') || null,
+                        utm_campaign: new URLSearchParams(window.location.search).get('utm_campaign') || null,
+                        utm_content: new URLSearchParams(window.location.search).get('utm_content') || null,
+                        utm_term: new URLSearchParams(window.location.search).get('utm_term') || null
                     }
                 }
             });
