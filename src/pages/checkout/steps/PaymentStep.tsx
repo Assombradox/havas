@@ -76,12 +76,19 @@ const PaymentStep: React.FC<PaymentStepProps> = ({ onBack }) => {
 
             console.log("PIX Created:", response);
 
-            // Navigate to PIX Page with data
-            // Navigate to PIX Page with ID in URL (Resilient Flow)
-            const pixUrl = `/checkout/pix/${response.paymentId}`;
-            window.history.pushState({}, '', pixUrl);
-            // Force a re-render/location check since we are using a custom simple router in App.tsx
-            window.dispatchEvent(new PopStateEvent('popstate'));
+            if (response && response.paymentId) {
+                // FIX: Captura as UTMs/Query Params atuais para persistir na próxima página
+                const currentQueryParams = window.location.search;
+
+                // Constrói a URL final mantendo os parâmetros
+                const pixUrl = `/checkout/pix/${response.paymentId}${currentQueryParams}`;
+
+                // Executa a navegação manual
+                window.history.pushState({}, '', pixUrl);
+                window.dispatchEvent(new PopStateEvent('popstate'));
+            } else {
+                throw new Error("Resposta inválida do servidor: Payment ID ausente");
+            }
 
         } catch (error) {
             console.error("Payment Error:", error);
