@@ -40,6 +40,9 @@ app.use('/api/email', emailRouter);
 import configRouter from './routes/config.routes';
 app.use('/api/config', configRouter);
 
+// Health Check
+
+
 app.post('/api/pix/create', handleCreatePixPayment);
 app.get('/api/pix/:paymentId', handleGetPixPayment);
 app.post('/api/pix/webhook', handlePixWebhook);

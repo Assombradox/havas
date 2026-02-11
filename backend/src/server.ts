@@ -21,13 +21,18 @@ console.log('---------------------------------------------------');
 import app from './app';
 import { connectDB } from './config/database';
 
+import healthRouter from './routes/health.routes';
+
 const PORT = process.env.PORT || 3000;
 
 const startServer = async () => {
     // 1. Connect to MongoDB
     await connectDB();
 
-    // 2. Start Express Server
+    // 2. Health Check Route
+    app.use('/health', healthRouter);
+
+    // 3. Start Express Server
     app.listen(PORT, () => {
         console.log(`🚀 Backend rodando na porta ${PORT}`);
         console.log(`👉 API Docs (Exemplo): http://localhost:${PORT}/api/pix/create`);

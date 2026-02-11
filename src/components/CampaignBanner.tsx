@@ -110,10 +110,10 @@ export default function CampaignBanner() {
                                     <Clock className="w-4 h-4 text-white" />
                                 </div>
                                 <div className="flex flex-col leading-tight sm:flex-row sm:gap-2 sm:items-center">
-                                    <span className="font-extrabold text-sm tracking-wide uppercase">Oferta Secreta!</span>
-                                    <span className="text-xs sm:text-sm text-red-50 hidden sm:inline-block">Use cupom <span className="font-black text-white bg-white/20 px-1.5 py-0.5 rounded ml-1">DESCONTO60</span></span>
+                                    <span className="font-extrabold text-sm tracking-wide uppercase">ESQUENTA CARNAVAL!</span>
+                                    <span className="text-xs sm:text-sm text-red-50 hidden sm:inline-block">Cupom já aplicado <span className="font-black text-white bg-white/20 px-1.5 py-0.5 rounded ml-1">DESCONTO60</span></span>
                                     {/* Mobile-only compact view */}
-                                    <span className="text-xs sm:hidden font-bold text-white/90">Cupom: DESCONTO60</span>
+                                    <span className="text-xs sm:hidden font-bold text-white/90">Cupom aplicado: DESCONTO60</span>
                                 </div>
                             </div>
 
