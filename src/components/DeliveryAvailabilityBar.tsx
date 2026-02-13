@@ -11,17 +11,24 @@ const DeliveryAvailabilityBar: React.FC = () => {
             setIsVisible(false);
         }
 
-        // Fetch user location based on IP
+        // Fetch user location based on IP with error handling
         fetch('https://ipapi.co/json/')
-            .then(res => res.json())
+            .then(async res => {
+                if (!res.ok) throw new Error(`IPAPI Error: ${res.status}`);
+                const contentType = res.headers.get("content-type");
+                if (!contentType || !contentType.includes("application/json")) {
+                    throw new Error("IPAPI Response was not JSON");
+                }
+                return res.json();
+            })
             .then(data => {
                 if (data.city && data.region_code) {
                     setLocation(`${data.city}, ${data.region_code}`);
                 }
             })
-            .catch(() => {
+            .catch((err) => {
                 // Silent fail/Warn only (AdBlockers often block this)
-                console.warn("Geolocalização automática indisponível (Bloqueada pelo Cliente/AdBlock).");
+                console.warn("Geolocalização automática indisponível:", err.message);
                 // Keep default "todo o Brasil"
             });
     }, []);

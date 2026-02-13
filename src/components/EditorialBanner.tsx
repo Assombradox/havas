@@ -34,7 +34,7 @@ const EditorialBanner: React.FC = () => {
                 {link ? (
                     <a href={link} className="block transition-transform hover:scale-[1.01] duration-300">
                         <img
-                            src={optimizeImage(imageSrc, 1200)}
+                            src={optimizeImage(imageSrc?.trim(), 1200)}
                             alt={banner?.title || "Havaianas Editorial"}
                             width="1200"
                             height="400"

@@ -7,6 +7,7 @@
  */
 export const optimizeImage = (url: string, width: number = 400): string => {
     if (!url) return '';
+    url = url.trim(); // Remove whitespace to prevent 400 Bad Request
     if (!url.includes('cloudinary.com')) return url;
 
     // Check if we already have transformation params
