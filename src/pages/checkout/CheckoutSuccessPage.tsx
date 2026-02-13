@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { CheckCircle2, MessageCircle, ShoppingBag, Calendar, MapPin } from 'lucide-react';
 import logo from '../../assets/logo.png';
 
@@ -39,14 +39,51 @@ const MOCK_ORDER = {
 };
 
 const CheckoutSuccessPage: React.FC = () => {
-    // 1. Safe State Access via Window History (Custom Router)
-    const historyState = window.history.state as any; // Type as needed
+    const [order, setOrder] = useState<any>(MOCK_ORDER);
+    const [loading, setLoading] = useState(true);
+    const [isMock, setIsMock] = useState(true);
 
-    // We try to get the order from navigation state (real flow)
-    // If missing, we fallback to MOCK_ORDER (debug/direct access)
-    // We assume if state.order exists, it has the valid structure.
-    const hasRealOrder = !!historyState?.order;
-    const order = hasRealOrder ? historyState.order : MOCK_ORDER;
+    useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
+        const orderId = searchParams.get('id');
+
+        if (orderId) {
+            fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/api/pix/${orderId}`)
+                .then(res => {
+                    if (!res.ok) throw new Error('Falha ao buscar pedido');
+                    return res.json();
+                })
+                .then(data => {
+                    console.log('📦 Pedido Real Carregado:', data);
+
+                    // Map API response to UI structure
+                    setOrder({
+                        id: orderId,
+                        items: data.items || [],
+                        total: (data.totalAmount || 0) / 100, // Convert cents to float
+                        shipping: {
+                            deadline: '3 a 5 dias úteis', // Default estimate
+                            address: data.shippingAddress // Matches { street, number, city... }
+                        },
+                        customer: data.customer
+                    });
+                    setIsMock(false);
+                })
+                .catch(err => {
+                    console.error('Erro ao carregar pedido:', err);
+                    // Keep MOCK_ORDER on error/fallback
+                })
+                .finally(() => setLoading(false));
+        } else {
+            // Check history state fallback
+            const historyState = window.history.state as any;
+            if (historyState?.order) {
+                setOrder(historyState.order);
+                setIsMock(false);
+            }
+            setLoading(false);
+        }
+    }, []);
 
     // Helper to format price
     const formatPrice = (price: number) => {
@@ -61,6 +98,9 @@ const CheckoutSuccessPage: React.FC = () => {
     const fullAddress = address
         ? `${address.street}, ${address.number} - ${address.city}/${address.state}`
         : "Endereço não informado";
+
+    // Calculate total from items if implicit
+    const displayTotal = order.total || order.items.reduce((acc: number, item: any) => acc + (item.unitPrice * item.quantity), 0);
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-start p-4 font-sans pb-12">
@@ -79,7 +119,7 @@ const CheckoutSuccessPage: React.FC = () => {
                 <p className="text-gray-600 text-sm">
                     Obrigado pela compra. Abaixo estão os detalhes do pedido.
                 </p>
-                {!hasRealOrder && (
+                {isMock && !loading && (
                     <span className="inline-block mt-2 px-2 py-0.5 bg-yellow-100 text-yellow-800 text-[10px] font-bold uppercase rounded-sm border border-yellow-200">
                         Modo Visualização (Mock)
                     </span>
@@ -126,32 +166,46 @@ const CheckoutSuccessPage: React.FC = () => {
                         Resumo da Compra
                     </p>
 
-                    <div className="space-y-3 mb-4">
-                        {order.items.map((item: any, idx: number) => (
-                            <div key={item.id || idx} className="flex gap-3">
-                                <div className="w-12 h-12 border border-gray-100 bg-gray-50 relative shrink-0">
-                                    <span className="absolute -top-1.5 -right-1.5 bg-gray-500 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full z-10">
-                                        {item.quantity}
-                                    </span>
-                                    {item.image && <img src={item.image} alt={item.name} className="w-full h-full object-contain p-0.5" />}
+                    {loading ? (
+                        <div className="space-y-3 mb-4 animate-pulse">
+                            {[1, 2].map(i => (
+                                <div key={i} className="flex gap-3">
+                                    <div className="w-12 h-12 bg-gray-200"></div>
+                                    <div className="flex-1 space-y-2">
+                                        <div className="h-4 bg-gray-200 w-3/4"></div>
+                                        <div className="h-3 bg-gray-200 w-1/2"></div>
+                                    </div>
                                 </div>
-                                <div className="flex-1 min-w-0">
-                                    <h4 className="text-sm font-medium text-gray-900 truncate">{item.name}</h4>
-                                    <p className="text-xs text-gray-500">{item.color} / {item.size}</p>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="space-y-3 mb-4">
+                            {order.items?.map((item: any, idx: number) => (
+                                <div key={item.id || idx} className="flex gap-3">
+                                    <div className="w-12 h-12 border border-gray-100 bg-gray-50 relative shrink-0">
+                                        <span className="absolute -top-1.5 -right-1.5 bg-gray-500 text-white text-[9px] font-bold w-4 h-4 flex items-center justify-center rounded-full z-10">
+                                            {item.quantity}
+                                        </span>
+                                        {item.image && <img src={item.image} alt={item.name} className="w-full h-full object-contain p-0.5" />}
+                                    </div>
+                                    <div className="flex-1 min-w-0">
+                                        <h4 className="text-sm font-medium text-gray-900 truncate">{item.name}</h4>
+                                        <p className="text-xs text-gray-500">{item.color} {item.size ? `/ ${item.size}` : ''}</p>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-sm font-bold text-gray-900">
+                                            {formatPrice((item.price || item.unitPrice) * item.quantity)}
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className="text-right">
-                                    <p className="text-sm font-bold text-gray-900">
-                                        {formatPrice((item.discountedPrice || item.unitPrice) * item.quantity)}
-                                    </p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+                    )}
 
                     {/* Total Row */}
                     <div className="pt-3 border-t border-gray-100 flex justify-between items-center">
                         <span className="text-sm font-medium text-gray-600">Total Pago</span>
-                        <span className="text-lg font-bold text-gray-900">{formatPrice(order.total)}</span>
+                        <span className="text-lg font-bold text-gray-900">{formatPrice(displayTotal)}</span>
                     </div>
                 </div>
             </div>

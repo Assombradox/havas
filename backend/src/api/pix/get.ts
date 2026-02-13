@@ -14,8 +14,15 @@ export const handleGetPixPayment = async (req: Request, res: Response) => {
             return res.status(404).json({ error: 'Pagamento não encontrado' });
         }
 
-        // Return the stored PIX data
-        return res.json(payment.pixData);
+        // Return full order data for Receipt Page
+        return res.json({
+            ...payment.pixData,
+            status: payment.status,
+            totalAmount: payment.totalAmount,
+            items: payment.items,
+            shippingAddress: payment.shippingAddress,
+            customer: payment.customer
+        });
 
     } catch (error: any) {
         console.error('[API Get] Erro ao buscar PIX:', error.message);

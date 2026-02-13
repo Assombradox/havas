@@ -93,7 +93,9 @@ const PixPaymentPage: React.FC<PixPaymentPageProps> = ({ paymentId }) => {
                 const data = await response.json();
 
                 if (data.status === 'paid') {
-                    window.location.href = '/checkout/success';
+                    if (data.status === 'paid') {
+                        window.location.href = `/checkout/success?id=${paymentId}`;
+                    }
                 }
             } catch (error) {
                 console.error('Erro ao verificar status:', error);
