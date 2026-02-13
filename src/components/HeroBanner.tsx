@@ -17,7 +17,6 @@ const HeroBanner: React.FC = () => {
     const [banners, setBanners] = useState<BannerData[]>([
         { id: 'static-1', src: "https://res.cloudinary.com/ddcjebuni/image/upload/v1769584180/asset-havaianas-farm-alto-verao-2_q44zfy.gif", alt: "Coleção Farm Alto Verão" },
         { id: 'static-2', src: "https://res.cloudinary.com/ddcjebuni/image/upload/v1769583937/asset_havaianas_banner_ginga_promocao_2_o3a95s.gif", alt: "Promoção Ginga" },
-        { id: 'static-3', src: "https://res.cloudinary.com/ddcjebuni/image/upload/v1769583924/asset-havaianas-60_2_r3isra.gif", alt: "Outlet 60% OFF" },
         { id: 'static-4', src: "https://res.cloudinary.com/ddcjebuni/image/upload/v1769584069/Asset_Hero_Banner_Site_Mobile_2_knnu7z.png", alt: "Ofertas Especiais" },
         { id: 'static-5', src: "https://res.cloudinary.com/ddcjebuni/image/upload/v1769584394/banner_203.gif_t8zxca.webp", alt: "Verão Havaianas" }
     ]);
