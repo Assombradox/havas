@@ -1,15 +1,35 @@
 import Product, { IProduct } from '../models/Product';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
+import NodeCache from 'node-cache';
+
+// Cache for 5 minutes (300s) to optimize Home/Category load
+// checkperiod: 600s (cleanup check)
+const productCache = new NodeCache({ stdTTL: 300, checkperiod: 600 });
 
 export const productsService = {
     getAll: async (): Promise<IProduct[]> => {
+        const CACHE_KEY = 'all_products_cache';
+
+        // 1. Check Cache
+        if (productCache.has(CACHE_KEY)) {
+            // console.log('⚡ Serving products from Cache');
+            return productCache.get<IProduct[]>(CACHE_KEY) || [];
+        }
+
         try {
+            // 2. Fetch from DB
             const products = await Product.find({}).sort({ order: 1 });
+
+            // 3. Save to Cache
+            if (products) {
+                productCache.set(CACHE_KEY, products);
+            }
+
             return products || [];
         } catch (error) {
             console.error('Error fetching products:', error);
-            return []; // Fail safe: return empty array instead of throwing if critical
+            return [];
         }
     },
 
@@ -32,8 +52,18 @@ export const productsService = {
     },
 
     getByCategory: async (categorySlug: string): Promise<IProduct[]> => {
+        const CACHE_KEY = `category_${categorySlug}`;
+
+        if (productCache.has(CACHE_KEY)) {
+            return productCache.get<IProduct[]>(CACHE_KEY) || [];
+        }
+
         try {
             const products = await Product.find({ categories: categorySlug }).sort({ order: 1 });
+
+            if (products) {
+                productCache.set(CACHE_KEY, products);
+            }
             return products || [];
         } catch (error) {
             console.error('Error fetching products by category:', error);
@@ -43,10 +73,19 @@ export const productsService = {
 
     create: async (productData: any): Promise<IProduct> => {
         try {
-            // Unique checks are handled by Mongoose schema (unique: true)
-            // But we can catch duplicate key errors if needed
             const newProduct = new Product(productData);
-            return await newProduct.save();
+            const saved = await newProduct.save();
+
+            // Invalidate Caches
+            productCache.del('all_products_cache');
+            if (saved.categories) {
+                // Ideally we invalidate specific categories, but for simplicity we can wait for TTL or clear all if strict consistency needed.
+                // For now, let's assume 'all_products' is the critical one for Home.
+                // We can also flush all if we want extreme safety:
+                productCache.flushAll();
+            }
+
+            return saved;
         } catch (error) {
             console.error('Error creating product:', error);
             throw error;
@@ -55,11 +94,16 @@ export const productsService = {
 
     update: async (id: string, updates: Partial<IProduct>): Promise<IProduct | null> => {
         try {
-            return await Product.findOneAndUpdate(
+            const updated = await Product.findOneAndUpdate(
                 { id: id },
                 updates,
-                { new: true } // Return the updated document
+                { new: true }
             );
+
+            // Invalidate Caches
+            productCache.flushAll(); // Safest approach for edits that might affect categories/order
+
+            return updated;
         } catch (error) {
             console.error('Error updating product:', error);
             throw error;
@@ -69,6 +113,9 @@ export const productsService = {
     delete: async (id: string): Promise<boolean> => {
         try {
             const result = await Product.findOneAndDelete({ id: id });
+
+            productCache.flushAll();
+
             return !!result;
         } catch (error) {
             console.error('Error deleting product:', error);
@@ -82,15 +129,10 @@ export const productsService = {
             if (!original) throw new Error('Product not found');
 
             const originalObj = original.toObject() as any;
-
-            // Generate new IDs
             const newId = Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 5);
             const randomSuffix = Math.random().toString(36).substring(2, 6);
-
-            // Create new base slug
             const newSlug = `${originalObj.slug}-copy-${randomSuffix}`;
 
-            // Prepare new object
             const { _id, created_at, updated_at, ...rest } = originalObj;
 
             const newProductData = {
@@ -98,25 +140,24 @@ export const productsService = {
                 id: newId,
                 name: `${originalObj.name} (Cópia)`,
                 slug: newSlug,
-                // Ensure unique IDs for sub-documents if necessary (e.g. colors)
-                // Assuming simple structure for now, but strictly speaking we should regenerate IDs for colors if they have them.
-                // Based on previous code, colors have 'id'. Let's regen them.
                 colors: originalObj.colors ? originalObj.colors.map((c: any) => ({
                     ...c,
-                    id: Date.now().toString() + Math.random().toString().slice(2, 5) // Simple unique gen 
+                    id: Date.now().toString() + Math.random().toString().slice(2, 5)
                 })) : []
             };
 
             const newProduct = new Product(newProductData);
-            return await newProduct.save();
+            const saved = await newProduct.save();
+
+            productCache.flushAll();
+
+            return saved;
 
         } catch (error) {
             console.error('Error duplicating product:', error);
             throw error;
         }
     },
-
-
 
     batchReorder: async (items: { id: string, order: number }[]): Promise<boolean> => {
         try {
@@ -127,6 +168,9 @@ export const productsService = {
                 }
             }));
             await Product.bulkWrite(operations);
+
+            productCache.flushAll();
+
             return true;
         } catch (error) {
             console.error('Error in batch reorder:', error);
